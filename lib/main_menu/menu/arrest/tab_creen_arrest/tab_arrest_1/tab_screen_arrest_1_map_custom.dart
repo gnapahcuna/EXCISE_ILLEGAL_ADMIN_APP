@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,32 +8,23 @@ import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future_master.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_1_locale.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_location.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_distinct.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_province.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_subdistinct.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map_custom.dart';
 
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map_search.dart';
-class TabScreenArrest1Map extends StatefulWidget {
+class TabScreenArrest1MapCustom extends StatefulWidget {
   ItemsListArrestLocation itemsLocale;
-  TabScreenArrest1Map({
+  TabScreenArrest1MapCustom({
     Key key,
     @required this.itemsLocale,
   }) : super(key: key);
   @override
   _TabScreenArrest1MapState createState() => new _TabScreenArrest1MapState();
 }
-
-const kGoogleApiKey = "AIzaSyDV1zb4rCLMbE2epqclI2Nc7Llnq0EEz4U";
-
-class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
+class _TabScreenArrest1MapState extends State<TabScreenArrest1MapCustom> {
   TabController tabController;
-  bool _value1 = false;
-  bool _value2 = false;
 
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
   GoogleMapController mapController;
@@ -64,7 +54,6 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
       _road="";
   String placeAddress = "";
 
-  TextEditingController controller = new TextEditingController();
 
   //textfield
   final FocusNode myFocusNodeArrestRoad = FocusNode();
@@ -122,6 +111,8 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
       fontSize: 16.0,
       color: Colors.black54,
       fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleStar = TextStyle(
+      color: Colors.red, fontFamily: FontStyles().FontFamily);
 
   //dialog
   TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
@@ -136,41 +127,11 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
   @override
   void initState() {
     super.initState();
-    _value1 = true;
-    initPlatformState();
     itemsLocale = widget.itemsLocale;
-    if(itemsLocale!=null){
-      print("not null");
-      /*editArrestRoad.text = itemsLocale.ROAD;
-      editArrestAlley.text = itemsLocale.ALLEY;
-      editArrestHouseNumber.text = itemsLocale.ADDRESS_NO;
-      List splits = itemsLocale.GPS.split(",");
-      double lat = double.parse(splits[0]);
-      double lon = double.parse(splits[1]);
-      getPlaceAddress(lat,lon);*/
-    }
+    print("locale : "+itemsLocale.toString());
+
     _onSelectCountry(1);
-
-
   }
-  onSearchTextSubmitted(text){
-    byPlaceAddress(text);
-  }
-
-  byPlaceAddress(String text)async{
-    var addresses = await Geocoder.local.findAddressesFromQuery(text);
-    var place = addresses.first;
-    getPlaceAddress(place.coordinates.latitude,place.coordinates.longitude);
-  }
-  Future<void> _goToTheLake(lat,lon) async {
-    CameraPosition _kLake = CameraPosition(
-      target: LatLng(lat, lon),
-      bearing: 0.0,
-      tilt: 30.0,
-      zoom: 17.0,);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
-
 
   @override
   void dispose() {
@@ -185,25 +146,16 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     mapController = controller;
   }
 
-  void _setMarker(placeName,lat,lon) {
+  void _setMarker(placeName) {
     final String markerIdVal = placeName;
     final MarkerId markerId = MarkerId(markerIdVal);
     final Marker marker = Marker(
       markerId: markerId,
       //icon: BitmapDescriptor.fromAsset('assets/icons/marker.png',),
       position: LatLng(
-          lat, lon
+          _startLocation.latitude, _startLocation.longitude
       ),
       infoWindow: InfoWindow(title: markerIdVal, /*snippet: '*'*/),
-      onTap: (){
-        /*ItemProvince.RESPONSE_DATA.forEach((province) {
-          if (_province.trim().endsWith(
-              province.PROVINCE_NAME_TH.trim())) {
-            sProvince = province;
-            _onSelectDataAddress(sProvince.PROVINCE_ID);
-          }
-        });*/
-      }
     );
 
     setState(() {
@@ -211,38 +163,15 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
       markers[markerId] = marker;
     });
   }
-  _navigateMap(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>
-          TabScreenArrest1MapCustom(
-            itemsLocale: itemsLocale,
-          )),
-    );
-    if(result.toString()!="Back"){
-      Navigator.pop(context,result);
-    }
-  }
 
-  _navigateSearchPlace(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>
-          CustomSearchScaffold(
-          )),
-    );
-    if(result.toString()!="Back"){
-      Navigator.pop(context,result);
-    }
-  }
   void getPlaceAddress(latitude, longitude) async {
-    _initDataAddress();
     final coordinates = new Coordinates(latitude, longitude);
     var addresses = await Geocoder.local.findAddressesFromCoordinates(
         coordinates);
+
     var place = addresses.first;
-    _placeName = place.featureName /*+ " " + place.thoroughfare!=null?place.thoroughfare.toString():""*/;
-    _addressno = place.subThoroughfare!=null?place.subThoroughfare:"";
+    _placeName = place.featureName + " " + place.thoroughfare;
+    _addressno = place.subThoroughfare;
     _province = place.adminArea;
     _country = place.countryName;
     _pos = place.postalCode;
@@ -250,65 +179,62 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
         coordinates.longitude.toString();
 
     placeAddress = place.addressLine;
-    _setMarker(place.addressLine,latitude,longitude);
-    _goToTheLake(place.coordinates.latitude,place.coordinates.longitude);
+    _setMarker(place.addressLine);
 
-   /* print("featureName " + place.featureName);
-    print("adminArea " + place.adminArea);
+    if (place.subLocality.contains("เขต")) {
+      List splits = place.subLocality.split(" ");
+      _distict = splits[1];
+    }
+
+    /*print("featureName " + place.featureName);
     print("subLocality " + place.subLocality.toString());
     print("locality " + place.locality.toString());
     print("subAdminArea " + place.subAdminArea.toString());
-    print("coordinates " + place.coordinates.toString());
     print("thoroughfare " + place.thoroughfare.toString());
     print("subThoroughfare " + place.subThoroughfare.toString());
     print("postalCode " + place.postalCode.toString());
-    print("addressLine "+place.addressLine.toString());
-    print("countryCode "+place.countryCode.toString());
-    print("countryName "+place.countryName.toString());*/
-
-    if(place.subLocality!=null){
-      if (place.subLocality.contains("เขต")) {
-        List splits = place.subLocality.split(" ");
-        _distict = splits[1];
-      }
-    }else{
-      if (place.subAdminArea.contains("อำเภอ")) {
-        List splits = place.subAdminArea.split("อำเภอ");
-        print(splits.length);
-        _distict = splits[1];
-      }
-    }
-
+    print("adminArea "+place.adminArea);
+    print("coordinates "+place.coordinates.latitude.toString()+","+coordinates.longitude.toString());
+    print("countryName "+place.countryName);
+    print("countryCode "+place.countryCode);
+    print("addressLine "+place.addressLine.split(" ").toString());*/
     List addressLine = place.addressLine.split(" ");
     for (int i = 0; i < addressLine.length; i++) {
       if (addressLine[i].toString().endsWith("ซอย")) {
         _alley = addressLine[i + 1];
       } else if (addressLine[i].toString().endsWith("ถนน")) {
         _road = addressLine[i + 1];
-      } else if (addressLine[i].toString().endsWith("แขวง")||
-          addressLine[i].toString().endsWith("ตำบล")) {
+      } else if (addressLine[i].toString().endsWith("แขวง")) {
         _sub_distinct = addressLine[i + 1];
       }
     }
 
-    //print(_province+","+_distict+","+_sub_distinct);
-
     setState(() {});
   }
-  _initDataAddress(){
-    _placeName = "";
-    _addressno = "";
-    _province = "";
-    _country = "";
-    _pos = "";
-    _gps = "";
-    placeAddress = "";
-    _alley="";
-    _road="";
-    _sub_distinct="";
-    _distict="";
-  }
 
+  /*initPlatformState() async {
+    Locations.LocationData location;
+    try {
+      _permission = await _location.hasPermission();
+      location = await _location.getLocation();
+      error = null;
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'Permission denied';
+      } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error =
+        'Permission denied - please ask the user to enable it from the app settings';
+      }
+
+      location = null;
+    }
+
+    setState(() {
+      print("error :" + error);
+      _startLocation = location;
+      //getPlaceAddress(location.latitude,location.longitude);
+    });
+  }*/
   initPlatformState() async {
     await _locationService.changeSettings(
         accuracy: LocationAccuracy.HIGH, interval: 1000);
@@ -324,7 +250,15 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
         if (_permission) {
           location = await _locationService.getLocation();
           print("Location: ${location.latitude}");
-          getPlaceAddress(location.latitude, location.longitude);
+          _locationSubscription = _locationService.onLocationChanged().listen((
+              LocationData result) {
+            if (mounted) {
+              setState(() {
+                _currentLocation = result;
+                getPlaceAddress(result.latitude, result.longitude);
+              });
+            }
+          });
         }
       } else {
         bool serviceStatusResult = await _locationService.requestService();
@@ -348,100 +282,79 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     });
   }
 
-  Widget _buildContentGoogleMap(width, height) {
-    if (_startLocation != null) {
-      return Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        child: Container(
-          width: width,
-          child: Stack(
-            children: <Widget>[
-              GoogleMap(
-                //myLocationEnabled: true,
-                //mapType: MapType.hybrid,
-                onMapCreated: _onMapCreated,
-                initialCameraPosition:
-                CameraPosition(
-                  target: LatLng(
-                      _startLocation.latitude, _startLocation.longitude),
-                  bearing: 0.0,
-                  tilt: 30.0,
-                  zoom: 17.0,
-                ),
-                markers: Set<Marker>.of(markers.values),
-                onTap: ((location) {
-                  getPlaceAddress(location.latitude, location.longitude);
-                  //print(location.latitude.toString()+","+location.longitude.toString());
-                }),
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      /* border: Border.all(
-                          color: Colors.grey.withOpacity(0.5), width: 1.0),
-                      color: Colors.white*/),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            //width: itemWidth,
-                            child: Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: new Card(
-                                color: Colors.white,
-                                child: new ListTile(
-                                  leading: new Icon(Icons.search),
-                                  title: /*new TextField(
-                                    controller: controller,
-                                    keyboardType: TextInputType.text,
-                                    textCapitalization: TextCapitalization.words,
-                                    decoration: new InputDecoration(
-                                        hintText: 'ค้นหาสถานที่', border: InputBorder.none),
-                                    onSubmitted: onSearchTextSubmitted,
-                                    onTap: (){
-                                      _navigateSearchPlace(context);
-                                    },
-                                  ),*/
-                                  new PlacesAutocompleteField(
-                                      apiKey: kGoogleApiKey,
-                                    controller: controller,
-                                    onChanged: onSearchTextSubmitted,
-                                    inputDecoration: new InputDecoration(
-                                        hintText: 'ค้นหาสถานที่',
-                                        border: InputBorder.none,
-                                      hintStyle: textInputStyle,
-                                      labelStyle: textLabelStyle
-                                    ),
-                                  ),
-                                  /*trailing: new IconButton(
-                                    icon: new Icon(Icons.cancel),
-                                    onPressed: () {
-                                      controller.clear();
-                                    },
-                                  ),*/
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        )
-      );
+  CupertinoAlertDialog _createCupertinoIsPlaceDialog() {
+    return new CupertinoAlertDialog(
+        content: new Padding(
+          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+          child: Text("สถานที่เดียวกับเขียนที่",
+            style: TitleStyle,
+          ),
+        ),
+        actions: <Widget>[
+
+          new CupertinoButton(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  isPlace=false;
+                  _putAddress();
+                });
+              },
+              child: new Text(
+                  'ไม่', style: ButtonCancelStyle)),
+          new CupertinoButton(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  isPlace=true;
+                  _putAddress();
+                });
+              },
+              child: new Text('ใช่', style: ButtonAcceptStyle)),
+        ]
+    );
+  }
+  void _putAddress(){
+    String houseNumber = editArrestHouseNumber.text;
+    String road = editArrestRoad.text;
+    String alley = editArrestAlley.text;
+    itemsLocale = new ItemsListArrestLocation(
+      sProvince,
+      sDistrict,
+      sSubDistrict,
+      road,
+      alley,
+      houseNumber,
+      null,
+      houseNumber + (alley.isEmpty ? "" : " ซอย " + alley) +
+          (road.isEmpty ? "" : " ถนน " + road)
+          + " อำเภอ/เขต " + sDistrict.DISTRICT_NAME_TH
+          + " ตำบล/แขวง " +
+          sSubDistrict.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+          sProvince.PROVINCE_NAME_TH,
+      isPlace,
+      editArrestOther.text,
+    );
+    Navigator.pop(context, itemsLocale);
+  }
+  void _showIsPlaceAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _createCupertinoIsPlaceDialog();
+      },
+    );
+  }
+
+  void _onSaved(){
+    if (editArrestHouseNumber.text.isEmpty ||
+        sProvince == null || sDistrict == null ||
+        sSubDistrict == null
+    ) {
+      _showSearchEmptyAlertDialog(
+          context, "กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน");
     } else {
-      return Container();
+      _showIsPlaceAlertDialog();
     }
   }
 
@@ -457,93 +370,6 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
         .size
         .height;
     //TextField Style
-
-    final _buildChoice = new Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                setState(() {
-                  if (!_value1) {
-                    _value1 = !_value1;
-                    _value2 = !_value2;
-                  }
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _value1 ? Colors.blue : Colors.white,
-                  border: Border.all(color: Colors.black12),
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: _value1
-                        ? Icon(
-                      Icons.check,
-                      size: 30.0,
-                      color: Colors.white,
-                    )
-                        : Container(
-                      height: 30.0,
-                      width: 30.0,
-                      color: Colors.transparent,
-                    )
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Text('Google Map',
-                style: _value1 ? textStyleSelect : textStyleUnselect,),
-            )
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                setState(() {
-                  if (!_value2) {
-                    _value2 = !_value2;
-                    _value1 = !_value1;
-                  }
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _value2 ? Colors.blue : Colors.white,
-                  border: Border.all(color: Colors.black12),
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: _value2
-                        ? Icon(
-                      Icons.check,
-                      size: 30.0,
-                      color: Colors.white,
-                    )
-                        : Container(
-                      height: 30.0,
-                      width: 30.0,
-                      color: Colors.transparent,
-                    )
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Text('ระบุเอง',
-                style: _value2 ? textStyleSelect : textStyleUnselect,),
-            )
-          ],
-        )
-      ],
-    );
     Widget _buildLine = Container(
       padding: EdgeInsets.only(top: 0.0, bottom: 4.0),
       width: width,
@@ -574,67 +400,15 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          /*Container(
-                            padding: paddingLabel,
-                            child: Text(
-                              "จังหวัด", style: textLabelStyle,),
-                          ),
-                          Padding(
-                            padding: paddingInputBox,
-                            child: TextField(
-                              focusNode: myFocusNodeArrestProvince,
-                              controller: editArrestProvince,
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.words,
-                              style: textInputStyle,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          _buildLine,
                           Container(
                             padding: paddingLabel,
-                            child: Text(
-                              "อำเภอ/เขต", style: textLabelStyle,),
-                          ),
-                          Padding(
-                            padding: paddingInputBox,
-                            child: TextField(
-                              focusNode: myFocusNodeArrestDistinct,
-                              controller: editArrestDistinct,
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.words,
-                              style: textInputStyle,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-
-                              ),
+                            child: Row(
+                              children: <Widget>[
+                                Text("จังหวัด",
+                                  style: textLabelStyle,),
+                                Text("*", style: textStyleStar,),
+                              ],
                             ),
-                          ),
-                          _buildLine,
-                          Container(
-                            padding: paddingLabel,
-                            child: Text("ตำบล/แขวง", style: textLabelStyle,),
-                          ),
-                          Padding(
-                            padding: paddingInputBox,
-                            child: TextField(
-                              focusNode: myFocusNodeArrestSubDistinct,
-                              controller: editArrestSubDistinct,
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.words,
-                              style: textInputStyle,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          _buildLine,*/
-                          Container(
-                            padding: paddingLabel,
-                            child: Text("จังหวัด",
-                              style: textLabelStyle,),
                           ),
                           Container(
                             width: size.width,
@@ -673,8 +447,13 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
                           _buildLine,
                           Container(
                             padding: paddingLabel,
-                            child: Text("อำเภอ/เขต",
-                              style: textLabelStyle,),
+                            child: Row(
+                              children: <Widget>[
+                                Text("อำเภอ/เขต",
+                                  style: textLabelStyle,),
+                                Text("*", style: textStyleStar,),
+                              ],
+                            ),
                           ),
                           Container(
                             width: size.width,
@@ -712,8 +491,13 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
                           _buildLine,
                           Container(
                             padding: paddingLabel,
-                            child: Text("ตำบล/แขวง",
-                              style: textLabelStyle,),
+                            child: Row(
+                              children: <Widget>[
+                                Text("ตำบล/แขวง",
+                                  style: textLabelStyle,),
+                                Text("*", style: textStyleStar,),
+                              ],
+                            ),
                           ),
                           Container(
                             width: size.width,
@@ -779,9 +563,19 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
                             ),
                           ),
                           _buildLine,
-                          Container(
+                          /*Container(
                             padding: paddingLabel,
                             child: Text("บ้านเลขที่", style: textLabelStyle,),
+                          ),*/
+                          Container(
+                            padding: paddingLabel,
+                            child: Row(
+                              children: <Widget>[
+                                Text("บ้านเลขที่",
+                                  style: textLabelStyle,),
+                                Text("*", style: textStyleStar,),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: paddingInputBox,
@@ -799,15 +593,14 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
                           _buildLine,
                           Container(
                             padding: paddingLabel,
-                            child: Text(
-                              "ระบุเพิ่มเติม", style: textLabelStyle,),
+                            child: Text("ระบุเพิ่มเติม", style: textLabelStyle,),
                           ),
                           Padding(
                             padding: paddingInputBox,
                             child: TextField(
                               focusNode: myFocusNodeArrestOther,
                               controller: editArrestOther,
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.words,
                               style: textInputStyle,
                               decoration: InputDecoration(
@@ -828,77 +621,75 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
       ),
     );
     return Scaffold(
-        backgroundColor: Colors.white,
-        key: homeScaffoldKey,
-        appBar: AppBar(
-          title: Text('สถานที่เกิดเหตุ', style: textStyleAppbar,),
-          centerTitle: true,
-          actions: <Widget>[
-            new FlatButton(
-                onPressed: () {
-                  //_showIsPlaceAlertDialog();
-                  if (ItemProvince != null) {
-                    for(int i=0;i<ItemProvince.RESPONSE_DATA.length;i++){
-                      if (_province.trim().endsWith(
-                          ItemProvince.RESPONSE_DATA[i].PROVINCE_NAME_TH.trim())) {
-                        sProvince = ItemProvince.RESPONSE_DATA[i];
-                        _onSelectDataAddress(sProvince.PROVINCE_ID);
-                        break;
-                      }
-                    }
-                  } else {
-                    print("error");
-                  }
-                },
-                child: Text('ตกลง', style: textStyleAppbar)),
-          ],
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context, "Back");
-            },
+      backgroundColor: Colors.grey[200],
+      key: homeScaffoldKey,
+      appBar: AppBar(
+        title: Text('สถานที่เกิดเหตุ', style: textStyleAppbar,),
+        centerTitle: true,
+        actions: <Widget>[
+          new FlatButton(
+              onPressed: () {
+                _onSaved();
+                //_showIsPlaceAlertDialog();
+              },
+              child: Text('บันทึก', style: textStyleAppbar)),
+        ],
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context,"Back");
+          },
+        ),
+      ),
+      body: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              child: _buildContentCustom,
+
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  CupertinoAlertDialog _cupertinoSearchEmpty(mContext, text) {
+    TextStyle TitleStyle = TextStyle(
+        fontSize: 16.0, fontFamily: FontStyles().FontFamily);
+    TextStyle ButtonAcceptStyle = TextStyle(
+        color: Colors.blue,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w500,
+        fontFamily: FontStyles().FontFamily);
+    return new CupertinoAlertDialog(
+        content: new Padding(
+          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+          child: Text(text,
+            style: TitleStyle,
           ),
         ),
-        body: Stack(
-          children: <Widget>[
-            _value1
-                ? _buildContentGoogleMap(width, height)
-                : _buildContentCustom,
-          ],
-        ),
-      bottomNavigationBar: Container(
-        height: (size.height*20)/100,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: width,
-                padding: EdgeInsets.all(12.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Text(_placeName, style: textStylePlaceName,),
-              ),
-              Container(
-                width: width,
-                padding: EdgeInsets.all(12.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Text(placeAddress, style: textStylePlaceAddress,),
-              ),
-            ],
-          ),
-        )
-      )
+        actions: <Widget>[
+          new CupertinoButton(
+              onPressed: () {
+                Navigator.pop(mContext);
+                setState(() {
+                });
+              },
+              child: new Text('ตกลง', style: ButtonAcceptStyle)),
+        ]
+    );
+  }
+
+  void _showSearchEmptyAlertDialog(context, text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _cupertinoSearchEmpty(context, text);
+      },
     );
   }
 
@@ -907,7 +698,7 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
   }
 
   void _onSelectProvince(int PROVINCE_ID) async {
-    await _onSelectDataAddress(PROVINCE_ID);
+    await onLoadActionDistinctMaster(PROVINCE_ID);
   }
 
   void _onSelectDistrict(int DISTRICT_ID) async {
@@ -924,26 +715,23 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
           );
         });
     await onLoadActionLoadDataAddressMaster(PROVINCE_ID);
-    Navigator.pop(context);
 
-    print("_addressno : "+_addressno.toString());
-    print("_road : "+_road.toString());
+    print("_addressno : "+_addressno);
+    print("_road : "+_road);
     print("_alley : "+_alley.isEmpty.toString());
-    setState(() {
-      itemsLocale = new ItemsListArrestLocation(
-          sProvince,
-          sDistrict,
-          sSubDistrict,
-          _road,
-          _alley,
-          _addressno,
-          _gps,
-          placeAddress,
-          false,
-          ""
-      );
-    });
-    _navigateMap(context);
+    itemsLocale = new ItemsListArrestLocation(
+        sProvince,
+        sDistrict,
+        sSubDistrict,
+        _road,
+        _alley,
+        _addressno,
+        _gps,
+        placeAddress,
+        isPlace,
+      editArrestOther.text,
+    );
+    Navigator.pop(context,itemsLocale);
   }
   Future<bool> onLoadActionLoadDataAddressMaster(int PROVINCE_ID) async {
     Map map = {
@@ -960,7 +748,6 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
           setState(() {
             sSubDistrict = null;
             sDistrict = district;
-            //print("District : "+sDistrict.DISTRICT_ID.toString());
             this.onLoadActionSubDistinctMaster(sDistrict.DISTRICT_ID);
           });
         }
@@ -998,6 +785,13 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     await new ArrestFutureMaster().apiRequestMasProvincegetByCon(map).then((
         onValue) {
       ItemProvince = onValue;
+      ItemProvince.RESPONSE_DATA.forEach((item){
+        if(item.PROVINCE_ID==itemsLocale.PROVINCE.PROVINCE_ID){
+          sProvince = item;
+          onLoadActionDistinctMaster(sProvince.PROVINCE_ID);
+        }
+      });
+
     });
     setState(() {});
     return true;
@@ -1012,14 +806,10 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     await new ArrestFutureMaster().apiRequestMasDistrictgetByCon(map).then((
         onValue) {
       ItemDistrict = onValue;
-      ItemDistrict.RESPONSE_DATA.forEach((district) {
-        if (_distict.trim().endsWith(
-            district.DISTRICT_NAME_TH.trim())) {
-          setState(() {
-            sSubDistrict = null;
-            sDistrict = district;
-            this.onLoadActionSubDistinctMaster(sDistrict.DISTRICT_ID);
-          });
+      ItemDistrict.RESPONSE_DATA.forEach((item){
+        if(item.DISTRICT_ID==itemsLocale.DISTICT.DISTRICT_ID){
+          sDistrict = item;
+          onLoadActionSubDistinctMaster(sDistrict.DISTRICT_ID);
         }
       });
       setState(() {});
@@ -1037,17 +827,14 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     await new ArrestFutureMaster().apiRequestMasSubDistrictgetByCon(map).then((
         onValue) {
       ItemSubDistrict = onValue;
-      if (ItemSubDistrict != null) {
-        ItemSubDistrict.RESPONSE_DATA.forEach((subdistrict) {
-          if (_sub_distinct.trim().endsWith(
-              subdistrict.SUB_DISTRICT_NAME_TH.trim())) {
-            setState(() {
-              sSubDistrict = subdistrict;
-              //print("sSubDistrict : "+sSubDistrict.SUB_DISTRICT_ID.toString());
-            });
-          }
-        });
-      }
+      ItemSubDistrict.RESPONSE_DATA.forEach((item){
+        if(item.SUB_DISTRICT_ID==itemsLocale.SUB_DISTICT.SUB_DISTRICT_ID){
+          sSubDistrict = item;
+        }
+      });
+      editArrestRoad.text = itemsLocale.ROAD!=null?itemsLocale.ROAD.toString():"";
+      editArrestAlley.text = itemsLocale.ALLEY.toString();
+      editArrestHouseNumber.text = itemsLocale.ADDRESS_NO.toString();
     });
     setState(() {});
     return true;

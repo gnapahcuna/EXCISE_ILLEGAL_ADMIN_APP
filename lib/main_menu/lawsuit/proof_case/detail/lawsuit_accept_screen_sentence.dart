@@ -210,7 +210,10 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
     String sentence_date = "";
     String fine_date = "";
     DateTime dt_sentence_date = DateTime.parse(itemMain.JUDGEMENT_DATE);
-    DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);
+    /*DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);*/
+    DateTime dt_fine_date = itemMain.FINE_DATE!=null
+        ?DateTime.parse(itemMain.FINE_DATE)
+        :DateTime.now();
     List splitsSentenceDate = dateFormatDate.format(dt_sentence_date).toString().split(
         " ");
     List splitsFineDate = dateFormatDate.format(dt_fine_date).toString().split(
@@ -252,7 +255,10 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
     String sentence_date = "";
     String fine_date = "";
     DateTime dt_sentence_date = DateTime.parse(itemMain.JUDGEMENT_DATE);
-    DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);
+    /*DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);*/
+    DateTime dt_fine_date = itemMain.FINE_DATE!=null
+        ?DateTime.parse(itemMain.FINE_DATE)
+        :DateTime.now();
     List splitsSentenceDate = dateFormatDate.format(dt_sentence_date).toString().split(
         " ");
     List splitsFineDate = dateFormatDate.format(dt_fine_date).toString().split(
@@ -1406,7 +1412,10 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
     String sentence_date = "";
     String fine_date = "";
     DateTime dt_sentence_date = DateTime.parse(itemMain.JUDGEMENT_DATE);
-    DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);
+    /*DateTime dt_fine_date = DateTime.parse(itemMain.FINE_DATE);*/
+    DateTime dt_fine_date = itemMain.FINE_DATE!=null
+        ?DateTime.parse(itemMain.FINE_DATE)
+        :DateTime.now();
     List splitsSentenceDate = dateFormatDate.format(dt_sentence_date).toString().split(
         " ");
     List splitsFineDate = dateFormatDate.format(dt_fine_date).toString().split(
@@ -1955,15 +1964,15 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        height: 34.0,
+                        //height: 34.0,
                         decoration: BoxDecoration(
                             color: Colors.grey[200],
                             border: Border(
                               top: BorderSide(color: Colors.grey[300], width: 1.0),
-                              bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                              //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
                             )
                         ),
-                        child: Row(
+                        /*child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -1973,7 +1982,7 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
                                 'ILG60_B_02_00_06_00', style: textStylePageName,),
                             )
                           ],
-                        ),
+                        ),*/
                       ),
                       Expanded(
                         child: _onSaved?_buildContent_saved(context):_buildContent(),

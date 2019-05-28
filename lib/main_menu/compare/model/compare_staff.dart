@@ -1,5 +1,7 @@
 class ItemsListCompareStaff {
   final int STAFF_ID;
+  final int COMPARE_ID;
+  final int COMPARE_DETAIL_ID;
   final String STAFF_CODE;
   final int STAFF_REF_ID;
   final String ID_CARD;
@@ -17,6 +19,8 @@ class ItemsListCompareStaff {
 
   ItemsListCompareStaff({
     this.STAFF_ID,
+    this.COMPARE_ID,
+    this.COMPARE_DETAIL_ID,
     this.STAFF_CODE,
     this.STAFF_REF_ID,
     this.ID_CARD,
@@ -36,6 +40,8 @@ class ItemsListCompareStaff {
   factory ItemsListCompareStaff.fromJson(Map<String, dynamic> js) {
     return ItemsListCompareStaff(
         STAFF_ID: js['STAFF_ID'],
+        COMPARE_ID: js['COMPARE_ID'],
+        COMPARE_DETAIL_ID: js['COMPARE_DETAIL_ID'],
         STAFF_CODE: js['STAFF_CODE'],
         STAFF_REF_ID: js['STAFF_REF_ID'],
         ID_CARD: js['ID_CARD'],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype_app_pang/font_family/font_style.dart';
 
 class Background extends StatelessWidget {
   @override
@@ -25,19 +26,165 @@ class BackgroundContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          new Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              WavyHeaderContent(),
-              //WavyFooter()
-            ],
-          ),
-        ],
-      ),
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Colors.white,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                  style: TextStyle(
+                      fontFamily: FontStyles().FontFamily,
+                      color: Colors.grey[100],
+                      fontSize: 18.0),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: new RotationTransition(
+                  turns: new AlwaysStoppedAnimation(-35 / 360),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: 75,
+                        width:  140,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: new AssetImage(
+                                'assets/images/logo_page.png'),
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,),
+                        ),
+                      ),
+                      Container(
+                        height: 75,
+                        width:  140,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: new AssetImage(
+                                'assets/images/logo_page.png'),
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                  style: TextStyle(
+                      fontFamily: FontStyles().FontFamily,
+                      color: Colors.grey[100],
+                      fontSize: 18.0),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      height: 75,
+                      width:  140,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: new AssetImage(
+                              'assets/images/logo_page.png'),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,),
+                      ),
+                    ),
+                    Container(
+                      height: 75,
+                      width:  140,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: new AssetImage(
+                              'assets/images/logo_page.png'),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
+
+            Align(
+              alignment: Alignment.bottomRight,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                  style: TextStyle(
+                      fontFamily: FontStyles().FontFamily,
+                      color: Colors.grey[100],
+                      fontSize: 18.0),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      height: 75,
+                      width:  140,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: new AssetImage(
+                              'assets/images/logo_page.png'),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,),
+                      ),
+                    ),
+                    Container(
+                      height: 75,
+                      width:  140,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: new AssetImage(
+                              'assets/images/logo_page.png'),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: new RotationTransition(
+                turns: new AlwaysStoppedAnimation(-35 / 360),
+                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                  style: TextStyle(
+                      fontFamily: FontStyles().FontFamily,
+                      color: Colors.grey[100],
+                      fontSize: 18.0),
+                ),
+              ),
+            ),
+          ],
+        )
     );
   }
 }

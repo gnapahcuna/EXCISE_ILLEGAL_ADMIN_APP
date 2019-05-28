@@ -1,8 +1,10 @@
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_product.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_notice.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_%20suspect.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_case_information.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_locale.dart';
 
 class ItemsLawsuitArrestMain {
   int ARREST_ID;
@@ -28,7 +30,8 @@ class ItemsLawsuitArrestMain {
   String PENALTY_DESC;
   List<ItemsLawsuitListIndicmentProduct> LawsuitArrestIndictmentProduct;
   List<ItemsLawsuitListIndicmentDetail> LawsuitArrestIndictmentDetail;
-  List LawsuitNotice;
+  List<ItemsListArrestLocale> LawsuitLocale;
+  List<ItemsLawsuitNotice> LawsuitNotice;
 
   ItemsLawsuitArrestMain({
     this.ARREST_ID,
@@ -54,6 +57,7 @@ class ItemsLawsuitArrestMain {
     this.PENALTY_DESC,
     this.LawsuitArrestIndictmentProduct,
     this.LawsuitArrestIndictmentDetail,
+    this.LawsuitLocale,
     this.LawsuitNotice,
   });
 
@@ -82,6 +86,8 @@ class ItemsLawsuitArrestMain {
       PENALTY_DESC: json['PENALTY_DESC'],
       LawsuitArrestIndictmentProduct: List.from(json['LawsuitArrestIndictmentProduct'].map((m) => ItemsLawsuitListIndicmentProduct.fromJson(m))),
       LawsuitArrestIndictmentDetail: List.from(json['LawsuitArrestIndictmentDetail'].map((m) => ItemsLawsuitListIndicmentDetail.fromJson(m))),
+      LawsuitLocale: List.from(json['LawsuitLocale'].map((m) => ItemsListArrestLocale.fromJson(m))),
+      LawsuitNotice: List.from(json['LawsuitNotice'].map((m) => ItemsLawsuitNotice.fromJson(m))),
     );
   }
 }

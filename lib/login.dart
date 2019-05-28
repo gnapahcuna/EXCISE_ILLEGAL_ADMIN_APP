@@ -537,7 +537,7 @@ class _SplashScreenState extends State<LoginScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('เวอร์ชั่น 0.0.4', style: textInputStyleVersion,)
+              Text('เวอร์ชั่น 0.0.5 Admin', style: textInputStyleVersion,)
             ],
           )
       ),

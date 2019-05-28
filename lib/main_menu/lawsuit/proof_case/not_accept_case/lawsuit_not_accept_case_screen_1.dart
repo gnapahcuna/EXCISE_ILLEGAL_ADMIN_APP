@@ -70,6 +70,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
 
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
+  TextStyle textDataTitleStyle = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
   TextStyle textStyleLink = TextStyle(color: Color(0xff4564c2),fontFamily: FontStyles().FontFamily);
@@ -330,6 +331,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
       if(!_onEdited){
         List<Map> LawsuitDetail =[];
         _itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail.forEach((item){
+
           LawsuitDetail.add({
             "LAWSUIT_DETAIL_ID": "",
             "LAWSUIT_ID": "",
@@ -359,7 +361,13 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
             "PAYMENT_PERIOD": "",
             "PAYMENT_PERIOD_DUE": "",
             "PAYMENT_PERIOD_DUE_UNIT": "",
+            "PAYMENT_CHANNEL": "",
+            "PAYMENT_BANK": "",
+            "PAYMENT_REF_NO": "",
+            "PAYMENT_DATE": "",
+            "IS_DISMISS": "",
             "IS_ACTIVE": 1
+
           });
         });
 
@@ -445,6 +453,8 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
           "LawsuitDetail": LawsuitDetail
         };
 
+        print(map.toString());
+
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -457,6 +467,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
         Navigator.pop(context);
       }else{
         List<Map> LawsuitDetail =[];
+
         _itemsLawsuitMain.LawsuitDetail.forEach((item){
           LawsuitDetail.add({
             "LAWSUIT_DETAIL_ID": item.LAWSUIT_DETAIL_ID,
@@ -487,6 +498,11 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
             "PAYMENT_PERIOD": "",
             "PAYMENT_PERIOD_DUE": "",
             "PAYMENT_PERIOD_DUE_UNIT": "",
+            "PAYMENT_CHANNEL": "",
+            "PAYMENT_BANK": "",
+            "PAYMENT_REF_NO": "",
+            "PAYMENT_DATE": "",
+            "IS_DISMISS": "",
             "IS_ACTIVE": 1
           });
         });
@@ -574,6 +590,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
           });
         }
 
+
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -634,7 +651,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
     Map map_indic={
       "INDICTMENT_ID" : _itemsLawsuitArrestMain.INDICTMENT_ID,
     };
-    await new LawsuitFuture().apiRequestLawsuiltArrestIndictmentupdIndictmentComplete(map_indic).then((onValue) {
+    /*await new LawsuitFuture().apiRequestLawsuiltArrestIndictmentupdIndictmentComplete(map_indic).then((onValue) {
       print("Update IndictmentComplete : "+onValue.Msg);
     });
     Map map_arrest={
@@ -642,7 +659,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
     };
     await new LawsuitFuture().apiRequestLawsuiltArrestIndictmentupdArrestComplete(map_arrest).then((onValue) {
       print("Update ArrestComplete : "+onValue.Msg);
-    });
+    });*/
     if(LAWSUIT_ID!=null){
       Map map = {
         "LAWSUIT_ID": LAWSUIT_ID
@@ -1090,7 +1107,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
           padding: paddingData,
           child: Text(
             _itemsLawsuitArrestMain.ARREST_CODE,
-            style: textStyleData,),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -1198,10 +1215,15 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
     );
   }
   buildExpanded() {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double Width = (size.width * 80) / 100;
+    String address = "error";
+    /*_itemsLawsuitArrestMain.LawsuitLocale.forEach((item) {
+      address = item.ADDRESS_NO+(item.ALLEY==null?"":" ซอย "+item.ALLEY)
+          +(item.ROAD==null?"":" ถนน "+item.ROAD)
+          + " อำเภอ/เขต " +  item.DISTRICT_NAME_TH
+          + " ตำบล/แขวง " +
+          item.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+          item.PROVINCE_NAME_TH;
+    });*/
 
     String arrest_date = "";
     DateTime dt_occourrence = DateTime.parse(_itemsLawsuitArrestMain.OCCURRENCE_DATE);
@@ -1223,7 +1245,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
           padding: paddingData,
           child: Text(
             _itemsLawsuitArrestMain.ARREST_CODE,
-            style: textStyleData,),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -1332,7 +1354,7 @@ class _FragmentState extends State<LawsuitNotAcceptCaseMainScreenFragment>  with
         Padding(
           padding: paddingData,
           child: Text(
-            _itemsLawsuitArrestMain.ARREST_OFFICE_NAME,
+            address,
             style: textStyleData,),
         ),
         /*Padding(

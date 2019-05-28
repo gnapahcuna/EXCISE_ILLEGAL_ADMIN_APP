@@ -43,6 +43,7 @@ class ItemsListArrestLawbreaker {
   String ID_CARD;
   String PASSPORT_NO;
   String COMPANY_REGISTRATION_NO;
+  int TITLE_ID;
   String TITLE_NAME_TH;
   String TITLE_NAME_EN;
   String TITLE_SHORT_NAME_TH;
@@ -67,6 +68,7 @@ class ItemsListArrestLawbreaker {
     this.ID_CARD,
     this.PASSPORT_NO,
     this.COMPANY_REGISTRATION_NO,
+    this.TITLE_ID,
     this.TITLE_NAME_TH,
     this.TITLE_NAME_EN,
     this.TITLE_SHORT_NAME_TH,
@@ -85,28 +87,29 @@ class ItemsListArrestLawbreaker {
 
   factory ItemsListArrestLawbreaker.fromJson(Map<String, dynamic> js) {
     return ItemsListArrestLawbreaker(
-        LAWBREAKER_ID: js['LAWBREAKER_ID'],
-        ARREST_ID: js['ARREST_ID'],
-        PERSON_ID: js['PERSON_ID'],
-        PERSON_TYPE: js['PERSON_TYPE'],
-        ENTITY_TYPE: js['ENTITY_TYPE'],
-        ID_CARD: js['ID_CARD'],
-        PASSPORT_NO: js['PASSPORT_NO'],
-        COMPANY_REGISTRATION_NO: js['COMPANY_REGISTRATION_NO'],
-        TITLE_NAME_TH: js['TITLE_NAME_TH'],
-        TITLE_NAME_EN: js['TITLE_NAME_EN'],
-        TITLE_SHORT_NAME_TH: js['TITLE_SHORT_NAME_TH'],
-        TITLE_SHORT_NAME_EN: js['TITLE_SHORT_NAME_EN'],
-        FIRST_NAME: js['FIRST_NAME'],
-        MIDDLE_NAME: js['MIDDLE_NAME'],
-        LAST_NAME: js['LAST_NAME'],
-        OTHER_NAME: js['OTHER_NAME'],
-        MISTREAT_NO: js['MISTREAT_NO'],
-        AGE: js['AGE'],
-        //MAS_PERSON_RELATIONSHIP:List<ItemsListArrestPersonRelationShip>.from(js['MAS_PERSON_RELATIONSHIP'].map((m) => ItemsListArrestPersonRelationShip.fromJson(m))),
-        IsCheck: false,
-        IsCheckOffence: false,
-        INDEX: null,
+      LAWBREAKER_ID: js['LAWBREAKER_ID'],
+      ARREST_ID: js['ARREST_ID'],
+      PERSON_ID: js['PERSON_ID'],
+      PERSON_TYPE: js['PERSON_TYPE'],
+      ENTITY_TYPE: js['ENTITY_TYPE'],
+      ID_CARD: js['ID_CARD'],
+      PASSPORT_NO: js['PASSPORT_NO'],
+      COMPANY_REGISTRATION_NO: js['COMPANY_REGISTRATION_NO'],
+      TITLE_ID: js['TITLE_ID'],
+      TITLE_NAME_TH: js['TITLE_NAME_TH'],
+      TITLE_NAME_EN: js['TITLE_NAME_EN'],
+      TITLE_SHORT_NAME_TH: js['TITLE_SHORT_NAME_TH'],
+      TITLE_SHORT_NAME_EN: js['TITLE_SHORT_NAME_EN'],
+      FIRST_NAME: js['FIRST_NAME'],
+      MIDDLE_NAME: js['MIDDLE_NAME'],
+      LAST_NAME: js['LAST_NAME'],
+      OTHER_NAME: js['OTHER_NAME'],
+      MISTREAT_NO: js['MISTREAT_NO'],
+      AGE: js['AGE'],
+      //MAS_PERSON_RELATIONSHIP:List<ItemsListArrestPersonRelationShip>.from(js['MAS_PERSON_RELATIONSHIP'].map((m) => ItemsListArrestPersonRelationShip.fromJson(m))),
+      IsCheck: false,
+      IsCheckOffence: false,
+      INDEX: null,
     );
   }
 }

@@ -227,4 +227,22 @@ class ArrestFutureMaster{
       print('Something went wrong. \nResponse Code : ${response.statusCode}');
     }
   }
+
+
+  Future<ItemsMasterProductMappingResponse> apiRequestMasProductMappinginsAll(Map jsonMap) async {
+    //encode Map to JSON
+    var body = json.encode(jsonMap);
+    final response = await http.post(
+      serv
+          .Server()
+          .IPAddressMaster + "/MasProductMappinginsAll",
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      return ItemsMasterProductMappingResponse.fromJson(json.decode(response.body));
+    } else {
+      print('Something went wrong. \nResponse Code : ${response.statusCode}');
+    }
+  }
 }

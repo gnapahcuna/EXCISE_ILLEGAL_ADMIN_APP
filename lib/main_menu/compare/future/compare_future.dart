@@ -65,7 +65,7 @@ class CompareFuture{
     }
   }
 
-  Future<ItemsCompareArrestMain> apiRequestCompareArrestgetByIndictmentID(Map jsonMap) async {
+  Future<List<ItemsCompareArrestMain>> apiRequestCompareArrestgetByIndictmentID(Map jsonMap) async {
     //encode Map to JSON
     var body = json.encode(jsonMap);
     final response = await http.post(
@@ -76,8 +76,10 @@ class CompareFuture{
       body: body,
     );
     if (response.statusCode == 200) {
-      return ItemsCompareArrestMain.fromJson(json.decode(response.body));
-
+      List responseJson = json.decode(response.body);
+      return responseJson.map((m) => new ItemsCompareArrestMain.fromJson(m))
+          .toList();
+      //return ItemsCompareArrestMain.fromJson(json.decode(response.body));
     } else {
       print('Something went wrong. \nResponse Code : ${response.statusCode}');
     }

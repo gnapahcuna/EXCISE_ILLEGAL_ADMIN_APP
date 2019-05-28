@@ -4,8 +4,16 @@ class ItemsCompareList {
   int INDICTMENT_ID;
   String COMPARE_NO;
   String COMPARE_NO_YEAR;
+  String COMPARE_TITLE_NAME_TH;
+  String COMPARE_TITLE_SHORT_NAME_TH;
+  String COMPARE_FIRST_NAME;
+  String COMPARE_LAST_NAME;
   int LAWSUIT_NO;
   String LAWSUIT_NO_YEAR;
+  String LAWSUIT_TITLE_NAME_TH;
+  String LAWSUIT_TITLE_SHORT_NAME_TH;
+  String LAWSUIT_FIRST_NAME;
+  String LAWSUIT_LAST_NAME;
 
   ItemsCompareList({
     this.COMPARE_ID,
@@ -15,6 +23,14 @@ class ItemsCompareList {
     this.COMPARE_NO_YEAR,
     this.LAWSUIT_NO,
     this.LAWSUIT_NO_YEAR,
+    this.COMPARE_TITLE_NAME_TH,
+    this.COMPARE_TITLE_SHORT_NAME_TH,
+    this.COMPARE_FIRST_NAME,
+    this.COMPARE_LAST_NAME,
+    this.LAWSUIT_TITLE_NAME_TH,
+    this.LAWSUIT_TITLE_SHORT_NAME_TH,
+    this.LAWSUIT_FIRST_NAME,
+    this.LAWSUIT_LAST_NAME,
   });
 
   factory ItemsCompareList.fromJson(Map<String, dynamic> json) {
@@ -26,6 +42,14 @@ class ItemsCompareList {
       COMPARE_NO_YEAR: json['COMPARE_NO_YEAR'],
       LAWSUIT_NO: json['LAWSUIT_NO'],
       LAWSUIT_NO_YEAR: json['LAWSUIT_NO_YEAR'],
+      COMPARE_TITLE_NAME_TH: json['COMPARE_TITLE_NAME_TH'],
+      COMPARE_TITLE_SHORT_NAME_TH: json['COMPARE_TITLE_SHORT_NAME_TH'],
+      COMPARE_FIRST_NAME: json['COMPARE_FIRST_NAME'],
+      COMPARE_LAST_NAME: json['COMPARE_LAST_NAME'],
+      LAWSUIT_TITLE_NAME_TH: json['LAWSUIT_TITLE_NAME_TH'],
+      LAWSUIT_TITLE_SHORT_NAME_TH: json['LAWSUIT_TITLE_SHORT_NAME_TH'],
+      LAWSUIT_FIRST_NAME: json['LAWSUIT_FIRST_NAME'],
+      LAWSUIT_LAST_NAME: json['LAWSUIT_LAST_NAME'],
     );
   }
 }

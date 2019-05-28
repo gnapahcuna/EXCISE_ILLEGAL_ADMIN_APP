@@ -40,7 +40,6 @@ class ItemsListLawsuitDetail {
     this.COURT_ID,
     this.LAWSUIT_TYPE,
     this.LAWSUIT_END,
-
     this.COURT_NAME,
     this.UNDECIDE_NO_1,
     this.UNDECIDE_NO_YEAR_1,

@@ -54,3 +54,23 @@ class ItemsArrestResponseLawsuitLawsuitDetail {
     );
   }
 }
+
+class ItemsArrestResponseLawsuitMistreatNoupdByCon {
+  final String IsSuccess;
+  final String Msg;
+  final int MISTREAT_NO;
+
+  ItemsArrestResponseLawsuitMistreatNoupdByCon({
+    this.IsSuccess,
+    this.Msg,
+    this.MISTREAT_NO,
+  });
+
+  factory ItemsArrestResponseLawsuitMistreatNoupdByCon.fromJson(Map<String, dynamic> json) {
+    return ItemsArrestResponseLawsuitMistreatNoupdByCon(
+      IsSuccess: json['IsSuccess'],
+      Msg: json['Msg'],
+      MISTREAT_NO: json['MISTREAT_NO'],
+    );
+  }
+}

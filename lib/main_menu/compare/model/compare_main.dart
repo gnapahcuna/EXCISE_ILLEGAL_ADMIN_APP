@@ -13,15 +13,12 @@ class ItemsCompareMain {
   final double REWARD_RATE;
   final String OFFICE_CODE;
   final String OFFICE_NAME;
-  final String COMPARE_NO;
+  final int COMPARE_NO;
   final String COMPARE_NO_YEAR;
   final String COMPARE_DATE;
   final int IS_OUTSIDE;
   final int IS_ACTIVE;
   final List<ItemsCompareMapping> CompareMapping;
-  final List<ItemsCompareDetail> CompareDetail;
-  final List<ItemsCompareDetailPayment> CompareDetailPayment;
-  final List<ItemsCompareDetailFine> CompareDetailFine;
   final List<ItemsListCompareStaff> CompareStaff;
 
   ItemsCompareMain({
@@ -39,9 +36,6 @@ class ItemsCompareMain {
     this.IS_OUTSIDE,
     this.IS_ACTIVE,
     this.CompareMapping,
-    this.CompareDetail,
-    this.CompareDetailPayment,
-    this.CompareDetailFine,
     this.CompareStaff,});
 
   factory ItemsCompareMain.fromJson(Map<String, dynamic> json) {
@@ -60,9 +54,6 @@ class ItemsCompareMain {
       IS_OUTSIDE: json['IS_OUTSIDE'],
       IS_ACTIVE: json['IS_ACTIVE'],
       CompareMapping: List.from(json['CompareMapping'].map((m) => ItemsCompareMapping.fromJson(m))),
-      CompareDetail: List.from(json['CompareDetail'].map((m) => ItemsCompareDetail.fromJson(m))),
-      CompareDetailPayment: List.from(json['CompareDetailPayment'].map((m) => ItemsCompareDetailPayment.fromJson(m))),
-      CompareDetailFine: List.from(json['CompareDetailFine'].map((m) => ItemsCompareDetailFine.fromJson(m))),
       CompareStaff: List.from(json['CompareStaff'].map((m) => ItemsListCompareStaff.fromJson(m))),
     );
   }

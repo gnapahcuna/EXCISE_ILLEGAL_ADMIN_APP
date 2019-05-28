@@ -1,3 +1,4 @@
+import 'package:prototype_app_pang/main_menu/compare/model/compare_detail.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_indicment_detail.dart';
 
 class ItemsCompareMapping {
@@ -7,6 +8,7 @@ class ItemsCompareMapping {
   final int PAST_LAWSUIT_ID;
   final int IS_EVER_WRONG;
   final int IS_ACTIVE;
+  final List<ItemsCompareDetail> CompareDetail;
   final List<ItemsCompareListIndicmentDetail> CompareArrestIndictmentDetail;
 
   ItemsCompareMapping({
@@ -16,6 +18,7 @@ class ItemsCompareMapping {
     this.PAST_LAWSUIT_ID,
     this.IS_EVER_WRONG,
     this.IS_ACTIVE,
+    this.CompareDetail,
     this.CompareArrestIndictmentDetail,
   });
 
@@ -27,6 +30,7 @@ class ItemsCompareMapping {
       PAST_LAWSUIT_ID: json['PAST_LAWSUIT_ID'],
       IS_EVER_WRONG: json['IS_EVER_WRONG'],
       IS_ACTIVE: json['IS_ACTIVE'],
+      CompareDetail: List.from(json['CompareDetail'].map((m) => ItemsCompareDetail.fromJson(m))),
       CompareArrestIndictmentDetail: List.from(json['CompareArrestIndictmentDetail'].map((m) => ItemsCompareListIndicmentDetail.fromJson(m))),
     );
   }

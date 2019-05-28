@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:location/location.dart';
 import 'package:geocoder/model.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +21,12 @@ import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_2.dar
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_lawbreaker.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_location.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_main.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_distinct.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_province.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_subdistinct.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map_custom.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_2/tab_screen_arrest_2_search.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_3/tab_screen_arrest_3_search.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_4/tab_screen_arrest_4_add.dart';
@@ -126,6 +131,8 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
 
   bool TESTIMONY=false;
 
+  bool IsPlace = false;
+
   List<Constants> constants = const <Constants>[
     const Constants(text: 'แก้ไข', icon: Icons.mode_edit),
     const Constants(text: 'ลบ', icon: Icons.delete_outline),
@@ -207,7 +214,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
           "INDICTMENT_ID": "",
           "ARREST_ID": onValue.ARREST_ID,
           "GUILTBASE_ID": item.GUILTBASE_ID,
-          "FINE_ESTIMATE": "20000.00",
+          "FINE_ESTIMATE": "",
           "IS_LAWSUIT_COMPLETE": 0,
           "IS_ACTIVE": 1,
           "ArrestIndictmentDetail": ArrestLawbreaker,
@@ -501,6 +508,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
     return true;
   }*/
 
+  Location _locationService = new Location();
   @override
   void initState() {
     super.initState();
@@ -552,6 +560,8 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
       _itemsDataTab3.add(widget.ItemsPerson);
 
       editArrestNumber.text = "TN"+widget.ARREST_CODE;
+
+      initPlatformState();
       /*onChanged = () {
         setState(() {
           _currentIndex = this.tabController.index;
@@ -724,6 +734,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
       "ADDRESS_TYPE": 4,
       "ADDRESS_STATUS": 0,
       "POLICE_STATION": "",
+      "LOCATION": "",
       "IS_ACTIVE": 1
     };
 
@@ -733,9 +744,9 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         "LAWBREAKER_ID": "",
         "ARREST_ID": "",
         "PERSON_ID": item.PERSON_ID,
-        "TITLE_ID": "",
+        "TITLE_ID": item.TITLE_ID,
         "PERSON_TYPE": item.PERSON_TYPE,
-        "ENTITY_TYPE": 0,
+        "ENTITY_TYPE": item.ENTITY_TYPE,
         "TITLE_NAME_TH": item.TITLE_NAME_TH,
         "TITLE_NAME_EN": item.TITLE_NAME_EN,
         "TITLE_SHORT_NAME_TH": item.TITLE_SHORT_NAME_TH,
@@ -744,6 +755,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         "MIDDLE_NAME": item.MIDDLE_NAME,
         "LAST_NAME": item.LAST_NAME,
         "OTHER_NAME": item.OTHER_NAME,
+        "COMPANY_NAME": "",
         "COMPANY_REGISTRATION_NO": "",
         "EXCISE_REGISTRATION_NO": "",
         "ID_CARD": item.ID_CARD,
@@ -1052,8 +1064,8 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         });
         String address="";
         _arrestMain.ArrestLocale.forEach((item){
-          address = item.ADDRESS_NO+" ซอย "+item.ALLEY
-              +" ถนน "+item.ROAD
+          address = item.ADDRESS_NO+(item.ALLEY!=null?(" ซอย "+item.ALLEY):"")
+              +(item.ROAD!=null?(" ถนน "+item.ROAD):"")
               + " อำเภอ/เขต " +  item.DISTRICT_NAME_TH
               + " ตำบล/แขวง " +
               item.SUB_DISTRICT_NAME_TH + " จังหวัด " +
@@ -1181,6 +1193,22 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
     editArrestPlace.clear();
   }
 
+  String _placeName = "",
+      _addressno = "",
+      _province = "",
+      _distict = "",
+      _sub_distinct = "",
+      _alley = "",
+      _gps = "",
+      _road="";
+  ItemsMasterProvinceResponse ItemProvince;
+  ItemsMasterDistictResponse ItemDistrict;
+  ItemsMasterSubDistictResponse ItemSubDistrict;
+
+  ItemsListSubDistict sSubDistrict;
+  ItemsListDistict sDistrict;
+  ItemsListProvince sProvince;
+
   void getPlaceAddress(latitude, longitude) async {
     final coordinates = new Coordinates(latitude, longitude);
     var addresses = await Geocoder.local.findAddressesFromCoordinates(
@@ -1188,7 +1216,34 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
 
     var place = addresses.first;
     placeAddress = place.addressLine;
-    editArrestPlace.text = placeAddress;
+
+    _placeName = place.featureName + " " + place.thoroughfare;
+    _addressno = place.subThoroughfare;
+    _province = place.adminArea;
+    _gps = place.coordinates.latitude.toString() + "," +
+        coordinates.longitude.toString();
+
+    placeAddress = place.addressLine;
+
+    if (place.subLocality.contains("เขต")) {
+      List splits = place.subLocality.split(" ");
+      _distict = splits[1];
+    }
+    List addressLine = place.addressLine.split(" ");
+    for (int i = 0; i < addressLine.length; i++) {
+      if (addressLine[i].toString().endsWith("ซอย")) {
+        _alley = addressLine[i + 1];
+      } else if (addressLine[i].toString().endsWith("ถนน")) {
+        _road = addressLine[i + 1];
+      } else if (addressLine[i].toString().endsWith("แขวง")) {
+        _sub_distinct = addressLine[i + 1];
+      }
+    }
+
+    _onSelectCountry(1);
+
+
+    setState(() {});
   }
 
   initPlatformState() async {
@@ -1204,13 +1259,11 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         error =
         'Permission denied - please ask the user to enable it from the app settings';
       }
-
       location = null;
     }
     setState(() {
-      print("error :" + error);
       _startLocation = location;
-      //getPlaceAddress(location.latitude,location.longitude);
+      getPlaceAddress(location.latitude,location.longitude);
     });
   }
 
@@ -1228,30 +1281,36 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
   _navigateMap(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TabScreenArrest1Map(itemsLocale: _itemsLocale,)),
+      MaterialPageRoute(builder: (context) => TabScreenArrest1MapCustom(itemsLocale: _itemsLocale,)),
     );
     //_itemsLocale = result;
     //String address = _itemsLocale.ADDRESS_NO+""+_itemsLocale.ROAD;
-    if(_onEdited){
-      list_update_location = result;
-      String address = list_update_location.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
-          +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)
-          + " อำเภอ/เขต " +  list_update_location.DISTICT.DISTRICT_NAME_TH
-          + " ตำบล/แขวง " +
-          list_update_location.SUB_DISTICT.SUB_DISTRICT_NAME_TH + " จังหวัด " +
-          list_update_location.PROVINCE.PROVINCE_NAME_TH;
-      editArrestLocation.text = address;
-    }else{
-      _itemsLocale =result;
-      String address = _itemsLocale.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
-          +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)
-          + " อำเภอ/เขต " +  _itemsLocale.DISTICT.DISTRICT_NAME_TH
-          + " ตำบล/แขวง " +
-          _itemsLocale.SUB_DISTICT.SUB_DISTRICT_NAME_TH + " จังหวัด " +
-          _itemsLocale.PROVINCE.PROVINCE_NAME_TH;
-      editArrestLocation.text = address;
+    if(result.toString()!="Back"){
+      if(_onEdited){
+        list_update_location = result;
+        String address = list_update_location.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
+            +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)
+            + " อำเภอ/เขต " +  list_update_location.DISTICT.DISTRICT_NAME_TH
+            + " ตำบล/แขวง " +
+            list_update_location.SUB_DISTICT.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+            list_update_location.PROVINCE.PROVINCE_NAME_TH+" "+
+            list_update_location.Other;
+        editArrestLocation.text = address;
+      }else{
+        _itemsLocale =result;
+        String address = _itemsLocale.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
+            +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)
+            + " อำเภอ/เขต " +  _itemsLocale.DISTICT.DISTRICT_NAME_TH
+            + " ตำบล/แขวง " +
+            _itemsLocale.SUB_DISTICT.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+            _itemsLocale.PROVINCE.PROVINCE_NAME_TH+" "+
+            _itemsLocale.Other;
+        editArrestLocation.text = address;
+        if(_itemsLocale.IsPlace){
+          editArrestPlace.text = address;
+        }
+      }
     }
-
   }
 
   //test async
@@ -1440,9 +1499,9 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
               "LAWBREAKER_ID": "",
               "ARREST_ID": _arrestMain.ARREST_ID,
               "PERSON_ID": f.PERSON_ID,
-              "TITLE_ID": "",
+              "TITLE_ID": f.TITLE_ID,
               "PERSON_TYPE": f.PERSON_TYPE,
-              "ENTITY_TYPE": 0,
+              "ENTITY_TYPE": f.ENTITY_TYPE,
               "TITLE_NAME_TH": f.TITLE_NAME_TH,
               "TITLE_NAME_EN": f.TITLE_NAME_EN,
               "TITLE_SHORT_NAME_TH": f.TITLE_SHORT_NAME_TH,
@@ -1451,6 +1510,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
               "MIDDLE_NAME": f.MIDDLE_NAME,
               "LAST_NAME": f.LAST_NAME,
               "OTHER_NAME": f.OTHER_NAME,
+              "COMPANY_NAME": "",
               "COMPANY_REGISTRATION_NO": "",
               "EXCISE_REGISTRATION_NO": "",
               "ID_CARD": f.ID_CARD,
@@ -1840,6 +1900,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             "ADDRESS_TYPE": 4,
             "ADDRESS_STATUS": 0,
             "POLICE_STATION": "",
+            "LOCATION": "",
             "IS_ACTIVE": 1
           };
         } else {
@@ -1860,6 +1921,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             "ADDRESS_TYPE": 4,
             "ADDRESS_STATUS": 0,
             "POLICE_STATION": "",
+            "LOCATION": "",
             "IS_ACTIVE": 1
           };
         }
@@ -2487,10 +2549,13 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
 
 
       return _arrestMain == null ? Container() : Container(
+        height: MediaQuery
+            .of(context)
+            .size.height,
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border(
-              bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
             )
         ),
         padding: EdgeInsets.only(
@@ -2932,9 +2997,9 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                                   child: Padding(
                                     padding: paddingInputBox,
                                     child: Text(
-                                      "สังกัด : " + _itemsDataTab3[index].OPERATION_OFFICE_SHORT_NAME!=null
+                                      "สังกัด : " + (_itemsDataTab3[index].OPERATION_OFFICE_SHORT_NAME!=null
                                           ?_itemsDataTab3[index].OPERATION_OFFICE_SHORT_NAME
-                                          :_itemsDataTab3[index].OPERATION_OFFICE_NAME,
+                                          :_itemsDataTab3[index].OPERATION_OFFICE_NAME),
                                           //_itemsDataTab3[index].OPERATION_OFFICE_NAME,
                                       style: textDataStyleSub,),
                                   ),
@@ -3507,7 +3572,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
   Future<bool> onLoadActionProductGroupMaster() async {
     Map map= {
       "TEXT_SEARCH": "",
-      "PRODUCT_GROUP_ID": 1
+      "PRODUCT_GROUP_ID": ""
     };
     await new ArrestFutureMaster().apiRequestMasProductGroupgetByCon(map).then((onValue) {
       itemsProductGroup = onValue;
@@ -5563,4 +5628,98 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
     );
   }
 //************************end_tab_8*****************************
+
+  void _onSelectCountry(int COUNTRY_ID) async {
+    await onLoadActionProvinceMaster(COUNTRY_ID);
+  }
+  Future<bool> onLoadActionProvinceMaster(int COUNTRY_ID) async {
+    Map map = {
+      "TEXT_SEARCH": "",
+      "COUNTRY_ID": COUNTRY_ID
+    };
+    await new ArrestFutureMaster().apiRequestMasProvincegetByCon(map).then((
+        onValue) {
+      ItemProvince = onValue;
+      ItemProvince.RESPONSE_DATA.forEach((province) {
+        if (_province.trim().endsWith(
+            province.PROVINCE_NAME_TH.trim())) {
+          sProvince = province;
+          onLoadActionDistinctMaster(sProvince.PROVINCE_ID);
+        }
+      });
+    });
+    setState(() {});
+    return true;
+  }
+
+  Future<bool> onLoadActionDistinctMaster(int PROVINCE_ID) async {
+    Map map = {
+      "TEXT_SEARCH": "",
+      "DISTRICT_ID": "",
+      "PROVINCE_ID": PROVINCE_ID
+    };
+    await new ArrestFutureMaster().apiRequestMasDistrictgetByCon(map).then((
+        onValue) {
+      ItemDistrict = onValue;
+      ItemDistrict.RESPONSE_DATA.forEach((district) {
+        if (_distict.trim().endsWith(
+            district.DISTRICT_NAME_TH.trim())) {
+          setState(() {
+            sSubDistrict = null;
+            sDistrict = district;
+            this.onLoadActionSubDistinctMaster(sDistrict.DISTRICT_ID);
+          });
+        }
+      });
+      setState(() {});
+    });
+    setState(() {});
+    return true;
+  }
+
+  Future<bool> onLoadActionSubDistinctMaster(int DISTRICT_ID) async {
+    Map map = {
+      "TEXT_SEARCH": "",
+      "SUB_DISTRICT_ID": "",
+      "DISTRICT_ID": DISTRICT_ID
+    };
+    await new ArrestFutureMaster().apiRequestMasSubDistrictgetByCon(map).then((
+        onValue) {
+      ItemSubDistrict = onValue;
+      if (ItemSubDistrict != null) {
+        ItemSubDistrict.RESPONSE_DATA.forEach((subdistrict) {
+          if (_sub_distinct.trim().endsWith(
+              subdistrict.SUB_DISTRICT_NAME_TH.trim())) {
+            setState(() {
+              sSubDistrict = subdistrict;
+
+
+              //finish
+              _itemsLocale = new ItemsListArrestLocation(
+                  sProvince,
+                  sDistrict,
+                  sSubDistrict,
+                  _road,
+                  _alley,
+                  _addressno,
+                  _gps,
+                  placeAddress,
+                false,
+                ""
+              );
+              String address = _itemsLocale.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
+                  +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)
+                  + " อำเภอ/เขต " +  _itemsLocale.DISTICT.DISTRICT_NAME_TH
+                  + " ตำบล/แขวง " +
+                  _itemsLocale.SUB_DISTICT.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+                  _itemsLocale.PROVINCE.PROVINCE_NAME_TH;
+              editArrestLocation.text = address;
+            });
+          }
+        });
+      }
+    });
+    setState(() {});
+    return true;
+  }
 }

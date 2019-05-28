@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_5.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_6_controller.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_create.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_created.dart';
 
 class TabScreenArrest5Search extends StatefulWidget {
   bool IsUpdate;
@@ -233,7 +233,7 @@ class _TabScreenArrest5SearchState extends State<TabScreenArrest5Search> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => TabScreenArrest5Create(ItemsData: _itemsData,)),
+          builder: (context) => TabScreenArrest5Created(ItemsData: _itemsData,)),
     );
     if (result.toString() != "back") {
       _itemsData = result;

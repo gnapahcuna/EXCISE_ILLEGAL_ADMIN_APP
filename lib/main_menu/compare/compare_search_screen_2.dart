@@ -7,6 +7,9 @@ import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_select_evidence_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/delivery_book_select_evidence_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/model/evidence.dart';
+import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
+import 'package:prototype_app_pang/main_menu/compare/lawsuit_search_result_screen_2.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_list.dart';
 import 'package:prototype_app_pang/main_menu/destroy/select_book_select_evidence_screen.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
@@ -15,28 +18,30 @@ import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 import 'package:prototype_app_pang/picker/date_picker_lawsuit_search.dart';
 
-class LawsuitMainScreenFragmentSearch2 extends StatefulWidget {
+class CompareMainScreenFragmentSearch2 extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
-  LawsuitMainScreenFragmentSearch2({
+  CompareMainScreenFragmentSearch2({
     Key key,
     @required this.ItemsPerson,
   }) : super(key: key);
   @override
   _FragmentState createState() => new _FragmentState();
 }
-class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
+class _FragmentState extends State<CompareMainScreenFragmentSearch2> {
 
   final FocusNode myFocusNodeDocNumber = FocusNode();
   final FocusNode myFocusNodeLawsuitNumber = FocusNode();
-  final FocusNode myFocusNodeLawsuitPerson= FocusNode();
-  final FocusNode myFocusNodeLawsuitDateStart= FocusNode();
-  final FocusNode myFocusNodeLawsuitDateEnd= FocusNode();
+  final FocusNode myFocusNodeComparePerson= FocusNode();
+  final FocusNode myFocusNodeCompareDateStart= FocusNode();
+  final FocusNode myFocusNodeCompareDateEnd= FocusNode();
+  final FocusNode myFocusNodeProveNumber= FocusNode();
 
   TextEditingController editDocNumber = new TextEditingController();
   TextEditingController editLawsuitNumber = new TextEditingController();
-  TextEditingController editLawsuitPerson = new TextEditingController();
-  TextEditingController editLawsuitDateStart = new TextEditingController();
-  TextEditingController editLawsuitDateEnd = new TextEditingController();
+  TextEditingController editComparePerson = new TextEditingController();
+  TextEditingController editCompareDateStart = new TextEditingController();
+  TextEditingController editCompareDateEnd = new TextEditingController();
+  TextEditingController editProveNumber = new TextEditingController();
 
   String _currentDateLawsuitStart, _currentDateLawsuitEnd;
   DateTime _dtDateLawsuitStart, _dtDateLawsuitEnd;
@@ -44,12 +49,12 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
 
   DateTime _dtMaxDate;
 
-  bool IsLawsuitType1=true;
-  bool IsLawsuitType2=false;
-  bool IsLawsuitComplete=true;
-  bool IsLawsuitNonComplete=false;
+  bool IsCompareType1=true;
+  bool IsCompareType2=false;
+  bool IsCompareComplete=true;
+  bool IsCompareNonComplete=false;
 
-  List<ItemsLawsuitList> _searchResult = [];
+  List<ItemsCompareList> _searchResult = [];
 
   @override
   void initState() {
@@ -86,13 +91,14 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                 Navigator.pop(mContext);
                 editDocNumber.clear();
                 editLawsuitNumber.clear();
-                editLawsuitDateStart.clear();
-                editLawsuitDateEnd.clear();
-                editLawsuitPerson.clear();
-                IsLawsuitType1=true;
-                IsLawsuitType2=false;
-                IsLawsuitComplete=true;
-                IsLawsuitNonComplete=false;
+                editCompareDateStart.clear();
+                editCompareDateEnd.clear();
+                editComparePerson.clear();
+                editProveNumber.clear();
+                IsCompareType1=true;
+                IsCompareType2=false;
+                IsCompareComplete=true;
+                IsCompareNonComplete=false;
               },
               child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
         ]
@@ -109,7 +115,7 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
   }
   //on show dialog
   Future<bool> onLoadAction(Map map) async {
-    await new LawsuitFuture().apiRequestLawsuiltListgetByConAdv(map).then((onValue) {
+    await new CompareFuture().apiRequestCompareListgetByConAdv(map).then((onValue) {
       _searchResult = onValue;
       print(onValue.length);
     });
@@ -134,7 +140,7 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
     }else{
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LawsuitMainScreenFragmentSearchResult(
+        MaterialPageRoute(builder: (context) => CompareMainScreenFragmentSearchResult(
           ItemsPerson: widget.ItemsPerson,
           ItemSearch: _searchResult,
         )),
@@ -148,9 +154,10 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
     super.dispose();
     editDocNumber.dispose();
     editLawsuitNumber.dispose();
-    editLawsuitPerson.dispose();
-    editLawsuitDateStart.dispose();
-    editLawsuitDateEnd.dispose();
+    editComparePerson.dispose();
+    editCompareDateStart.dispose();
+    editCompareDateEnd.dispose();
+    editProveNumber.dispose();
   }
 
   Widget _buildContent(BuildContext context) {
@@ -195,6 +202,13 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                             child: MaterialButton(
                               onPressed: () {
                                 Map map = {
+                                  "COMPARE_NO": "",
+                                  "COMPARE_NO_YEAR": "",
+                                  "COMPARE_DATE_FROM": editCompareDateStart.text.isEmpty?"":_dtDateLawsuitStart.toString(),
+                                  "COMPARE_DATE_TO": editCompareDateEnd.text.isEmpty?"":_dtDateLawsuitEnd.toString(),
+                                  "COMPARE_NAME": editComparePerson.text,
+                                  "COMPARE_OFFICE_NAME": "",
+                                  "COMPARE_IS_OUTSIDE": IsCompareType1?1:0,
                                   "ARREST_CODE": editDocNumber.text,
                                   "OCCURRENCE_DATE_FROM": "",
                                   "OCCURRENCE_DATE_TO": "",
@@ -202,17 +216,22 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                                   "ARREST_OFFICE_NAME": "",
                                   "SUBSECTION_NAME": "",
                                   "GUILTBASE_NAME": "",
+                                  "LAWSUIT_IS_OUTSIDE": "",
                                   "LAWSUIT_NO": editLawsuitNumber.text,
                                   "LAWSUIT_NO_YEAR": "",
-                                  "IS_OUTSIDE": IsLawsuitType1?1:0,
-                                  "LAWSUILT_DATE_FROM": editLawsuitDateStart.text.isEmpty?"":_dtDateLawsuitStart.toString(),
-                                  "LAWSUILT_DATE_TO": editLawsuitDateEnd.text.isEmpty?"":_dtDateLawsuitEnd.toString(),
-                                  "LAWSUILT_OFFICE_NAME": "",
-                                  "LAWSUILT_NAME": editLawsuitPerson.text,
-                                  "IS_LAWSUIT_COMPLETE": IsLawsuitComplete?1:0,
+                                  "LAWSUIT_DATE_FROM": "",
+                                  "LAWSUIT_DATE_TO": "",
+                                  "LAWSUIT_OFFICE_NAME": "",
+                                  "LAWSUIT_NAME": "",
+                                  "PROVE_IS_OUTSIDE": "",
+                                  "PROVE_NO": editProveNumber.text,
+                                  "PROVE_NO_YEAR": "",
+                                  "RECEIVE_DOC_DATE_FROM": "",
+                                  "RECEIVE_DOC_DATE_TO": "",
+                                  "RECEIVE_OFFICE_NAME": "",
+                                  "PROVE_NAME": "",
                                   "ACCOUNT_OFFICE_CODE": "000000"
                                 };
-                                print(map.toString());
                                 onSearchTextSubmitted(map, context,false);
                               },
                               splashColor: Colors.grey,
@@ -261,75 +280,35 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
         children: <Widget>[
           Container(
             //padding: paddingLabel,
-            child: Text("ลักษณะคดี", style: textLabelStyle,),
+            child: Text("ลักษณะคดีเปรียบเทียบ", style: textLabelStyle,),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: size.width / 2.4,
-                child: Row(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          IsLawsuitType1 = true;
-                          IsLawsuitType2 = false;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: IsLawsuitType1 ? Color(0xff3b69f3) : Colors
-                              .white,
-                          border: Border.all(color: Colors.black12),
-                        ),
-                        child: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: IsLawsuitType1
-                                ? Icon(
-                              Icons.check,
-                              size: 30.0,
-                              color: Colors.white,
-                            )
-                                : Container(
-                              height: 30.0,
-                              width: 30.0,
-                              color: Colors.transparent,
-                            )
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text('คดีนอกสถานที่',
-                        style: textStyleSelect,),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                  width: size.width / 2.4,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: size.width / 2.2,
                   child: Row(
                     children: <Widget>[
                       InkWell(
                         onTap: () {
                           setState(() {
-                            IsLawsuitType2 = true;
-                            IsLawsuitType1 = false;
+                            IsCompareType1 = true;
+                            IsCompareType2 = false;
                           });
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: IsLawsuitType2 ? Color(0xff3b69f3) : Colors
+                            color: IsCompareType1 ? Color(0xff3b69f3) : Colors
                                 .white,
                             border: Border.all(color: Colors.black12),
                           ),
                           child: Padding(
                               padding: const EdgeInsets.all(0.0),
-                              child: IsLawsuitType2
+                              child: IsCompareType1
                                   ? Icon(
                                 Icons.check,
                                 size: 30.0,
@@ -345,87 +324,88 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(12.0),
-                        child: Text('คดีในสถานที่',
+                        child: Text('นอกสถานที่',
                           style: textStyleSelect,),
                       )
                     ],
-                  )
-              )
-            ],
+                  ),
+                ),
+                Container(
+                    width: size.width / 2.2,
+                    child: Row(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              IsCompareType2 = true;
+                              IsCompareType1 = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: IsCompareType2 ? Color(0xff3b69f3) : Colors
+                                  .white,
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: IsCompareType2
+                                    ? Icon(
+                                  Icons.check,
+                                  size: 30.0,
+                                  color: Colors.white,
+                                )
+                                    : Container(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  color: Colors.transparent,
+                                )
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text('ในสถานที่',
+                            style: textStyleSelect,),
+                        )
+                      ],
+                    )
+                )
+              ],
+            ),
           ),
           Container(
             //padding: paddingLabel,
-            child: Text("สถานะการรับคดี", style: textLabelStyle,),
+            child: Text("สถานะการเปรียบเทียบ", style: textLabelStyle,),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: size.width / 2.4,
-                child: Row(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          IsLawsuitComplete = true;
-                          IsLawsuitNonComplete = false;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: IsLawsuitComplete ? Color(0xff3b69f3) : Colors
-                              .white,
-                          border: Border.all(color: Colors.black12),
-                        ),
-                        child: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: IsLawsuitComplete
-                                ? Icon(
-                              Icons.check,
-                              size: 30.0,
-                              color: Colors.white,
-                            )
-                                : Container(
-                              height: 30.0,
-                              width: 30.0,
-                              color: Colors.transparent,
-                            )
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text('รับคดีแล้ว',
-                        style: textStyleSelect,),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                  width: size.width / 2.4,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: size.width / 2.2,
                   child: Row(
                     children: <Widget>[
                       InkWell(
                         onTap: () {
                           setState(() {
-                            IsLawsuitComplete = false;
-                            IsLawsuitNonComplete = true;
+                            IsCompareComplete = true;
+                            IsCompareNonComplete = false;
                           });
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: IsLawsuitNonComplete
-                                ? Color(0xff3b69f3)
-                                : Colors
+                            color: IsCompareComplete ? Color(0xff3b69f3) : Colors
                                 .white,
                             border: Border.all(color: Colors.black12),
                           ),
                           child: Padding(
                               padding: const EdgeInsets.all(0.0),
-                              child: IsLawsuitNonComplete
+                              child: IsCompareComplete
                                   ? Icon(
                                 Icons.check,
                                 size: 30.0,
@@ -441,13 +421,58 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(12.0),
-                        child: Text('ยังไม่รับคดี',
+                        child: Text('เปรียบเทียบแล้ว',
                           style: textStyleSelect,),
                       )
                     ],
-                  )
-              )
-            ],
+                  ),
+                ),
+                Container(
+                    width: size.width / 2.2,
+                    child: Row(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              IsCompareComplete = false;
+                              IsCompareNonComplete = true;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: IsCompareNonComplete
+                                  ? Color(0xff3b69f3)
+                                  : Colors
+                                  .white,
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: IsCompareNonComplete
+                                    ? Icon(
+                                  Icons.check,
+                                  size: 30.0,
+                                  color: Colors.white,
+                                )
+                                    : Container(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  color: Colors.transparent,
+                                )
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text('ยังไม่เปรียบเทียบ',
+                            style: textStyleSelect,),
+                        )
+                      ],
+                    )
+                )
+              ],
+            ),
           ),
           Container(
             padding: paddingLabel,
@@ -485,6 +510,24 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
             ),
           ),
           _buildLine,
+          Container(
+            padding: paddingLabel,
+            child: Text("ทะเบียนตรวจพิสูจน์", style: textLabelStyle,),
+          ),
+          Padding(
+            padding: paddingInputBox,
+            child: TextField(
+              focusNode: myFocusNodeProveNumber,
+              controller: editProveNumber,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.words,
+              style: textInputStyle,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          _buildLine,
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -497,7 +540,7 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                   children: <Widget>[
                     Container(
                       padding: paddingLabel,
-                      child: Text("วันที่รับคดี", style: textLabelStyle,),
+                      child: Text("วันที่เปรียบเทียบคดี", style: textLabelStyle,),
                     ),
                     Padding(
                       padding: paddingInputBox,
@@ -524,13 +567,13 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                             setState(() {
                               _dtDateLawsuitStart = s;
                               _currentDateLawsuitStart = date;
-                              editLawsuitDateStart.text =
+                              editCompareDateStart.text =
                                   _currentDateLawsuitStart;
                             });
                           });
                         },
-                        focusNode: myFocusNodeLawsuitDateStart,
-                        controller: editLawsuitDateStart,
+                        focusNode: myFocusNodeCompareDateStart,
+                        controller: editCompareDateStart,
                         keyboardType: TextInputType.text,
                         textCapitalization: TextCapitalization.words,
                         style: textInputStyle,
@@ -580,12 +623,12 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                             setState(() {
                               _dtDateLawsuitEnd = s;
                               _currentDateLawsuitEnd = date;
-                              editLawsuitDateEnd.text = _currentDateLawsuitEnd;
+                              editCompareDateEnd.text = _currentDateLawsuitEnd;
                             });
                           });
                         },
-                        focusNode: myFocusNodeLawsuitDateEnd,
-                        controller: editLawsuitDateEnd,
+                        focusNode: myFocusNodeCompareDateEnd,
+                        controller: editCompareDateEnd,
                         keyboardType: TextInputType.text,
                         textCapitalization: TextCapitalization.words,
                         style: textInputStyle,
@@ -604,13 +647,13 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
           ),
           Container(
             padding: paddingLabel,
-            child: Text("ชื่อผู้รับคดี", style: textLabelStyle,),
+            child: Text("ชื่อผู้เปรียบเทียบคดี", style: textLabelStyle,),
           ),
           Padding(
             padding: paddingInputBox,
             child: TextField(
-              focusNode: myFocusNodeLawsuitPerson,
-              controller: editLawsuitPerson,
+              focusNode: myFocusNodeComparePerson,
+              controller: editComparePerson,
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.words,
               style: textInputStyle,
@@ -635,7 +678,7 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0), // here the desired height
         child: AppBar(
-          title: new Text("ค้นหาคดีรับคำกล่าวโทษ",
+          title: new Text("ค้นหางานเปรียบเทียบเเละชำระค่าปรับ",
             style: styleTextAppbar,
           ),
           centerTitle: true,

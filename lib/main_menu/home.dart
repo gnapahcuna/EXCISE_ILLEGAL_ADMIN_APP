@@ -5,9 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:prototype_app_pang/color/text.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/guy/search.dart';
 import 'package:prototype_app_pang/main_menu/auction/auction_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_search_main_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_search_screen.dart';
+import 'package:prototype_app_pang/main_menu/compare/compare_search_screen_2.dart';
 import 'package:prototype_app_pang/main_menu/destroy/destroy_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/export/export_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/lawsuit_screen_1_search.dart';
@@ -95,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
         "ทะเบียนบัญชีของกลาง", AssetImage("assets/icons/icon_drawer_tab6.png")),
     new DrawerItem("จัดเก็บเข้าพิพิธภัณฑ์",
         AssetImage("assets/icons/icon_drawer_tab5_6.png")),
-    new DrawerItem(
-        "อนุมัติของกลาง", AssetImage("assets/icons/icon_drawer_tab5_7.png")),
+    /*new DrawerItem(
+        "อนุมัติของกลาง", AssetImage("assets/icons/icon_drawer_tab5_7.png")),*/
     new DrawerItem("นำของกลางออกจากคลัง",
         AssetImage("assets/icons/icon_drawer_tab5_8.png")),
     new DrawerItem(
@@ -113,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextColors _colors = new TextColors();
 
   _getDrawerItemWidget(int pos) {
+    print(pos);
     switch (pos) {
       case 0:
         return _main_tab();
@@ -127,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 3:
         return new ProveFragment();
       case 4:
-        return new CompareFragment();
+        return new CompareFragment(ItemsPerson: widget.ItemsData);
       case 6:
         return new StockFragment();
       case 7:
@@ -148,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return new StockFragment();
       case 16:
         return new MusuimFragment();
-      case 18:
+      case 17:
         return new ExportFragment();
       default:
         return new Text(drawerItems[pos].title,
@@ -345,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       image: d.icon,
                       height: 35.0,
                       width: 35.0,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       color: i == _selectedDrawerIndex
                           ? Colors.white
                           : icon_color,
@@ -405,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       image: d.icon,
                       height: 35.0,
                       width: 35.0,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       color: i == _selectedDrawerIndex
                           ? Colors.white
                           : icon_color,
@@ -747,7 +750,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       .push(
                       new MaterialPageRoute(
                           builder: (context) =>
-                              CompareMainScreenFragmentSearch()));
+                              CompareMainScreenFragmentSearch2(ItemsPerson: widget.ItemsData,)));
                   break;
                 case 11 :
                   Navigator.of(context)
@@ -820,12 +823,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                   break;
                 case 10 :
-                /*Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>
-                          TrackingBookSearchScreenFragment(),
-                      ));*/
-                  showSearch(context: context, delegate: Searchchat());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => new Search1()),
+                  );
                   break;
               }
             },
@@ -884,7 +885,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _main_tab() {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _getMenuItemWidget(_selectedDrawerIndex),
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          _getMenuItemWidget(_selectedDrawerIndex)
+        ],
+      ),
     );
       /*Scaffold(
         backgroundColor: Colors.transparent,
@@ -919,9 +925,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      GestureDetector(
+                      new ButtonTheme(
+                        minWidth: 44.0,
+                        padding: new EdgeInsets.all(0.0),
                         child: Container(
                           width: size.width / 3,
                           child: Column(
@@ -933,14 +941,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(4.0)
                                 ),
                                 elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                        "assets/icons/icon_drawer_tab1.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.fitWidth,
-                                    color: icon_color,
+                                child: FlatButton(
+                                  highlightColor: TextColors()
+                                      .text_splash_color,
+                                  onPressed: () {
+                                    _onClickMenu(1);
+                                  },
+                                  child: Padding(padding: EdgeInsets.all(12.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                          "assets/icons/icon_drawer_tab1.png"),
+                                      height: 55.0,
+                                      width: 55.0,
+                                      fit: BoxFit.fitWidth,
+                                      color: icon_color,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -951,224 +966,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        onTap: () {
-                          _onClickMenu(1);
-                        },
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          width: size.width / 3,
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                shape: new RoundedRectangleBorder(
-                                    side: new BorderSide(
-                                        color: Color(0xff549ee8), width: 1.5),
-                                    borderRadius: BorderRadius.circular(4.0)
-                                ),
-                                elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                        "assets/icons/icon_drawer_tab2.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.fitWidth,
-                                    color: icon_color,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'รับคำกล่าวโทษ',
-                                style: Menustyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          _onClickMenu(2);
-                        },
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          width: size.width / 3,
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                shape: new RoundedRectangleBorder(
-                                    side: new BorderSide(
-                                        color: Color(0xff549ee8), width: 1.5),
-                                    borderRadius: BorderRadius.circular(4.0)
-                                ),
-                                elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                        "assets/icons/icon_drawer_tab3.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.fitWidth,
-                                    color: icon_color,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'พิสูจน์ของกลาง',
-                                style: Menustyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          _onClickMenu(3);
-                        },
                       ),
                     ],
-                  ),
-                  GestureDetector(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            width: size.width / 3,
-                            child: Column(
-                              children: <Widget>[
-                                Card(
-                                  shape: new RoundedRectangleBorder(
-                                      side: new BorderSide(
-                                          color: Color(0xff549ee8), width: 1.5),
-                                      borderRadius: BorderRadius.circular(4.0)
-                                  ),
-                                  elevation: 0.0,
-                                  child: Padding(padding: EdgeInsets.all(12.0),
-                                    child: Image(
-                                      image: AssetImage(
-                                          "assets/icons/icon_drawer_tab4.png"),
-                                      height: 55.0,
-                                      width: 55.0,
-                                      fit: BoxFit.fitWidth,
-                                      color: icon_color,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  'ชำระค่าปรับ',
-                                  style: Menustyle,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      _onClickMenu(4);
-                    },
-                  ),
-                  new Container(
-                    height: 1.5,
-                    color: const Color(0xffc8c8c8),
-                  ),
-                ],
-              )
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent2() {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    return Container(
-      //padding: EdgeInsets.only(left:12.0,right: 12.0,bottom: 12.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.only(
-                left: 12.0, right: 12.0, bottom: 12.0, top: 12.0),
-            child: new Text('งานจัดการของกลาง',
-              style: Titlestyle,),
-          ),
-          new Container(
-            //padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      _onClickMenu(6);
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                          width: size.width / 3,
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                shape: new RoundedRectangleBorder(
-                                    side: new BorderSide(
-                                        color: Color(0xff549ee8), width: 1.5),
-                                    borderRadius: BorderRadius.circular(4.0)
-                                ),
-                                elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(image: AssetImage(
-                                      "assets/icons/icon_drawer_tab5.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.cover,
-                                    color: icon_color,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'จัดการของกลาง',
-                                style: Menustyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: size.width / 3,
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                shape: new RoundedRectangleBorder(
-                                    side: new BorderSide(
-                                        color: Color(0xff549ee8), width: 1.5),
-                                    borderRadius: BorderRadius.circular(4.0)
-                                ),
-                                elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(image: AssetImage(
-                                      "assets/icons/icon_drawer_tab6.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.fitWidth,
-                                    color: icon_color,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'ทะเบียนบัญชีของกลาง',
-                                style: Menustyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: size.width / 3,
-                        ),
-                      ],
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16.0),
@@ -1184,8 +983,738 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  Widget _buildContent2() {
+    var size = MediaQuery
+        .of(context)
+        .size;
+    return Container(
+      //padding: EdgeInsets.only(left:12.0,right: 12.0,bottom: 12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Padding(
+            padding: EdgeInsets.only(
+                left: 12.0, right: 12.0, bottom: 12.0, top: 12.0),
+            child: new Text('งานส่วนคดี',
+              style: Titlestyle,),
+          ),
+          new Container(
+            //padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      new ButtonTheme(
+                        minWidth: 44.0,
+                        padding: new EdgeInsets.all(0.0),
+                        child: Container(
+                          width: size.width / 3,
+                          child: Column(
+                            children: <Widget>[
+                              Card(
+                                shape: new RoundedRectangleBorder(
+                                    side: new BorderSide(
+                                        color: Color(0xff549ee8), width: 1.5),
+                                    borderRadius: BorderRadius.circular(4.0)
+                                ),
+                                elevation: 0.0,
+                                child: FlatButton(
+                                  highlightColor: TextColors()
+                                      .text_splash_color,
+                                  onPressed: () {
+                                    _onClickMenu(2);
+                                  },
+                                  child: Padding(padding: EdgeInsets.all(12.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                          "assets/icons/icon_drawer_tab2.png"),
+                                      height: 55.0,
+                                      width: 55.0,
+                                      fit: BoxFit.fitWidth,
+                                      color: icon_color,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                'รับคำกล่าวโทษ',
+                                style: Menustyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      new ButtonTheme(
+                        minWidth: 44.0,
+                        padding: new EdgeInsets.all(0.0),
+                        child: Container(
+                          width: size.width / 3,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                width: size.width / 3,
+                                child: Column(
+                                  children: <Widget>[
+                                    Card(
+                                      shape: new RoundedRectangleBorder(
+                                          side: new BorderSide(
+                                              color: Color(0xff549ee8), width: 1.5),
+                                          borderRadius: BorderRadius.circular(4.0)
+                                      ),
+                                      elevation: 0.0,
+                                      child: FlatButton(
+                                        highlightColor: TextColors()
+                                            .text_splash_color,
+                                        onPressed: () {
+                                          _onClickMenu(4);
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: Image(
+                                            image: AssetImage(
+                                                "assets/icons/icon_drawer_tab4.png"),
+                                            height: 55.0,
+                                            width: 55.0,
+                                            fit: BoxFit.fitWidth,
+                                            color: icon_color,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'ชำระค่าปรับ',
+                                      style: Menustyle,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: size.width / 3,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: new Container(
+                      height: 1.5,
+                      color: const Color(0xffc8c8c8),
+                    ),
+                  ),
+                ],
+              )
+          ),
+        ],
+      ),
+    );
+  }
+  Widget buildExpanded_menu(){
+    var size = MediaQuery
+        .of(context)
+        .size;
+    return new Container(
+      //padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(3);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(
+                                image: AssetImage(
+                                    "assets/icons/icon_drawer_tab3.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'พิสูจน์ของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(11);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab5_1.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.contain,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'ตรวจรับของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(12);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab5_2.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'ทำลายของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new ButtonTheme(
+                    minWidth: 44.0,
+                    padding: new EdgeInsets.all(0.0),
+                    child: Container(
+                      width: size.width / 3,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            shape: new RoundedRectangleBorder(
+                                side: new BorderSide(
+                                    color: Color(0xff549ee8), width: 1.5),
+                                borderRadius: BorderRadius.circular(4.0)
+                            ),
+                            elevation: 0.0,
+                            child: FlatButton(
+                              highlightColor: TextColors()
+                                  .text_splash_color,
+                              onPressed: () {
+                                _onClickMenu(13);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Image(
+                                  image: AssetImage(
+                                      "assets/icons/icon_drawer_tab5_3.png"),
+                                  height: 55.0,
+                                  width: 55.0,
+                                  fit: BoxFit.fitWidth,
+                                  color: icon_color,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'ขายทอดตลาด',
+                            style: Menustyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  new ButtonTheme(
+                    minWidth: 44.0,
+                    padding: new EdgeInsets.all(0.0),
+                    child: Container(
+                      width: size.width / 3,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            shape: new RoundedRectangleBorder(
+                                side: new BorderSide(
+                                    color: Color(0xff549ee8), width: 1.5),
+                                borderRadius: BorderRadius.circular(4.0)
+                            ),
+                            elevation: 0.0,
+                            child: FlatButton(
+                              highlightColor: TextColors()
+                                  .text_splash_color,
+                              onPressed: () {
+                                _onClickMenu(14);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Image(image: AssetImage(
+                                    "assets/icons/icon_drawer_tab5_4.png"),
+                                  height: 55.0,
+                                  width: 55.0,
+                                  fit: BoxFit.contain,
+                                  color: icon_color,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'โอนย้ายของกลาง',
+                            style: Menustyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  new ButtonTheme(
+                    minWidth: 44.0,
+                    padding: new EdgeInsets.all(0.0),
+                    child: Container(
+                      width: size.width / 3,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            shape: new RoundedRectangleBorder(
+                                side: new BorderSide(
+                                    color: Color(0xff549ee8), width: 1.5),
+                                borderRadius: BorderRadius.circular(4.0)
+                            ),
+                            elevation: 0.0,
+                            child: FlatButton(
+                              highlightColor: TextColors()
+                                  .text_splash_color,
+                              onPressed: () {
+                                _onClickMenu(6);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Image(image: AssetImage(
+                                    "assets/icons/icon_drawer_tab5_6.png"),
+                                  height: 55.0,
+                                  width: 55.0,
+                                  fit: BoxFit.fitWidth,
+                                  color: icon_color,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'ทะเบียนบัญชีของกลาง',
+                            style: Menustyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(16);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Image(
+                                image: AssetImage(
+                                    "assets/icons/icon_drawer_tab5_8.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'จัดเก็บเข้าพิพิธภัณฑ์',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(17);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab5_9.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.cover,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'นำของกลางออกจากคลัง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(18);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab6.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'คืนของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: new Container(
+                height: 1.5,
+                color: const Color(0xffc8c8c8),
+              ),
+            ),
+          ],
+        )
+    );
+  }
+  Widget buildCollapsed_menu(){
+    var size = MediaQuery
+        .of(context)
+        .size;
+    return new Container(
+      //padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(3);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(
+                                image: AssetImage(
+                                    "assets/icons/icon_drawer_tab3.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'พิสูจน์ของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(11);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab5_1.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.contain,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'ตรวจรับของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new ButtonTheme(
+                  minWidth: 44.0,
+                  padding: new EdgeInsets.all(0.0),
+                  child: Container(
+                    width: size.width / 3,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                  color: Color(0xff549ee8), width: 1.5),
+                              borderRadius: BorderRadius.circular(4.0)
+                          ),
+                          elevation: 0.0,
+                          child: FlatButton(
+                            highlightColor: TextColors()
+                                .text_splash_color,
+                            onPressed: () {
+                              _onClickMenu(12);
+                            },
+                            child: Padding(padding: EdgeInsets.all(12.0),
+                              child: Image(image: AssetImage(
+                                  "assets/icons/icon_drawer_tab5_2.png"),
+                                height: 55.0,
+                                width: 55.0,
+                                fit: BoxFit.fitWidth,
+                                color: icon_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'ทำลายของกลาง',
+                          style: Menustyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: new Container(
+                height: 1.5,
+                color: const Color(0xffc8c8c8),
+              ),
+            ),
+          ],
+        )
+    );
+  }
 
   Widget _buildContent3() {
+    return Container(
+      //padding: EdgeInsets.only(left:12.0,right: 12.0,bottom: 12.0),
+      child: ExpandableNotifier(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new Padding(
+                  padding: EdgeInsets.only(
+                      left: 12.0, right: 12.0, bottom: 12.0, top: 12.0),
+                  child: new Text('งานพิสูจน์และจัดการของกลาง',
+                    style: Titlestyle,),
+                ),
+                new Padding(
+                  padding: EdgeInsets.only(
+                      right: 12.0, bottom: 12.0),
+                  child: Builder(
+                      builder: (context) {
+                        var exp = ExpandableController.of(context);
+                        return Container(
+                          /* padding: EdgeInsets.only(
+                              top: 12.0, bottom: 12.0),*/
+                          //decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                          child: IconButton(
+                            icon: Icon(
+                              exp.expanded
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              size: 48.0,
+                              color: Colors.grey[400],),
+                            onPressed: () {
+                              exp.toggle();
+                            },
+                          ),
+                        );
+                      }
+                  ),
+                ),
+              ],
+            ),
+            Expandable(
+                collapsed: buildCollapsed_menu(),
+                expanded: buildExpanded_menu()
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent4() {
     var size = MediaQuery
         .of(context)
         .size;
@@ -1208,7 +1737,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      GestureDetector(
+                      new ButtonTheme(
+                        minWidth: 44.0,
+                        padding: new EdgeInsets.all(0.0),
                         child: Container(
                           width: size.width / 3,
                           child: Column(
@@ -1220,14 +1751,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(4.0)
                                 ),
                                 elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                        "assets/icons/icon_drawer_tab7.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.fitWidth,
-                                    color: icon_color,
+                                child: FlatButton(
+                                  highlightColor: TextColors()
+                                      .text_splash_color,
+                                  onPressed: () {
+                                    _onClickMenu(7);
+                                  },
+                                  child: Padding(padding: EdgeInsets.all(12.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                          "assets/icons/icon_drawer_tab7.png"),
+                                      height: 55.0,
+                                      width: 55.0,
+                                      fit: BoxFit.fitWidth,
+                                      color: icon_color,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1238,11 +1776,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        onTap: () {
-                          _onClickMenu(7);
-                        },
                       ),
-                      GestureDetector(
+                      new ButtonTheme(
+                        minWidth: 44.0,
+                        padding: new EdgeInsets.all(0.0),
                         child: Container(
                           width: size.width / 3,
                           child: Column(
@@ -1254,13 +1791,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(4.0)
                                 ),
                                 elevation: 0.0,
-                                child: Padding(padding: EdgeInsets.all(12.0),
-                                  child: Image(image: AssetImage(
-                                      "assets/icons/icon_drawer_tab8.png"),
-                                    height: 55.0,
-                                    width: 55.0,
-                                    fit: BoxFit.cover,
-                                    color: icon_color,
+                                child: FlatButton(
+                                  highlightColor: TextColors()
+                                      .text_splash_color,
+                                  onPressed: () {
+                                    _onClickMenu(8);
+                                  },
+                                  child: Padding(padding: EdgeInsets.all(12.0),
+                                    child: Image(image: AssetImage(
+                                        "assets/icons/icon_drawer_tab8.png"),
+                                      height: 55.0,
+                                      width: 55.0,
+                                      fit: BoxFit.cover,
+                                      color: icon_color,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1271,48 +1815,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        onTap: () {
-                          _onClickMenu(8);
-                        },
                       ),
-                      Container(
-                        width: size.width / 3,
-                        child: Column(
-                          children: <Widget>[
-                            Card(
-                              shape: new RoundedRectangleBorder(
-                                  side: new BorderSide(
-                                      color: Color(0xff549ee8), width: 1.5),
-                                  borderRadius: BorderRadius.circular(4.0)
-                              ),
-                              elevation: 0.0,
-                              child: Padding(padding: EdgeInsets.all(12.0),
-                                child: Image(image: AssetImage(
-                                    "assets/icons/icon_drawer_tab9.png"),
-                                  height: 55.0,
-                                  width: 55.0,
-                                  fit: BoxFit.cover,
-                                  color: icon_color,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'รายงานสถิติ',
-                              style: Menustyle,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        GestureDetector(
+                      new ButtonTheme(
+                          minWidth: 44.0,
+                          padding: new EdgeInsets.all(0.0),
                           child: Container(
                             width: size.width / 3,
                             child: Column(
@@ -1324,13 +1830,69 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(4.0)
                                   ),
                                   elevation: 0.0,
-                                  child: Padding(padding: EdgeInsets.all(12.0),
-                                    child: Image(image: AssetImage(
-                                        "assets/icons/icon_drawer_tab10.png"),
-                                      height: 55.0,
-                                      width: 55.0,
-                                      fit: BoxFit.fitWidth,
-                                      color: icon_color,
+                                  child: FlatButton(
+                                    highlightColor: TextColors()
+                                        .text_splash_color,
+                                    onPressed: () {
+                                      //_onClickMenu(8);
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Image(image: AssetImage(
+                                          "assets/icons/icon_drawer_tab9.png"),
+                                        height: 55.0,
+                                        width: 55.0,
+                                        fit: BoxFit.cover,
+                                        color: icon_color,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  'รายงานสถิติ',
+                                  style: Menustyle,
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new ButtonTheme(
+                          minWidth: 44.0,
+                          padding: new EdgeInsets.all(0.0),
+                          child: Container(
+                            width: size.width / 3,
+                            child: Column(
+                              children: <Widget>[
+                                Card(
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: Color(0xff549ee8), width: 1.5),
+                                      borderRadius: BorderRadius.circular(4.0)
+                                  ),
+                                  elevation: 0.0,
+                                  child: FlatButton(
+                                    highlightColor: TextColors()
+                                        .text_splash_color,
+                                    onPressed: () {
+                                      _onClickMenu(10);
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Image(image: AssetImage(
+                                          "assets/icons/icon_drawer_tab10.png"),
+                                        height: 55.0,
+                                        width: 55.0,
+                                        fit: BoxFit.fitWidth,
+                                        color: icon_color,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1341,9 +1903,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          onTap: () {
-                            _onClickMenu(10);
-                          },
                         ),
                       ],
                     ),
@@ -1365,6 +1924,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildContent1(),
               _buildContent2(),
               _buildContent3(),
+              _buildContent4(),
             ],
           ),
         );
@@ -1376,7 +1936,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 3:
         return new ProveFragment();
       case 4:
-        return new CompareFragment();
+        return new CompareFragment(ItemsPerson: widget.ItemsData);
       case 6:
         return new StockFragment();
       case 7:
@@ -1385,6 +1945,24 @@ class _HomeScreenState extends State<HomeScreen> {
         return new TrackingFragment();
       case 10:
         return new ChatFragment();
+      case 11:
+        return new CheckEvidenceFragment();
+      case 12:
+        return new DestroyFragment();
+      case 13:
+        return new AuctionFragment();
+      case 14:
+        return new TransferFragment();
+      case 15:
+        return new StockFragment();
+      case 16:
+        return new MusuimFragment();
+      case 17:
+        return new ExportFragment();
+      default:
+        return new Text(drawerItems[pos].title,
+          style: TextStyle(
+              fontFamily: _fontStyles.FontFamily, fontSize: 16.0),);
 
     /*default:
         return new Text("Error");*/

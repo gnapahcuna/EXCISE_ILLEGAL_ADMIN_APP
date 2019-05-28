@@ -1,31 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_select_evidence_screen.dart';
+import 'package:prototype_app_pang/main_menu/check_evidence/delivery_book_select_evidence_screen.dart';
+import 'package:prototype_app_pang/main_menu/check_evidence/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_list.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
+import 'package:prototype_app_pang/main_menu/destroy/select_book_select_evidence_screen.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/lawsuit_accept_case_screen.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/lawsuit_not_accept_case_screen_1.dart';
+import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_search.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/picker/date_picker.dart';
+import 'package:prototype_app_pang/picker/date_picker_lawsuit_search.dart';
 
-class CompareMainScreenFragmentSearch extends StatefulWidget {
+class CompareMainScreenFragmentSearchResult extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
-  CompareMainScreenFragmentSearch({
+  List<ItemsCompareList> ItemSearch;
+  CompareMainScreenFragmentSearchResult({
     Key key,
     @required this.ItemsPerson,
+    @required this.ItemSearch,
   }) : super(key: key);
   @override
   _FragmentState createState() => new _FragmentState();
 }
-class _FragmentState extends State<CompareMainScreenFragmentSearch> {
-  TextEditingController controller = new TextEditingController();
-  List<ItemsCompareList> _searchResult = [];
+class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
 
+  List<ItemsCompareList> _searchResult = [];
   //ItemsCompareArrestMain _compareArrestMain;
-  var _compareArrestMain;
+  ItemsCompareArrestMain _compareArrestMain;
   ItemsCompareMain itemsCompareMain;
 
   var dateFormatDate;
@@ -35,65 +49,12 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
     super.initState();
     initializeDateFormatting();
     dateFormatDate = new DateFormat.yMMMMd('th');
-  }
 
-  CupertinoAlertDialog _cupertinoSearchEmpty(mContext) {
-    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text("ไม่พบข้อมูล.",
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(mContext);
-                controller.clear();
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
+    _searchResult = widget.ItemSearch;
   }
-
-  void _showSearchEmptyAlertDialog(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _cupertinoSearchEmpty(context);
-      },
-    );
-  }
-  //on show dialog
-  Future<bool> onLoadAction(Map map) async {
-    await new CompareFuture().apiRequestCompareListgetByKeyword(map).then((onValue) {
-      _searchResult = onValue;
-    });
-    setState(() {});
-    return true;
-  }
-  //on submitted search
-  onSearchTextSubmitted(String text, mContext,IsAction) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: CupertinoActivityIndicator(
-            ),
-          );
-        });
-    //Map map = {'TEXT_SEARCH': text, 'ACCOUNT_OFFICE_CODE': widget.ItemsPerson.UnderOffCode};
-    Map map = {'TEXT_SEARCH': text,"ACCOUNT_OFFICE_CODE": "000000"};
-    await onLoadAction(map);
-    Navigator.pop(context);
-    if (_searchResult.length == 0) {
-      if(!IsAction){
-        _showSearchEmptyAlertDialog(mContext);
-      }
-    }
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Widget _buildSearchResults() {
@@ -140,6 +101,7 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
         lawsuit_year = (int.parse(splitslawYear[3]) + 543).toString();
 
 
+        String compare_name ;
         if(_searchResult[index].COMPARE_ID!=0){
           /*DateTime dt_compare_year = DateTime.parse(
               _searchResult[index].COMPARE_NO_YEAR);*/
@@ -151,7 +113,22 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
               .split(
               " ");
           compare_year = (int.parse(splitsCompareYear[3]) + 543).toString();
+
+          compare_name ="";
+          /*_searchResult[index].COMPARE_TITLE_SHORT_NAME_TH != null
+              ? _searchResult[index].COMPARE_TITLE_SHORT_NAME_TH
+              : _searchResult[index].COMPARE_TITLE_NAME_TH +
+              _searchResult[index].COMPARE_FIRST_NAME + " " +
+              _searchResult[index].COMPARE_LAST_NAME;*/
+        }else {
+          compare_name = _searchResult[index].LAWSUIT_TITLE_SHORT_NAME_TH!=null
+              ?_searchResult[index].LAWSUIT_TITLE_SHORT_NAME_TH
+              :_searchResult[index].LAWSUIT_TITLE_NAME_TH+
+              _searchResult[index].LAWSUIT_FIRST_NAME+" "+
+              _searchResult[index].LAWSUIT_LAST_NAME;
         }
+
+
 
         return Padding(
           padding: EdgeInsets.only(top: 2.0, bottom: 2.0),
@@ -182,36 +159,12 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
                   ),
                   Container(
                     padding: paddingLabel,
-                    child: Text("ชื่อผู้ต้องหา", style: textLabelStyle,),
+                    child: Text("ชื่อผู้เปรียบเทียบคดี", style: textLabelStyle,),
                   ),
-                  /*Padding(
+                  Container(
                     padding: paddingInputBox,
-                    child: Text(
-                      _searchResult[index].Informations.Suspects[0].SuspectName,
-                      style: textInputStyle,),
+                    child: Text(compare_name, style: textInputStyle,),
                   ),
-                  _searchResult[index].Informations.Suspects.length > 1
-                      ? Padding(
-                      padding: paddingInputBox,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            _searchResult[index].Informations.Suspects[1]
-                                .SuspectName,
-                            style: textStyleDataSub,),
-                          _searchResult[index].Informations.Suspects.length -
-                              2 != 0
-                              ?
-                          Text(' ... และคนอื่นๆ ' +
-                              (_searchResult[index].Informations.Suspects
-                                  .length - 2)
-                                  .toString(),
-                            style: textStyleDataSub,)
-                              : Container()
-                        ],
-                      )
-                  )
-                      : Container()*/
                 ],
               )
                   : Column(
@@ -231,33 +184,12 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
                   ),
                   Container(
                     padding: paddingLabel,
-                    child: Text("ชื่อผู้ต้องหา", style: textLabelStyle,),
+                    child: Text("ชื่อผู้กล่าวหา", style: textLabelStyle,),
                   ),
-                  /*Padding(
-                    padding: paddingData,
-                    child: Text(
-                      itemMain[index].Informations.Suspects[0].SuspectName,
-                      style: textStyleData,),
+                  Container(
+                    padding: paddingInputBox,
+                    child: Text(compare_name, style: textInputStyle,),
                   ),
-                  itemMain[index].Informations.Suspects.length > 1 ? Padding(
-                      padding: paddingData,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            itemMain[index].Informations.Suspects[1]
-                                .SuspectName,
-                            style: textStyleDataSub,),
-                          itemMain[index].Informations.Suspects.length - 2 != 0
-                              ?
-                          Text(' ... และคนอื่นๆ ' +
-                              (itemMain[index].Informations.Suspects.length - 2)
-                                  .toString(),
-                            style: textStyleDataSub,)
-                              : Container()
-                        ],
-                      )
-                  )
-                      : Container()*/
                 ],
               ),
               _searchResult[index].COMPARE_ID != 0 ? Row(
@@ -281,8 +213,8 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
                                 child: Center(
                                   child: MaterialButton(
                                     onPressed: () {
-                                       _navigatePreview(
-                                          context, 353, _searchResult[index].COMPARE_ID,);
+                                      _navigatePreview(
+                                        context, 366, _searchResult[index].COMPARE_ID,);
                                     },
                                     splashColor: labelColor,
                                     //highlightColor: Colors.blue,
@@ -318,7 +250,7 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
                               child: MaterialButton(
                                 onPressed: () {
                                   _navigate(
-                                      context, /*_searchResult[index].INDICTMENT_ID*/353);
+                                      context, /*_searchResult[index].INDICTMENT_ID*/366);
                                 },
                                 splashColor: Color(0xff087de1),
                                 //highlightColor: Colors.blue,
@@ -340,8 +272,8 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
     );
   }
   Future<bool> onLoadActionGetCompareIndicment(Map map,bool IsPreview,COMPARE_ID) async {
-    await new LawsuitFuture().apiRequestLawsuiltArrestIndictmentgetByCon(map).then((onValue) {
-      _compareArrestMain = onValue;
+    await new CompareFuture().apiRequestCompareArrestgetByIndictmentID(map).then((onValue) {
+      _compareArrestMain = onValue[0];
     });
     if(IsPreview){
       Map map_law = {
@@ -427,83 +359,62 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle styleTextSearch = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    var size = MediaQuery
-        .of(context)
-        .size;
-
-    return new Theme(
-      data: new ThemeData(
-          primaryColor: Colors.white,
-          accentColor: Colors.white,
-          hintColor: Colors.grey[400]
+    TextStyle styleTextAppbar = TextStyle(fontSize: 18.0, color: Colors.white,fontFamily: FontStyles().FontFamily);
+    return new WillPopScope(
+      onWillPop: () {
+        //
+      }, child: Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0), // here the desired height
+        child: AppBar(
+          title: new Text("ค้นหางานเปรียบเทียบเเละชำระค่าปรับ",
+            style: styleTextAppbar,
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context, "Back");
+              }),
+        ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0), // here the desired height
-          child: AppBar(
-            title: new Padding(
-              padding: EdgeInsets.only(right: 22.0),
-              child: new TextField(
-                style: styleTextSearch,
-                controller: controller,
-                decoration: new InputDecoration(
-                  hintText: "ค้นหา",
-                  hintStyle: styleTextSearch,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[400]),
-                  ),
-                ),
-                onSubmitted: (String text) {
-                  onSearchTextSubmitted(text, context,false);
-                },
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              //height: 34.0,
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[300], width: 1.0),
+                    //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                  )
               ),
+              /*child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: new Text('ILG60_B_02_00_02_00',
+                      style: TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0),),
+                  )
+                ],
+              ),*/
             ),
-            centerTitle: true,
-            elevation: 0.0,
-            backgroundColor: Colors.white,
-            leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios,), onPressed: () {
-              Navigator.pop(context, "Back");
-            }),
-          ),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: new Text('ILG60_B_04_00_02_00',
-                        style: TextStyle(color: Colors.grey[400],fontSize: 12.0,fontFamily: FontStyles().FontFamily),),
-                    )
-                  ],
-                ),*/
-              ),
-              Expanded(
-                child: _searchResult.length != 0 || controller.text.isNotEmpty
-                    ? _buildSearchResults() : new Container(),
-              ),
-            ],
-          ),
+            Expanded(
+              child: _searchResult.length != 0
+                  ? _buildSearchResults() : new Container(),
+            ),
+          ],
         ),
       ),
+    ),
     );
   }
 }

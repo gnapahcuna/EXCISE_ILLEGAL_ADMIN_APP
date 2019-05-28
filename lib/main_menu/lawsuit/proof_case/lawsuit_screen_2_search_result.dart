@@ -103,7 +103,10 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearchResult> {
 
         String lawsuit_year = "";
         if(_searchResult[index].INDICTMENT_IS_LAWSUIT_COMPLETE==1){
-          DateTime dt_lawsuit_year = DateTime.parse(_searchResult[index].LAWSUIT_NO_YEAR);
+          /*DateTime dt_lawsuit_year = DateTime.parse(_searchResult[index].LAWSUIT_NO_YEAR);*/
+          DateTime dt_lawsuit_year = _searchResult[index].LAWSUIT_NO_YEAR!=null
+              ?DateTime.parse(_searchResult[index].LAWSUIT_NO_YEAR)
+              :DateTime.now();
           List splitslawYear = dateFormatDate.format(dt_lawsuit_year).toString().split(
               " ");
           lawsuit_year = (int.parse(splitslawYear[3]) + 543).toString();
@@ -214,7 +217,8 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearchResult> {
                                 child: Center(
                                   child: MaterialButton(
                                     onPressed: () {
-                                      _navigateLawsuitPreview(context,_searchResult[index].INDICTMENT_ID,true,false,_searchResult[index].LAWSUIT_ID);
+                                      /*_navigateLawsuitPreview(context,_searchResult[index].INDICTMENT_ID,true,false,_searchResult[index].LAWSUIT_ID);*/
+                                      _navigateLawsuitPreview(context,301,true,false,280);
                                     },
                                     splashColor: labelColor,
                                     //highlightColor: Colors.blue,

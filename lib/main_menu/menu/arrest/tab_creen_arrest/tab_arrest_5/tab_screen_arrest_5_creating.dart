@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future_master.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_5.dart';
@@ -10,13 +11,12 @@ import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_produ
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_product_subtype.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_product_type.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_created.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_creating.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_search.dart';
 
-class TabScreenArrest5Add extends StatefulWidget {
+class TabScreenArrest5Creating extends StatefulWidget {
   bool IsUpdate;
   ItemsMasterProductGroupResponse ItemsProductGroup;
-  TabScreenArrest5Add({
+  TabScreenArrest5Creating({
     Key key,
     @required this.IsUpdate,
     @required this.ItemsProductGroup,
@@ -24,38 +24,48 @@ class TabScreenArrest5Add extends StatefulWidget {
   @override
   _TabScreenArrest5AddState createState() => new _TabScreenArrest5AddState();
 }
-class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
+class _TabScreenArrest5AddState extends State<TabScreenArrest5Creating> {
   List _itemsData = [];
 
   final FocusNode myFocusNodeMainBrand = FocusNode();
   final FocusNode myFocusNodeSecondaryBrand = FocusNode();
   final FocusNode myFocusNodeProductModel = FocusNode();
-  //final FocusNode myFocusNodeCapacity = FocusNode();
+  final FocusNode myFocusNodeSize = FocusNode();
+  final FocusNode myFocusNodeCapacity = FocusNode();
+  final FocusNode myFocusNodeVolumn = FocusNode();
+  final FocusNode myFocusNodeVolumnUnit = FocusNode();
+  final FocusNode myFocusNodeNumbeMotor = FocusNode();
+  final FocusNode myFocusNodeNumberTank = FocusNode();
+  final FocusNode myFocusNodeOther = FocusNode();
 
   TextEditingController editMainBrand = new TextEditingController();
   TextEditingController editSecondaryBrand = new TextEditingController();
   TextEditingController editProductModel = new TextEditingController();
-  //TextEditingController editCapacity = new TextEditingController();
+  TextEditingController editSize = new TextEditingController();
+  TextEditingController editCapacity = new TextEditingController();
+  TextEditingController editVolumn = new TextEditingController();
+  TextEditingController editVolumnUnit= new TextEditingController();
+  TextEditingController editNumbeMotor = new TextEditingController();
+  TextEditingController editNumberTank = new TextEditingController();
+  TextEditingController editOther= new TextEditingController();
 
-  /*List<String> dropdownItemsUnit = ["ขวด", 'ลัง'];
-  List<String> dropdownItemsSubProductType = [];
-  List<String> dropdownItemsSubSetProductType = [];*/
+  List<String> dropdownItemsSizeUnit = ["ลิตร",'มิลลิลิตร'];
+  List<String> dropdownItemsCapacityUnit = ["ขวด", 'ลัง'];
+
+  final formatter = new NumberFormat("#,###.###");
 
   ItemsMasterProductCategoryResponse ItemsProductCategory;
-  ItemsMasterProductTypeResponse ItemsProductType;
-  //ItemsMasterProductSubTypeResponse ItemsProductSubType;
-  //ItemsMasterProductSubSetTypeResponse ItemsProductSubSetType;
 
   ItemsListProductGroup sProductGroup;
   ItemsListProductCategory sProductCategory;
-  ItemsListProductType sProductType;
-  //ItemsListProductSubType sProductSubType;
-  //ItemsListProductSubSetType sProductSubSetType;
+
+  double xSize=0;
+  int yCount=0;
+  double zTotal=0;
 
 
-  String dropdownValueUnit = "ขวด";
-  String dropdownValueSubProductType;
-  String dropdownValueSubSetProductType;
+  String dropdownValueSizeUnit = null;
+  String dropdownValueCapacityUnit = null;
 
   Color labelColor = Color(0xff087de1);
   TextStyle textInputStyle = TextStyle(fontSize: 16.0, color: Colors.black,fontFamily: FontStyles().FontFamily);
@@ -63,6 +73,8 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
   TextStyle textLabelStyle = TextStyle(fontSize: 16.0, color:  Color(0xff087de1),fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(
       fontSize: 12.0, color: Colors.grey[400],fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleStar = TextStyle(
+      color: Colors.red, fontFamily: FontStyles().FontFamily);
 
   EdgeInsets paddingInputBox = EdgeInsets.only(top: 4.0, bottom: 4.0);
   EdgeInsets paddingLabel = EdgeInsets.only(top: 12.0);
@@ -70,8 +82,24 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
   @override
   void initState() {
     super.initState();
-    sProductGroup = widget.ItemsProductGroup.RESPONSE_DATA[0];
+    //sProductGroup = widget.ItemsProductGroup.RESPONSE_DATA[0];
     this.onLoadActionProuductCategoryMaster(widget.ItemsProductGroup.RESPONSE_DATA[0].PRODUCT_GROUP_ID);
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    editMainBrand.dispose();
+    editSecondaryBrand.dispose();
+    editProductModel.dispose();
+    editSize.dispose();
+    editCapacity.dispose();
+    editVolumn.dispose();
+    editVolumnUnit.dispose();
+    editNumbeMotor.dispose();
+    editNumberTank.dispose();
+    editOther.dispose();
   }
 
   Widget _buildContent(BuildContext context) {
@@ -80,7 +108,6 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
         .size;
     final double Width = (size.width * 85) / 100;
     return Container(
-      height: size.height,
         decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
@@ -94,43 +121,101 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
           child: Container(
             padding: EdgeInsets.only(top: 4.0, bottom: 12.0),
             width: Width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildInput(),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      new Card(
-                          shape: new RoundedRectangleBorder(
-                              side: new BorderSide(
-                                  color: labelColor, width: 1.5),
-                              borderRadius: BorderRadius.circular(12.0)
-                          ),
-                          elevation: 0.0,
-                          child: Container(
-                            width: 100.0,
-                            child: MaterialButton(
-                              onPressed: () {
-                                _navigateSearch(context);
-                              },
-                              splashColor: Colors.grey,
-                              child: Center(
-                                child: Text("ค้นหา", style: textLabelStyle,),),
-                            ),
-                          )
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+            child: _buildInput(),
           ),
         )
     );
   }
+  void _onSaved(mContext)async{
+    if (sProductGroup==null) {
+      _showSearchEmptyAlertDialog(mContext,'กรุณาเลือกหมวดหมู่สินค้า');
+    } else if (sProductCategory == null) {
+      _showSearchEmptyAlertDialog(mContext,'กรุณาเลือกกลุ่มสินค้า');
+    } else if (editSize.text.isEmpty||dropdownValueSizeUnit==null) {
+      _showSearchEmptyAlertDialog(mContext,'กรุณากรอกข้อมูลและเลือกหน่วยขนาดบรรจุ');
+    } else if (editCapacity.text.isEmpty||dropdownValueCapacityUnit==null) {
+      _showSearchEmptyAlertDialog(mContext,'กรุณากรอกข้อมูลและเลือกหน่วยจำนวน');
+    } else{
+      Map map = {
+        "PRODUCT_MAPPING_ID": "",
+        "PRODUCT_CODE": "",
+        "PRODUCT_REF_CODE": "",
+        "PRODUCT_GROUP_ID": sProductGroup.PRODUCT_GROUP_ID,
+        "PRODUCT_CATEGORY_ID": sProductCategory.PRODUCT_CATEGORY_ID,
+        "PRODUCT_TYPE_ID": "",
+        "PRODUCT_SUBTYPE_ID": "",
+        "PRODUCT_SUBSETTYPE_ID": "",
+        "PRODUCT_BRAND_ID": 3,
+        "PRODUCT_SUBBRAND_ID": 3,
+        "PRODUCT_MODEL_ID": 3,
+        "PRODUCT_TAXDETAIL_ID": 3,
+        "UNIT_ID": 3,
+        "SIZES": editVolumn.text,
+        "SIZES_UNIT": editVolumnUnit.text,
+        "DEGREE": "",
+        "SUGAR": "",
+        "CO2": "",
+        "PRICE": "",
+        "IS_DOMESTIC": 0,
+        "IS_ACTIVE": 1,
+        "CREATE_USER_ACCOUNT_ID": 1,
+        "CREATE_DATE": DateTime.now(),
+        "UPDATE_USER_ACCOUNT_ID": "",
+        "UPDATE_DATE": ""
+      };
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Center(
+              child: CupertinoActivityIndicator(
+              ),
+            );
+          });
+       await onLoadActionInsProductAllMaster(map);
+      //Navigator.pop(context,_getPersonResponse.RESPONSE_DATA);
+    }
+  }
+  Future<bool> onLoadActionInsProductAllMaster(Map map) async {
+    int PERSON_ID;
+    await new ArrestFutureMaster().apiRequestMasProductMappinginsAll(map).then((onValue) {
+      //PERSON_ID = onValue.RESPONSE_DATA;
+      print(onValue.SUCCESS);
+    });
+    setState(() {});
+    return true;
+  }
+
+  CupertinoAlertDialog _cupertinoSearchEmpty(mContext,text) {
+    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
+    TextStyle ButtonAcceptStyle = TextStyle(
+        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
+    return new CupertinoAlertDialog(
+        content: new Padding(
+          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+          child: Text(text,
+            style: TitleStyle,
+          ),
+        ),
+        actions: <Widget>[
+          new CupertinoButton(
+              onPressed: () {
+                Navigator.pop(mContext);
+              },
+              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
+        ]
+    );
+  }
+
+  void _showSearchEmptyAlertDialog(context,text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _cupertinoSearchEmpty(context,text);
+      },
+    );
+  }
+
 
   Widget _buildInput() {
     var size = MediaQuery
@@ -149,8 +234,13 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
       children: <Widget>[
         Container(
           padding: paddingLabel,
-          child: Text(
-            "หมวดหมู่สินค้า", style: textLabelStyle,),
+          child: Row(
+            children: <Widget>[
+              Text("หมวดหมู่สินค้า",
+                style: textLabelStyle,),
+              Text(" *", style: textStyleStar,),
+            ],
+          ),
         ),
         Container(
           width: Width,
@@ -180,8 +270,13 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
         _buildLine,
         Container(
           padding: paddingLabel,
-          child: Text(
-            "กลุ่มสินค้า", style: textLabelStyle,),
+          child: Row(
+            children: <Widget>[
+              Text("กลุ่มสินค้า",
+                style: textLabelStyle,),
+              Text(" *", style: textStyleStar,),
+            ],
+          ),
         ),
         Container(
           width: Width,
@@ -193,7 +288,6 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
               onChanged: (ItemsListProductCategory newValue) {
                 setState(() {
                   sProductCategory = newValue;
-                  _onSelectProductCategory(sProductCategory.PRODUCT_CATEGORY_ID);
                 });
               },
               items: ItemsProductCategory.RESPONSE_DATA
@@ -202,39 +296,6 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
                 return DropdownMenuItem<ItemsListProductCategory>(
                   value: value,
                   child: Text(value.PRODUCT_CATEGORY_NAME, style: textInputStyle,),
-                );
-              })
-                  .toList(),
-            ) : Container(
-              padding: paddingLabel,
-              child: Container(),),
-          ),
-        ),
-        _buildLine,
-        Container(
-          padding: paddingLabel,
-          child: Text(
-            "ประเภทสินค้า", style: textLabelStyle,),
-        ),
-        Container(
-          width: Width,
-          //padding: paddingInputBox,
-          child: DropdownButtonHideUnderline(
-            child: ItemsProductType != null ? DropdownButton<ItemsListProductType>(
-              isExpanded: true, //
-              value: sProductType,
-              onChanged: (ItemsListProductType newValue) {
-                setState(() {
-                  sProductType = newValue;
-                  //_onSelectProductType(sProductType.PRODUCT_TYPE_ID);
-                });
-              },
-              items: ItemsProductType.RESPONSE_DATA
-                  .map<DropdownMenuItem<ItemsListProductType>>((
-                  ItemsListProductType value) {
-                return DropdownMenuItem<ItemsListProductType>(
-                  value: value,
-                  child: Text(value.PRODUCT_TYPE_NAME, style: textInputStyle,),
                 );
               })
                   .toList(),
@@ -363,7 +424,7 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
           ),
         ),
         _buildLine,
-        /*Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
@@ -373,14 +434,182 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
                 children: <Widget>[
                   Container(
                     padding: paddingLabel,
-                    child: Text("ขนาดบรรจุ", style: textLabelStyle,),
+                    child: Row(
+                      children: <Widget>[
+                        Text("ขนาดบรรจุ",
+                          style: textLabelStyle,),
+                        Text(" *", style: textStyleStar,),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: paddingInputBox,
+                    child: TextField(
+                      focusNode: myFocusNodeSize,
+                      controller: editSize,
+                      keyboardType: TextInputType.number,
+                      textCapitalization: TextCapitalization.words,
+                      style: textInputStyle,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (text){
+                        xSize = double.parse(text);
+                        zTotal = xSize*yCount;
+                        editVolumn.text = formatter.format(zTotal).toString();
+                      },
+                    ),
+                  ),
+                  _buildLine,
+                ],
+              ),
+            ),
+            Container(
+              width: ((size.width * 75) / 100) / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: paddingLabel,
+                    child: Row(
+                      children: <Widget>[
+                        Text("หน่วย",
+                          style: textLabelStyle,),
+                        Text(" *", style: textStyleStar,),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: Width,
+                    //padding: paddingInputBox,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: dropdownValueSizeUnit,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValueSizeUnit = newValue;
+                            editVolumnUnit.text=dropdownValueSizeUnit;
+                          });
+                        },
+                        items: dropdownItemsSizeUnit
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value,style: textInputStyle),
+                          );
+                        })
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  _buildLine,
+                ],
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              width: ((size.width * 75) / 100) / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: paddingLabel,
+                    child: Row(
+                      children: <Widget>[
+                        Text("จำนวน",
+                          style: textLabelStyle,),
+                        Text(" *", style: textStyleStar,),
+                      ],
+                    ),
                   ),
                   Padding(
                     padding: paddingInputBox,
                     child: TextField(
                       focusNode: myFocusNodeCapacity,
                       controller: editCapacity,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.number,
+                      textCapitalization: TextCapitalization.words,
+                      style: textInputStyle,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (text){
+                        yCount = int.parse(text);
+                        zTotal = xSize*yCount;
+                        editVolumn.text = formatter.format(zTotal).toString();
+                      },
+                    ),
+                  ),
+                  _buildLine,
+                ],
+              ),
+            ),
+            Container(
+              width: ((size.width * 75) / 100) / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: paddingLabel,
+                    child: Row(
+                      children: <Widget>[
+                        Text("หน่วย",
+                          style: textLabelStyle,),
+                        Text(" *", style: textStyleStar,),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: Width,
+                    //padding: paddingInputBox,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: dropdownValueCapacityUnit,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValueCapacityUnit = newValue;
+                          });
+                        },
+                        items: dropdownItemsCapacityUnit
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value,style: textInputStyle),
+                          );
+                        })
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  _buildLine,
+                ],
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              width: ((size.width * 75) / 100) / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: paddingLabel,
+                    child:  Text("ปริมาณสุทธิ",
+                      style: textLabelStyle,),
+                  ),
+                  Padding(
+                    padding: paddingInputBox,
+                    child: TextField(
+                      focusNode: myFocusNodeVolumn,
+                      controller: editVolumn,
+                      keyboardType: TextInputType.number,
                       textCapitalization: TextCapitalization.words,
                       style: textInputStyle,
                       decoration: InputDecoration(
@@ -399,70 +628,89 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
                 children: <Widget>[
                   Container(
                     padding: paddingLabel,
-                    child: Text("หน่วย", style: textLabelStyle,),
+                    child: Text("หน่วย",
+                      style: textLabelStyle,),
                   ),
                   Container(
                     width: Width,
                     //padding: paddingInputBox,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: dropdownValueUnit,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValueUnit = newValue;
-                          });
-                        },
-                        items: dropdownItemsUnit
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value,style: textInputStyle),
-                          );
-                        })
-                            .toList(),
+                    child: TextField(
+                      enabled: false,
+                      focusNode: myFocusNodeVolumnUnit,
+                      controller: editVolumnUnit,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      style: textInputStyle,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
-                  _buildLine,
                 ],
               ),
             ),
           ],
-        ),*/
+        ),
+        Container(
+          padding: paddingLabel,
+          child: Text("หมายเลขเครื่องยนต์", style: textLabelStyle,),
+        ),
+        Padding(
+          padding: paddingInputBox,
+          child: TextField(
+            focusNode: myFocusNodeNumbeMotor,
+            controller: editNumbeMotor,
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.words,
+            style: textInputStyle,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        _buildLine,
+        Container(
+          padding: paddingLabel,
+          child: Text("หมายเลขตัวถัง", style: textLabelStyle,),
+        ),
+        Padding(
+          padding: paddingInputBox,
+          child: TextField(
+            focusNode: myFocusNodeNumberTank,
+            controller: editNumberTank,
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.words,
+            style: textInputStyle,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        _buildLine,
+        Container(
+          padding: paddingLabel,
+          child: Text("ระบุเพิ่มเติม", style: textLabelStyle,),
+        ),
+        Padding(
+          padding: paddingInputBox,
+          child: TextField(
+            focusNode: myFocusNodeOther,
+            controller: editOther,
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.words,
+            style: textInputStyle,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        _buildLine,
       ],
     );
   }
 
-  CupertinoAlertDialog _createCupertinoCancelDeleteDialog(text){
-    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 22.0, bottom: 22.0),
-          child: Text(text,
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-  }
-  void _showSearchEmptyAlertDialog(mContext,text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _createCupertinoCancelDeleteDialog(text);
-      },
-    );
-  }
-
-  _navigateSearch(BuildContext context) async {
-    showDialog(
+  _navigateSaved(BuildContext context) async {
+    /*showDialog(
         context: context,
         builder: (BuildContext context) {
           return Center(
@@ -484,21 +732,21 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
       }
     }else{
       _showSearchEmptyAlertDialog(context,"ไม่พบข้อมูลของกลาง");
-    }
+    }*/
   }
 
-  _navigateCreate(BuildContext mContext)async {
+  /*_navigateCreate(BuildContext mContext)async {
     final result = await Navigator.push(
       mContext,
       MaterialPageRoute(builder: (context) =>
           TabScreenArrest5Creating(
-            ItemsProductGroup: widget.ItemsProductGroup,
+            ItemsData: null,
           )),
     );
     if (result.toString() != "back") {
       Navigator.pop(context, result);
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -513,7 +761,7 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
         child: AppBar(
           title: new Padding(
             padding: EdgeInsets.only(right: 22.0),
-            child: new Text("ค้นหาของกลาง",
+            child: new Text("ของกลาง",
               style: styleTextAppbar,
             ),
           ),
@@ -527,9 +775,10 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
           actions: <Widget>[
             new FlatButton(
               onPressed: () {
-                _navigateCreate(context);
+                //_navigateSaved(context);
+                _onSaved(context);
               },
-              child: Text("สร้าง",
+              child: Text("บันทึก",
                 style: styleTextAppbar,
               ),
             ),
@@ -583,16 +832,6 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
   void _onSelectProductGroup(int PRODUCT_GROUP_ID)async{
     await onLoadActionProuductCategoryMaster(PRODUCT_GROUP_ID);
   }
-  void _onSelectProductCategory(int PRODUCT_CATEGORY_ID)async{
-    await onLoadActionProuductTypeMaster(PRODUCT_CATEGORY_ID);
-  }
-  /*void _onSelectProductType(int PRODUCT_TYPE_ID)async{
-    await onLoadActionProuductSubTypeMaster(PRODUCT_TYPE_ID);
-  }
-  void _onSelectProductSubType(int PRODUCT_SUBTYPE_ID)async{
-    await onLoadActionProuductSubSetTypeMaster(PRODUCT_SUBTYPE_ID);
-  }*/
-
   Future<bool> onLoadActionProuductCategoryMaster(int PRODUCT_GROUP_ID) async {
     Map map = {
       "TEXT_SEARCH": "",
@@ -602,68 +841,6 @@ class _TabScreenArrest5AddState extends State<TabScreenArrest5Add> {
 
     await new ArrestFutureMaster().apiRequestMasProductCategorygetByCon(map).then((onValue) {
       ItemsProductCategory = onValue;
-      print(ItemsProductCategory.RESPONSE_DATA[0].PRODUCT_CATEGORY_ID);
-      this.onLoadActionProuductTypeMaster(onValue.RESPONSE_DATA[0].PRODUCT_CATEGORY_ID);
-    });
-    setState(() {});
-    return true;
-  }
-  Future<bool> onLoadActionProuductTypeMaster(int PRODUCT_CATEGORY_ID) async {
-    Map map = {
-      "TEXT_SEARCH": "",
-      "PRODUCT_CATEGORY_ID": PRODUCT_CATEGORY_ID,
-      "PRODUCT_TYPE_ID": ""
-    };
-    await new ArrestFutureMaster().apiRequestMasProductTypegetByCon(map).then((onValue) {
-      ItemsProductType = onValue;
-      //this.onLoadActionProuductSubTypeMaster(onValue.RESPONSE_DATA[0].PRODUCT_TYPE_ID);
-    });
-    setState(() {});
-    return true;
-  }
-  /*Future<bool> onLoadActionProuductSubTypeMaster(int PRODUCT_TYPE_ID) async {
-    Map map = {
-      "TEXT_SEARCH": "",
-      "PRODUCT_TYPE_ID": PRODUCT_TYPE_ID,
-      "PRODUCT_SUBTYPE_ID": ""
-    };
-    await new ArrestFutureMaster().apiRequestMasProductSubTypegetByCon(map).then((onValue) {
-      ItemsProductSubType = onValue;
-      this.onLoadActionProuductSubSetTypeMaster(onValue.RESPONSE_DATA[0].PRODUCT_SUBTYPE_ID);
-    });
-    setState(() {});
-    return true;
-  }
-  Future<bool> onLoadActionProuductSubSetTypeMaster(int PRODUCT_SUBTYPE_ID) async {
-    Map map = {
-      "TEXT_SEARCH": "",
-      "PRODUCT_SUBTYPE_ID": PRODUCT_SUBTYPE_ID,
-      "PRODUCT_SUBSETTYPE_ID": ""
-    };
-    await new ArrestFutureMaster().apiRequestMasProductSubSetTypegetByCon(map).then((onValue) {
-      ItemsProductSubSetType = onValue;
-      //this.onLoadActionDistinctMaster(onValue.RESPONSE_DATA[0].PROVINCE_ID);
-    });
-    setState(() {});
-    return true;
-  }*/
-
-  Future<bool> onLoadActionProuductProductMappingMaster() async {
-    Map map = {
-      "PRODUCT_GROUP_NAME": sProductGroup==null?"":sProductGroup.PRODUCT_GROUP_NAME,
-      "PRODUCT_CATEGORY_NAME": sProductCategory==null?"":sProductCategory.PRODUCT_CATEGORY_NAME,
-      "PRODUCT_TYPE_NAME": sProductType==null?"":sProductType.PRODUCT_TYPE_NAME,
-      /*"PRODUCT_SUBTYPE_NAME": sProductSubType==null?"":sProductSubType.PRODUCT_SUBTYPE_NAME,
-      "PRODUCT_SUBSETTYPE_NAME": sProductSubSetType==null?"":sProductSubSetType.PRODUCT_SUBSETTYPE_NAME,*/
-      "PRODUCT_BRAND_NAME": editMainBrand.text,
-      "PRODUCT_SUBBRAND_NAME": editSecondaryBrand.text,
-      "PRODUCT_MODEL_NAME_TH": editProductModel.text,
-      /*"SIZES": "",
-      "SIZES_UNIT": ""*/
-    };
-    await new ArrestFutureMaster().apiRequestMasProductMappinggetByConAdv(map).then((onValue) {
-      _itemsData = onValue.RESPONSE_DATA;
-      //this.onLoadActionDistinctMaster(onValue.RESPONSE_DATA[0].PROVINCE_ID);
     });
     setState(() {});
     return true;

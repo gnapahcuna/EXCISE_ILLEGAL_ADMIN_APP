@@ -84,6 +84,7 @@ class LawsuitFuture{
       body: body,
     );
     if (response.statusCode == 200) {
+      print(response.body.toString());
       return ItemsArrestResponseLawsuitinsAll.fromJson(json.decode(response.body));
     } else {
       print('Something went wrong. \nResponse Code : ${response.statusCode}');
@@ -284,6 +285,42 @@ class LawsuitFuture{
       serv
           .Server()
           .IPAddressMasterLawsuit + "/LawsuitPaymentupdDelete",
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      return ItemsArrestResponseMessage.fromJson(json.decode(response.body));
+    } else {
+      print('Something went wrong. \nResponse Code : ${response.statusCode}');
+    }
+  }
+
+
+  Future<ItemsArrestResponseLawsuitMistreatNoupdByCon> apiRequestLawsuitMistreatNoupdByCon(List<Map> jsonMap) async {
+    //encode Map to JSON
+    var body = json.encode(jsonMap);
+    final response = await http.post(
+      serv
+          .Server()
+          .IPAddressMasterLawsuit + "/LawsuitMistreatNoupdByCon",
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      return ItemsArrestResponseLawsuitMistreatNoupdByCon.fromJson(json.decode(response.body));
+    } else {
+      print('Something went wrong. \nResponse Code : ${response.statusCode}');
+    }
+  }
+  Future<ItemsArrestResponseMessage> apiRequestLawsuitMistreatNoupdDelete(List<Map> jsonMap) async {
+    //encode Map to JSON
+    var body = json.encode(jsonMap);
+    final response = await http.post(
+      serv
+          .Server()
+          .IPAddressMasterLawsuit + "/LawsuitMistreatNoupdDelete",
       headers: {"Content-Type": "application/json"},
       body: body,
     );

@@ -7,17 +7,43 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_detailed_fine_screen.dart';
+import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_evidence.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_indicment_detail.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/response/item_compare_response.dart';
+import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
 import 'package:prototype_app_pang/model/test/compare_%20suspect.dart';
 import 'package:prototype_app_pang/model/test/compare_%20suspect_detail.dart';
 import 'package:prototype_app_pang/model/test/compare_case_information.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 
+const double _kPickerSheetHeight = 216.0;
 class CompareDetailScreenFragment extends StatefulWidget {
-  ItemsCompareCaseInformation ItemInformations;
+  String Title;
+  ItemsCompareMain itemsCompareMain;
+  ItemsCompareArrestMain itemsCompareArrestMain;
+  ItemsPersonInformation ItemsPerson;
+  ItemsCompareListIndicmentDetail itemsCompareListIndicmentDetail;
+  double FINE_VALUE;
+  bool IsCreate;
+  bool IsPreview;
+  CompareDetailScreenFragment({
+    Key key,
+    @required this.Title,
+    @required this.itemsCompareMain,
+    @required this.itemsCompareArrestMain,
+    @required this.ItemsPerson,
+    @required this.itemsCompareListIndicmentDetail,
+    @required this.FINE_VALUE,
+    @required this.IsCreate,
+    @required this.IsPreview,
+  }) : super(key: key);
+ /* ItemsCompareCaseInformation ItemInformations;
   ItemsCompareSuspect ItemSuspect;
   ItemsCompareSuspectDetail ItemSuspectDetail;
   CompareDetailScreenFragment({
@@ -25,7 +51,7 @@ class CompareDetailScreenFragment extends StatefulWidget {
     @required this.ItemInformations,
     @required this.ItemSuspect,
     @required this.ItemSuspectDetail,
-  }) : super(key: key);
+  }) : super(key: key);*/
   @override
   _FragmentState createState() => new _FragmentState();
 }
@@ -65,6 +91,11 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
   final FocusNode myFocusNodeCompareBail= FocusNode();
   final FocusNode myFocusNodeCompareDepositBail= FocusNode();
 
+  final FocusNode myFocusNodeCompareDate= FocusNode();
+  final FocusNode myFocusNodeCompareTime= FocusNode();
+  final FocusNode myFocusNodeTaxDueDate= FocusNode();
+  final FocusNode myFocusNodeFineDueDate= FocusNode();
+
   //textfield
   TextEditingController editCompareNumber = new TextEditingController();
   TextEditingController editCompareYear = new TextEditingController();
@@ -75,12 +106,19 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
   TextEditingController editCompareBail= new TextEditingController();
   TextEditingController editCompareDepositBail= new TextEditingController();
 
+  TextEditingController editCompareDate= new TextEditingController();
+  TextEditingController editCompareTime= new TextEditingController();
+  TextEditingController editTaxDueDate= new TextEditingController();
+  TextEditingController editFineDueDate= new TextEditingController();
+
   //วันเดือนปี เวลา ปัจจุบัน
   String _currentCompareDate,_currentCompareTime;
   var dateFormatDate,dateFormatTime;
   DateTime _initDate=DateTime.now();
 
   DateTime _dtCompare=DateTime.now();
+  //time
+  DateTime time = DateTime.now();
 
   //วันที่กำหนดชำระภาษี
   String _currentTaxDueDate="";
@@ -97,14 +135,14 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
   VoidCallback listener;
 
   //model คำพิพากษาศาล
-  ItemsCompareSuspect itemMain;
+  /*ItemsCompareSuspect itemMain;
   ItemsCompareCaseInformation itemInfor;
-  List<ItemsCompareEvidence> itemEvidence;
+  List<ItemsCompareEvidence> itemEvidence;*/
 
   //style text
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
-  TextStyle textStyleData = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleData1 = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleSubData = TextStyle(fontSize: 16, color: Colors.black38,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
@@ -124,6 +162,10 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
 
   String _titleAppbar;
+  
+  ItemsCompareMain _itemsCompareMain;
+  ItemsCompareArrestMain _itemsCompareArrestMain;
+  ItemsCompareListIndicmentDetail _indicmentDetail;
   @override
   void initState() {
     super.initState();
@@ -138,7 +180,27 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     _currentCompareDate=date;
     _currentCompareTime = dateFormatTime.format(DateTime.now()).toString();
 
-    itemMain=widget.ItemSuspect;
+    List splitslawYear = dateFormatDate.format(DateTime.now()).toString().split(
+        " ");
+    String compare_year = (int.parse(splitslawYear[3]) + 543).toString();
+    editCompareYear.text = compare_year;
+    editCompareDate.text = date;
+    editCompareTime.text = _currentCompareTime;
+    editTaxDueDate.text= _currentCompareTime;
+
+
+    print(widget.ItemsPerson.toString());
+    String title = widget.ItemsPerson.TITLE_SHORT_NAME_TH!=null
+        ?widget.ItemsPerson.TITLE_SHORT_NAME_TH
+        :"";
+    String firstname =  widget.ItemsPerson.FIRST_NAME!=null
+        ?widget.ItemsPerson.FIRST_NAME
+        :"";
+    String lastname =  widget.ItemsPerson.LAST_NAME!=null
+        ?widget.ItemsPerson.LAST_NAME
+        :"";
+    editComparePerson.text=title+firstname+" "+lastname;;
+    /*itemMain=widget.ItemSuspect;
     itemInfor=widget.ItemInformations;
 
     if(itemMain.SuspectDetails!=null) {
@@ -146,7 +208,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     }
 
     _onSaved=itemMain.IsActive;
-    /*if(widget.ItemSuspect!=null) {
+    if(widget.ItemSuspect!=null) {
       itemMain=widget.ItemSuspect;
       _onSaved=true;
       _isFine=itemMain.IsFine;
@@ -157,12 +219,19 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
       itemMain.IsOneTime?_setInitData1():_setInitData2();
 
       print("ชื่อศาล : " + itemMain.CourtName);
-    }
-*/
-    if(itemMain.SuspectName.length>17){
-      _titleAppbar= itemMain.SuspectName.substring(0,17)+"...";
+    }*/
+    if(widget.Title.length>17){
+      _titleAppbar= widget.Title.substring(0,17)+"...";
     }else{
-      _titleAppbar= itemMain.SuspectName;
+      _titleAppbar= widget.Title;
+    }
+
+    _itemsCompareArrestMain=widget.itemsCompareArrestMain;
+    _indicmentDetail=widget.itemsCompareListIndicmentDetail;
+    if(widget.IsPreview){
+      _onSaved=widget.IsPreview;
+      _onEdited=widget.IsCreate;
+      _itemsCompareMain=widget.itemsCompareMain;
     }
   }
 
@@ -221,13 +290,9 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                   'ยกเลิก', style: ButtonCancelStyle)),
           new CupertinoButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context,"Back");
                 setState(() {
-                  _onSaved = false;
-                  itemMain.IsActive=false;
-                  //itemInfor.IsCompare=false;
-                  clearTextfield();
-                  //Navigator.pop(context,itemMain);
+                  onDeleted();
                 });
               },
               child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
@@ -381,6 +446,28 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     }
   }
 
+  Widget _buildBottomPicker(Widget picker) {
+    return Container(
+      height: _kPickerSheetHeight,
+      padding: const EdgeInsets.only(top: 6.0),
+      color: CupertinoColors.white,
+      child: DefaultTextStyle(
+        style: TextStyle(
+            color: CupertinoColors.black,
+            fontSize: 22.0,fontFamily: FontStyles().FontFamily
+        ),
+        child: GestureDetector(
+          // Blocks taps from propagating to the modal sheet and popping.
+          onTap: () {},
+          child: SafeArea(
+            top: false,
+            child: picker,
+          ),
+        ),
+      ),
+    );
+  }
+
   //ส่วนของ body
   Widget _buildContent() {
     var size = MediaQuery
@@ -475,7 +562,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                           ),
                           Container(
                             width: ((size.width * 75) / 100) / 2,
-                            child: itemInfor.IsCompare?
+                            child: /*itemInfor.IsCompare?
                             new Padding(
                               padding: paddingData,
                               child: Center(
@@ -483,7 +570,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                   style: textStyleData,
                                 ),
                               )
-                            ):Column(
+                            ):*/Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Container(
@@ -515,7 +602,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                           ),
                           Container(
                             width: ((size.width * 75) / 100) / 2,
-                            child: itemInfor.IsCompare?
+                            child: /*itemInfor.IsCompare?
                             new Padding(
                               padding: paddingData,
                               child: Center(
@@ -523,7 +610,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                   style: textStyleData,
                                 ),
                               )
-                            ):Column(
+                            ):*/Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Container(
@@ -566,7 +653,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          new ListTile(
+                          new /*ListTile(
                             title: Text(
                               _currentCompareDate, style: textStyleData,),
                             trailing: Icon(
@@ -591,6 +678,40 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                 });
                               });
                             },
+                          ),*/
+                          TextField(
+                            enableInteractiveSelection: false,
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DynamicDialog(
+                                        Current: _dtCompare);
+                                  }).then((s) {
+                                String date = "";
+                                List splits = dateFormatDate.format(
+                                    s).toString().split(" ");
+                                date = splits[0] + " " + splits[1] +
+                                    " " +
+                                    (int.parse(splits[3]) + 543)
+                                        .toString();
+                                setState(() {
+                                  _dtCompare = s;
+                                  _currentCompareDate = date;
+                                  editCompareDate.text = _currentCompareDate;
+                                });
+                              });
+                            },
+                            focusNode: myFocusNodeCompareDate,
+                            controller: editCompareDate,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            style: textStyleData,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
+                            ),
                           ),
                           Container(
                             height: 1.0,
@@ -614,12 +735,51 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          new ListTile(
+                          /*new ListTile(
                             title: Text(
                               _currentCompareTime, style: textStyleData,),
                             onTap: () {
 
                             },
+                          ),*/
+                          TextField(
+                            enableInteractiveSelection: false,
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              showCupertinoModalPopup<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return _buildBottomPicker(
+                                    CupertinoDatePicker(
+                                      use24hFormat: true,
+                                      mode: CupertinoDatePickerMode.time,
+                                      initialDateTime: time,
+                                      onDateTimeChanged: (
+                                          DateTime newDateTime) {
+                                        setState(() {
+                                          time = newDateTime;
+                                          _currentCompareTime = dateFormatTime.format(time)
+                                              .toString();
+                                          editCompareTime.text = _currentCompareTime;
+
+                                          /*List splitsArrestDate = _dtArrest.toUtc().toLocal().toString().split(" ");
+                                          List splitsArrestTime = time.toString().split(" ");
+                                          _arrestDate=splitsArrestDate[0].toString()+" "+splitsArrestTime[1].toString();*/
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            focusNode: myFocusNodeCompareTime,
+                            controller: editCompareTime,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            style: textStyleData,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
                           ),
                           Container(
                             height: 1.0,
@@ -641,6 +801,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                           new Container(
                             //padding: paddingData,
                             child: TextField(
+                              enabled: false,
                               focusNode: myFocusNodeComparePerson,
                               controller: editComparePerson,
                               keyboardType: TextInputType.text,
@@ -816,7 +977,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          new ListTile(
+                          /*new ListTile(
                             title: Text(
                               _currentTaxDueDate, style: textStyleData,),
                             trailing: Icon(
@@ -841,6 +1002,40 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                 });
                               });
                             },
+                          ),*/
+                          TextField(
+                            enableInteractiveSelection: false,
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DynamicDialog(
+                                        Current: _dtTaxDueDate);
+                                  }).then((s) {
+                                String date = "";
+                                List splits = dateFormatDate.format(
+                                    s).toString().split(" ");
+                                date = splits[0] + " " + splits[1] +
+                                    " " +
+                                    (int.parse(splits[3]) + 543)
+                                        .toString();
+                                setState(() {
+                                  _dtTaxDueDate = s;
+                                  _currentTaxDueDate = date;
+                                  editTaxDueDate.text=_currentTaxDueDate;
+                                });
+                              });
+                            },
+                            focusNode: myFocusNodeTaxDueDate,
+                            controller: editTaxDueDate,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            style: textStyleData,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
+                            ),
                           ),
                           Container(
                             height: 1.0,
@@ -1055,7 +1250,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              new ListTile(
+                              /*new ListTile(
                                 title: Text(
                                   _currentFineDueDate, style: textStyleData,),
                                 trailing: Icon(
@@ -1080,6 +1275,40 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                     });
                                   });
                                 },
+                              ),*/
+                              TextField(
+                                enableInteractiveSelection: false,
+                                onTap: () {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return DynamicDialog(
+                                            Current: _dtFineDueDate);
+                                      }).then((s) {
+                                    String date = "";
+                                    List splits = dateFormatDate.format(
+                                        s).toString().split(" ");
+                                    date = splits[0] + " " + splits[1] +
+                                        " " +
+                                        (int.parse(splits[3]) + 543)
+                                            .toString();
+                                    setState(() {
+                                      _dtFineDueDate = s;
+                                      _currentFineDueDate = date;
+                                      editFineDueDate.text=_currentFineDueDate;
+                                    });
+                                  });
+                                },
+                                focusNode: myFocusNodeFineDueDate,
+                                controller: editFineDueDate,
+                                keyboardType: TextInputType.text,
+                                textCapitalization: TextCapitalization.words,
+                                style: textStyleData,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
+                                ),
                               ),
                               Container(
                                 height: 1.0,
@@ -1165,7 +1394,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
               ),
               GestureDetector(
                 onTap: (){
-                  _navigate(context,widget.ItemInformations,widget.ItemSuspect);
+                  //_navigate(context,widget.ItemInformations,widget.ItemSuspect);
                 },
                 child: Container(
                   width: size.width,
@@ -1210,7 +1439,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                   Padding(
                                     padding: EdgeInsets.only(right: 22.0),
                                     child: Text(
-                                        itemMain.FineValue.toString(),
+                                        "ค่าปรับ",
                                         style: textStyleData),
                                   ),
                                   Text(
@@ -1234,6 +1463,31 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
         )
     );
   }
+  String _convertDate(String sDate){
+    String result;
+    DateTime dt = DateTime.parse(sDate);
+    List splits = dateFormatDate.format(dt).toString().split(
+        " ");
+    result = splits[0] + " " + splits[1] + " " +
+        (int.parse(splits[3]) + 543).toString();
+
+
+    return result;
+  }
+  String _convertTime(String sDate){
+    DateTime dt = DateTime.parse(sDate);
+    String result = "เวลา " +
+        dateFormatTime.format(dt).toString();
+    return result;
+  }
+  String _convertYear(String sDate){
+    DateTime dt = DateTime.parse(sDate);
+    List splits = dateFormatDate.format(dt).toString().split(
+        " ");
+    String year = (int.parse(splits[3]) + 543).toString();
+    return year;
+  }
+
   Widget _buildContent_saved(BuildContext context) {
     var size = MediaQuery
         .of(context)
@@ -1263,7 +1517,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        "น."+itemInfor.CompareNumber+"/"+itemInfor.CompareYear,
+                        "น."+_itemsCompareMain.COMPARE_NO.toString()+"/"+_convertYear(_itemsCompareMain.COMPARE_NO_YEAR),
                         style: textStyleData,),
                     ),
                     Padding(
@@ -1280,7 +1534,8 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        itemMain.SuspectDetails.Date+" "+itemMain.SuspectDetails.Time,
+                        _convertDate(_itemsCompareMain.COMPARE_DATE)+" เวลา "+
+                        _convertTime(_itemsCompareMain.COMPARE_DATE),
                         style: textStyleData,),
                     ),
                     Container(
@@ -1290,7 +1545,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        itemMain.SuspectDetails.Person, style: textStyleData,),
+                        "Staff", style: textStyleData,),
                     ),
                     Container(
                       padding: paddingLabel,
@@ -1299,7 +1554,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        itemMain.SuspectDetails.Place, style: textStyleData,),
+                        _itemsCompareMain.OFFICE_NAME, style: textStyleData,),
                     ),
                     Container(
                       padding: paddingLabel,
@@ -1307,8 +1562,8 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     ),
                     Padding(
                       padding: paddingData,
-                      child: Text(
-                        itemMain.SuspectDetails.IsRequested?"ร้องขอ":"ไม่ร้องขอ", style: textStyleData,),
+                      /*child: Text(
+                        itemMain.SuspectDetails.IsRequested?"ร้องขอ":"ไม่ร้องขอ", style: textStyleData,),*/
                     ),
                     Container(
                       padding: paddingLabel,
@@ -1316,10 +1571,10 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     ),
                     Padding(
                       padding: paddingData,
-                      child: Text(
-                        itemMain.SuspectDetails.TaxDueDate, style: textStyleData,),
+                      /*child: Text(
+                        itemMain.SuspectDetails.TaxDueDate, style: textStyleData,),*/
                     ),
-                    IsRelease?
+                    /*IsRelease?
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -1421,7 +1676,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -1552,7 +1807,40 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     );
   }
 
-  void onSaved()async {
+  CupertinoAlertDialog _cupertinoSearchEmpty(mContext,text) {
+    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
+    TextStyle ButtonAcceptStyle = TextStyle(
+        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
+    return new CupertinoAlertDialog(
+        content: new Padding(
+          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+          child: Text(text,
+            style: TitleStyle,
+          ),
+        ),
+        actions: <Widget>[
+          new CupertinoButton(
+              onPressed: () {
+                Navigator.pop(mContext);
+              },
+              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
+        ]
+    );
+  }
+
+  void _showSearchEmptyAlertDialog(context,text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _cupertinoSearchEmpty(context,text);
+      },
+    );
+  }
+
+  void onDeleted()async{
+    Map map = {
+      "COMPARE_ID": _itemsCompareMain.COMPARE_ID
+    };
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1561,55 +1849,437 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
             ),
           );
         });
-    await onLoadAction();
+    await onLoadActionCompareDeleteAll(map);
     Navigator.pop(context);
+  }
+  void onSaved(BuildContext mContext)async {
+    if (editCompareNumber.text.isEmpty||editCompareYear.text.isEmpty) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกเลขที่คดีเปรียบเทียบ');
+    }else if (editCompareDate.text.isEmpty||editCompareTime.text.isEmpty) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกวันที่และเวลาเปรียบเทียบปรับ');
+    }else if (editComparePlace.text.isEmpty) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกช่องเขียนที่');
+    }else if (editFineDueDate.text.isEmpty&&IsRelease) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกวันที่กำหนดชำระค่าปรับ');
+    }else if (editCompareBillNumber.text.isEmpty) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกเลขที่ใบเสร็จ');
+    }else if (editCompareBillBookNo.text.isEmpty) {
+      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกเล่มที่ใบเสร็จ');
+    }else {
+      if (!_onEdited) {
+        Map map_compare={
+          "COMPARE_ID": "",
+          "LAWSUIT_ID": _itemsCompareArrestMain.LAWSUIT_ID,
+          "OFFICE_ID": "",
+          "TREASURY_RATE": "60",
+          "BRIBE_RATE": "20",
+          "REWARD_RATE": "20",
+          "OFFICE_CODE": "100300",
+          "OFFICE_NAME": "สำนักงานสรรพสเทพฯ 3",
+          "COMPARE_NO": int.parse(editCompareNumber.text),
+          "COMPARE_NO_YEAR": DateTime.now().toString(),
+          "COMPARE_DATE": _dtCompare.toString(),
+          "IS_OUTSIDE": 0,
+          "IS_ACTIVE": 1,
+          "CREATE_DATE": DateTime.now().toString(),
+          "CREATE_USER_ACCOUNT_ID": 1,
+          "UPDATE_DATE": "",
+          "UPDATE_USER_ACCOUNT_ID": "",
+          "CompareMapping":
+          [
+            {
+              "COMPARE_MAPPING_ID": "",
+              "COMPARE_ID": "",
+              "INDICTMENT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
+              "PAST_LAWSUIT_ID": 2,
+              "IS_EVER_WRONG": 1,
+              "IS_ACTIVE": 1
+            }
+          ],
+          "CompareDetail":
+          [
+            {
+              "COMPARE_DETAIL_ID": "",
+              "COMPARE_MAPPING_ID": "",
+              "RECEIPT_OFFICE_ID": "",
+              "APPROVE_OFFICE_ID": "",
+              "MISTREAT_NO": _indicmentDetail.MISTREAT_NO,
+              "OLD_PAYMENT_FINE": "",
+              "PAYMENT_FINE": "1000",
+              "DIFFERENCE_PAYMENT_FINE": "",
+              "TREASURY_MONEY": "600",
+              "BRIBE_MONEY": "200",
+              "REWARD_MONEY": "200",
+              "PAYMENT_FINE_DUE_DATE": IsRelease
+                  ? _dtFineDueDate.toString()
+                  : "",
+              "PAYMENT_VAT_DUE_DATE": _dtTaxDueDate.toString(),
+              "INSURANCE": editCompareBail.text,
+              "GAURANTEE": editCompareDepositBail.text,
+              "PAYMENT_DATE": _dtCompare.toString(),
+              "RECEIPT_TYPE": 0,
+              "RECEIPT_BOOK_NO": editCompareBillBookNo.text,
+              "RECEIPT_NO": editCompareBillNumber.text,
+              "RECEIPT_OFFICE_CODE": "",
+              "RECEIPT_OFFICE_NAME": "ส่วนคดี",
+              "APPROVE_OFFICE_CODE": "",
+              "APPROVE_OFFICE_NAME": "",
+              "APPROVE_DATE": "",
+              "APPROVE_TYPE": "",
+              "COMMAND_NO": "",
+              "COMMAND_DATE": "",
+              "REMARK_NOT_AGREE": "",
+              "REMARK_NOT_APPROVE": "",
+              "FACT": "",
+              "COMPARE_REASON": "",
+              "ADJUST_REASON": "",
+              "COMPARE_TYPE": 1,
+              "IS_REQUEST": IsRequested ? 1 : 0,
+              "IS_TEMP_RELEASE": IsRelease ? 1 : 0,
+              "IS_INSURANCE": editCompareBail.text.isEmpty ? 0 : 1,
+              "IS_GAURANTEE": editCompareDepositBail.text.isEmpty ? 0 : 1,
+              "IS_PAYMENT": 1,
+              "IS_REVENUE": 0,
+              "IS_AGREE": 0,
+              "IS_APPROVE": 0,
+              "IS_AUTHORITY": 1,
+              "IS_ACTIVE": 1,
+              "CompareDetailPayment":
+              [
+                {
+                  "PAYMENT_ID": "",
+                  "COMPARE_DETAIL_ID": "",
+                  "PAYMENT_TYPE": 0,
+                  "PAYMENT_FINE": "2000",
+                  "REFFERENCE_NO": "",
+                  "IS_ACTIVE": 1
+                }
+              ],
+              "CompareDetailFine":
+              [
+                {
+                  "FINE_ID": "",
+                  "COMPARE_DETAIL_ID": "",
+                  "PRODUCT_ID": 23,
+                  "FINE_RATE": 1,
+                  "VAT": "1000",
+                  "FINE": "",
+                  "NET_FINE": "1000",
+                  "OLD_PAYMENT_FINE": "",
+                  "PAYMENT_FINE": "1000",
+                  "DIFFERENCE_PAYMENT_FINE": "",
+                  "TREASURY_MONEY": "600",
+                  "BRIBE_MONEY": "200",
+                  "REWARD_MONEY": "200",
+                  "IS_ACTIVE": 1
+                }
+              ],
+              "ComparePayment":
+              [
+                {
+                  "PAYMENT_ID": "",
+                  "LAWSUIT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
+                  "COMPARE_DETAIL_ID": "",
+                  "FINE_TYPE": 1,
+                  "FINE": "1000",
+                  "PAYMENT_PERIOD_NO": "",
+                  "PAYMENT_DATE": IsRelease?_dtFineDueDate.toString():DateTime.now().toString(),
+                  "IS_REQUEST_REWARD": 0,
+                  "IS_ACTIVE": 1,
+                  "ComparePaymentDetail":
+                  [
+                    {
+                      "PAYMENT_DETAIL_ID": "",
+                      "PAYMENT_ID": "",
+                      "NOTICE_ID": 2,
+                      "IS_REQUEST_BRIBE": 0,
+                      "IS_ACTIVE": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "CompareStaff":
+          [
+            {
+              "STAFF_ID": "",
+              "COMPARE_ID": "",
+              "COMPARE_DETAIL_ID": "",
+              "STAFF_REF_ID": "",
+              "TITLE_ID": "1",
+              "STAFF_CODE": "4842",
+              "ID_CARD": "127896325",
+              "STAFF_TYPE": 1,
+              "TITLE_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+              "TITLE_NAME_EN": "",
+              "TITLE_SHORT_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+              "TITLE_SHORT_NAME_EN": "",
+              "FIRST_NAME":widget.ItemsPerson.FIRST_NAME,
+              "LAST_NAME": widget.ItemsPerson.LAST_NAME,
+              "AGE": "27",
+              "OPERATION_POS_CODE": "",
+              "OPREATION_POS_NAME": widget.ItemsPerson.OPREATION_POS_NAME,
+              "OPREATION_POS_LEVEL": "",
+              "OPERATION_POS_LEVEL_NAME": widget.ItemsPerson.OPREATION_POS_LAVEL_NAME,
+              "OPERATION_DEPT_CODE": "",
+              "OPERATION_DEPT_NAME": "",
+              "OPERATION_DEPT_LEVEL": "",
+              "OPERATION_UNDER_DEPT_CODE": "",
+              "OPERATION_UNDER_DEPT_NAME": "",
+              "OPERATION_UNDER_DEPT_LEVEL": "",
+              "OPERATION_OFFICE_CODE":"000000",
+              "OPERATION_OFFICE_NAME":"",
+              "OPERATION_OFFICE_SHORT_NAME":"",
+              "MANAGEMENT_WORK_DEPT_CODE": "",
+              "MANAGEMENT_WORK_DEPT_NAME": "",
+              "MANAGEMENT_WORK_DEPT_LEVEL": "",
+              "MANAGEMENT_OFFICE_CODE": "",
+              "MANAGEMENT_OFFICE_NAME": widget.ItemsPerson.OPERATION_OFFICE_NAME,
+              "MANAGEMENT_OFFICE_SHORT_NAME": "",
+              "REPRESENT_POS_CODE": "",
+              "REPRESENT_POS_NAME": "",
+              "REPRESENT_POS_LEVEL": "",
+              "REPRESENT_POS_LEVEL_NAME": "",
+              "REPRESENT_DEPT_CODE": "",
+              "REPRESENT_DEPT_NAME": "",
+              "REPRESENT_DEPT_LEVEL": "",
+              "REPRESENT_UNDER_DEPT_CODE": "",
+              "REPRESENT_UNDER_DEPT_NAME": "",
+              "REPRESENT_UNDER_DEPT_LEVEL": "",
+              "REPRESENT_WORK_DEPT_CODE": "",
+              "REPRESENT_WORK_DEPT_NAME": "",
+              "REPRESENT_WORK_DEPT_LEVEL": "",
+              "REPRESENT_OFFICE_CODE": "",
+              "REPRESENT_OFFICE_NAME": "",
+              "REPRESENT_OFFICE_SHORT_NAME": "",
+              "STATUS": 1,
+              "REMARK": "",
+              "CONTRIBUTOR_ID": 16,
+              "IS_ACTIVE": 1
+            }
+          ]
+        };
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Center(
+                child: CupertinoActivityIndicator(
+                ),
+              );
+            });
+        await onLoadActionCompareInsAll(map_compare);
+        Navigator.pop(context);
+        Navigator.pop(context,_itemsCompareMain);
+      }else{
+        List<Map> map_compare_mapping=[];
+        _itemsCompareMain.CompareMapping.forEach((item){
+          map_compare_mapping.add({
+            "COMPARE_MAPPING_ID": item.COMPARE_MAPPING_ID,
+            "COMPARE_ID": item.COMPARE_ID,
+            "INDICTMENT_DETAIL_ID": item.INDICTMENT_DETAIL_ID,
+            "PAST_LAWSUIT_ID": 2,
+            "IS_EVER_WRONG": 1,
+            "IS_ACTIVE": 1
+          });
+        });
+        Map map_compare={
+          "COMPARE_ID": _itemsCompareMain.COMPARE_ID,
+          "LAWSUIT_ID": _itemsCompareArrestMain.LAWSUIT_ID,
+          "OFFICE_ID": "",
+          "TREASURY_RATE": "60",
+          "BRIBE_RATE": "20",
+          "REWARD_RATE": "20",
+          "OFFICE_CODE": "100300",
+          "OFFICE_NAME": "สำนักงานสรรพสเทพฯ 3",
+          "COMPARE_NO": int.parse(editCompareNumber.text),
+          "COMPARE_NO_YEAR": DateTime.now().toString(),
+          "COMPARE_DATE": _dtCompare.toString(),
+          "IS_OUTSIDE": 0,
+          "IS_ACTIVE": 1,
+          "CREATE_DATE": "",
+          "CREATE_USER_ACCOUNT_ID": 1,
+          "UPDATE_DATE": DateTime.now().toString(),
+          "UPDATE_USER_ACCOUNT_ID": "",
+          "CompareMapping": map_compare_mapping
+        };
+
+        Map map_compare_detail=null;
+        _itemsCompareMain.CompareMapping.forEach((mapping){
+          mapping.CompareDetail.forEach((detail){
+            map_compare_detail={
+              "COMPARE_DETAIL_ID": detail.COMPARE_DETAIL_ID,
+              "COMPARE_MAPPING_ID": detail.COMPARE_MAPPING_ID,
+              "RECEIPT_OFFICE_ID": "",
+              "APPROVE_OFFICE_ID": "",
+              "MISTREAT_NO": detail.MISTREAT_NO,
+              "OLD_PAYMENT_FINE": "",
+              "PAYMENT_FINE": "1000",
+              "DIFFERENCE_PAYMENT_FINE": "",
+              "TREASURY_MONEY": "600",
+              "BRIBE_MONEY": "200",
+              "REWARD_MONEY": "200",
+              "PAYMENT_FINE_DUE_DATE": IsRelease
+                  ? _dtFineDueDate.toString()
+                  : "",
+              "PAYMENT_VAT_DUE_DATE": _dtTaxDueDate.toString(),
+              "INSURANCE": editCompareBail.text,
+              "GAURANTEE": editCompareDepositBail.text,
+              "PAYMENT_DATE": _dtCompare.toString(),
+              "RECEIPT_TYPE": 0,
+              "RECEIPT_BOOK_NO": editCompareBillBookNo.text,
+              "RECEIPT_NO": editCompareBillNumber.text,
+              "RECEIPT_OFFICE_CODE": "",
+              "RECEIPT_OFFICE_NAME": "ส่วนคดี",
+              "APPROVE_OFFICE_CODE": "",
+              "APPROVE_OFFICE_NAME": "",
+              "APPROVE_DATE": "",
+              "APPROVE_TYPE": "",
+              "COMMAND_NO": "",
+              "COMMAND_DATE": "",
+              "REMARK_NOT_AGREE": "",
+              "REMARK_NOT_APPROVE": "",
+              "FACT": "",
+              "COMPARE_REASON": "",
+              "ADJUST_REASON": "",
+              "IS_REQUEST": IsRequested ? 1 : 0,
+              "IS_TEMP_RELEASE": IsRelease ? 1 : 0,
+              "IS_INSURANCE": editCompareBail.text.isEmpty ? 0 : 1,
+              "IS_GAURANTEE": editCompareDepositBail.text.isEmpty ? 0 : 1,
+              "IS_PAYMENT": 1,
+              "IS_REVENUE": 0,
+              "IS_AGREE": 0,
+              "IS_APPROVE": 0,
+              "IS_AUTHORITY": 1,
+              "IS_ACTIVE": 1
+            };
+          });
+        });
+        List<Map> map_compare_detail_payment=[];
+        _itemsCompareMain.CompareMapping.forEach((mapping){
+          mapping.CompareDetail.forEach((detail){
+            detail.CompareDetailPayment.forEach((detail_pay){
+              map_compare_detail_payment.add({
+                "PAYMENT_ID": detail_pay.PAYMENT_ID,
+                "COMPARE_DETAIL_ID": detail_pay.COMPARE_DETAIL_ID,
+                "PAYMENT_TYPE": 0,
+                "PAYMENT_FINE": widget.FINE_VALUE,
+                "REFFERENCE_NO": "",
+                "IS_ACTIVE": 1
+              });
+            });
+          });
+        });
+        List<Map> map_compare_detail_fine=[];
+        _itemsCompareMain.CompareMapping.forEach((mapping){
+          mapping.CompareDetail.forEach((detail){
+            detail.CompareDetailFine.forEach((detail_fine){
+              map_compare_detail_fine.add({
+                "FINE_ID": detail_fine.FINE_ID,
+                "COMPARE_DETAIL_ID": detail_fine.COMPARE_DETAIL_ID,
+                "PRODUCT_ID": detail_fine.PRODUCT_ID,
+                "FINE_RATE": 1,
+                "VAT": "1000",
+                "FINE": "",
+                "NET_FINE": "1000",
+                "OLD_PAYMENT_FINE": "",
+                "PAYMENT_FINE": "1000",
+                "DIFFERENCE_PAYMENT_FINE": "",
+                "TREASURY_MONEY": "600",
+                "BRIBE_MONEY": "200",
+                "REWARD_MONEY": "200",
+                "IS_ACTIVE": 1
+              });
+            });
+          });
+        });
+        List<Map> map_staff=[];
+        _itemsCompareMain.CompareStaff.forEach((staff){
+           map_staff=[
+            {
+              "STAFF_ID": staff.STAFF_ID,
+              "COMPARE_ID": staff.COMPARE_ID,
+              "COMPARE_DETAIL_ID": staff.COMPARE_DETAIL_ID,
+              "STAFF_REF_ID": "",
+              "TITLE_ID": 1,
+              "STAFF_CODE": "4842",
+              "ID_CARD": "127896325",
+              "STAFF_TYPE": 1,
+              "TITLE_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+              "TITLE_NAME_EN": "",
+              "TITLE_SHORT_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+              "TITLE_SHORT_NAME_EN": "",
+              "FIRST_NAME":widget.ItemsPerson.FIRST_NAME,
+              "LAST_NAME": widget.ItemsPerson.LAST_NAME,
+              "AGE": "27",
+              "OPERATION_POS_CODE": "",
+              "OPREATION_POS_NAME": widget.ItemsPerson.OPREATION_POS_NAME,
+              "OPREATION_POS_LEVEL": "",
+              "OPERATION_POS_LEVEL_NAME": widget.ItemsPerson.OPREATION_POS_LAVEL_NAME,
+              "OPERATION_DEPT_CODE": "",
+              "OPERATION_DEPT_NAME": "",
+              "OPERATION_DEPT_LEVEL": "",
+              "OPERATION_UNDER_DEPT_CODE": "",
+              "OPERATION_UNDER_DEPT_NAME": "",
+              "OPERATION_UNDER_DEPT_LEVEL": "",
+              "OPERATION_OFFICE_CODE":"000000",
+              "OPERATION_OFFICE_NAME":"",
+              "OPERATION_OFFICE_SHORT_NAME":"",
+              "MANAGEMENT_WORK_DEPT_CODE": "",
+              "MANAGEMENT_WORK_DEPT_NAME": "",
+              "MANAGEMENT_WORK_DEPT_LEVEL": "",
+              "MANAGEMENT_OFFICE_CODE": "",
+              "MANAGEMENT_OFFICE_NAME": widget.ItemsPerson.OPERATION_OFFICE_NAME,
+              "MANAGEMENT_OFFICE_SHORT_NAME": "",
+              "REPRESENT_POS_CODE": "",
+              "REPRESENT_POS_NAME": "",
+              "REPRESENT_POS_LEVEL": "",
+              "REPRESENT_POS_LEVEL_NAME": "",
+              "REPRESENT_DEPT_CODE": "",
+              "REPRESENT_DEPT_NAME": "",
+              "REPRESENT_DEPT_LEVEL": "",
+              "REPRESENT_UNDER_DEPT_CODE": "",
+              "REPRESENT_UNDER_DEPT_NAME": "",
+              "REPRESENT_UNDER_DEPT_LEVEL": "",
+              "REPRESENT_WORK_DEPT_CODE": "",
+              "REPRESENT_WORK_DEPT_NAME": "",
+              "REPRESENT_WORK_DEPT_LEVEL": "",
+              "REPRESENT_OFFICE_CODE": "",
+              "REPRESENT_OFFICE_NAME": "",
+              "REPRESENT_OFFICE_SHORT_NAME": "",
+              "STATUS": 1,
+              "REMARK": "",
+              "CONTRIBUTOR_ID": 16,
+              "IS_ACTIVE": 1
+            }
+          ];
+        });
+
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Center(
+                child: CupertinoActivityIndicator(
+                ),
+              );
+            });
+        await onLoadActionCompareUpdAll(map_compare);
+        Navigator.pop(context);
+      }
+    }
 
     setState(() {
       _onSaved = true;
       _onFinish = true;
 
-      //สร้างเลขที่เปรียบเทียบคดีแล้ว
+      /*//สร้างเลขที่เปรียบเทียบคดีแล้ว
       itemInfor.IsCompare=true;
       //เปรียบคดีผู้ต้องหานี้แล้ว
       itemMain.IsActive=true;
       //เพิ่มข้อมูล
-      //itemInfor.SuspectDetails.IsRelease=IsRelease;
       itemInfor.CompareNumber=editCompareNumber.text;
       itemInfor.CompareYear=editCompareYear.text;
-
-      /*IsRelease?itemMain.SuspectDetails = new ItemsCompareSuspectDetail(
-          IsRelease,
-          _currentCompareDate,
-          _currentCompareTime,
-          editComparePerson.text,
-          editComparePlace.text,
-          IsRequested,
-          IsNotRequested,
-          _currentTaxDueDate,
-          null,
-          null,
-          null,
-          null,
-          _currentFineDueDate,
-          editCompareBail.text,
-          editCompareDepositBail.text
-      ): new ItemsCompareSuspectDetail(
-          IsRelease,
-          _currentCompareDate,
-          _currentCompareTime,
-          editComparePerson.text,
-          editComparePlace.text,
-          IsRequested,
-          IsNotRequested,
-          _currentTaxDueDate,
-          editCompareBillNumber.text,
-          editCompareBillBookNo.text,
-          IsCash,
-          IsCredit,
-          null,
-          null,
-          null
-      );*/
       itemMain.SuspectDetails = new ItemsCompareSuspectDetail(
           IsRelease,
           _currentCompareDate,
@@ -1626,12 +2296,40 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
           "",
           "",
           ""
-      );
+      );*/
     });
   }
+  ItemsArrestResponseInsAll insAll;
+  Future<bool> onLoadActionCompareInsAll(Map map) async {
+    await new CompareFuture().apiRequestCompareinsAll(map).then((onValue) {
+      print("Insert : "+onValue.IsSuccess.toString());
+      insAll = onValue;
+    });
+    Map map_compare={
+      "COMPARE_ID":insAll.COMPARE_ID
+    };
+    print(map_compare.toString());
+    await new CompareFuture().apiRequestComparegetByCon(map_compare).then((onValue) {
+      _itemsCompareMain = onValue;
+    });
+    print("COMPARE_ID : "+_itemsCompareMain.COMPARE_ID.toString());
 
-  Future<bool> onLoadAction() async {
-    await new Future.delayed(const Duration(seconds: 3));
+    setState(() {});
+    return true;
+  }
+  Future<bool> onLoadActionCompareUpdAll(Map map) async {
+    await new CompareFuture().apiRequestCompareupdByCon(map).then((onValue) {
+      print("Update Compare : "+onValue.IsSuccess.toString());
+    });
+    setState(() {});
+    return true;
+  }
+  Future<bool> onLoadActionCompareDeleteAll(Map map) async {
+    await new CompareFuture().apiRequestCompareupdDelete(map).then((onValue) {
+      print("Delete : "+onValue.IsSuccess.toString());
+    });
+
+    setState(() {});
     return true;
   }
   @override
@@ -1656,7 +2354,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                   _onSave = false;
                   _onEdited = false;
                 }) :
-                _onSaved ? Navigator.pop(context, itemMain) :
+                _onSaved ? Navigator.pop(context, "Back") :
                 _showCancelAlertDialog(context);
               },
               padding: EdgeInsets.all(10.0),
@@ -1714,7 +2412,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                   :
               new FlatButton(
                   onPressed: () {
-                    onSaved();
+                    onSaved(context);
                   },
                   child: Text('บันทึก', style: appBarStyle)),
             ],

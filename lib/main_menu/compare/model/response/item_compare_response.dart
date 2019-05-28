@@ -22,7 +22,7 @@ class ItemsArrestResponseInsAll {
       Msg: json['Msg'],
       COMPARE_ID: json['COMPARE_ID'],
       CompareMapping: List<ItemsArrestResponseCompareMapping>.from(json['CompareMapping'].map((m) => ItemsArrestResponseCompareMapping.fromJson(m))),
-      CompareDetail: List<ItemsArrestResponseCompareDetail>.from(json['CompareDetail'].map((m) => ItemsArrestResponseCompareDetail.fromJson(m))),
+      //CompareDetail: List<ItemsArrestResponseCompareDetail>.from(json['CompareDetail'].map((m) => ItemsArrestResponseCompareDetail.fromJson(m))),
       CompareStaff: List<ItemsArrestResponseCompareStaff>.from(json['CompareStaff'].map((m) => ItemsArrestResponseCompareStaff.fromJson(m))),
     );
   }

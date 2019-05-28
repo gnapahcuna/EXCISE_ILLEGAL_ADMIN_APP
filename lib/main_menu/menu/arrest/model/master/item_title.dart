@@ -1,7 +1,6 @@
 class ItemsListTitle {
   final int TITLE_ID;
   final String TITLE_NAME_TH;
-
   final String TITLE_NAME_EN;
   final String TITLE_SHORT_NAME_TH;
   final String TITLE_SHORT_NAME_EN;

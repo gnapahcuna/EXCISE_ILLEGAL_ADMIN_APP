@@ -14,6 +14,8 @@ class ItemsListArrestLocation {
   String ADDRESS_NO;
   String GPS;
   String ADDRESS_LINE;
+  bool IsPlace;
+  String Other;
 
   ItemsListArrestLocation(this.PROVINCE,
       this.DISTICT,
@@ -22,5 +24,7 @@ class ItemsListArrestLocation {
       this.ALLEY,
       this.ADDRESS_NO,
       this.GPS,
-      this.ADDRESS_LINE);
+      this.ADDRESS_LINE,
+      this.IsPlace,
+      this.Other);
 }

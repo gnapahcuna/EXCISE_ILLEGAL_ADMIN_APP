@@ -490,7 +490,7 @@ class TabScreenArrest4AddState extends State<TabScreenArrest4Add> {
         _buildLine,
         Container(
           padding: paddingLabel,
-          child: Text("ชื่อผู้ต้องหา/ชื่อสถานประกอบการ", style: textLabelStyle,),
+          child: Text("ชื่อผู้ต้องหา/ชื่อตัวแทนสถานประกอบการ", style: textLabelStyle,),
         ),
         Padding(
           padding: paddingInputBox,
@@ -508,7 +508,7 @@ class TabScreenArrest4AddState extends State<TabScreenArrest4Add> {
         _buildLine,
         Container(
           padding: paddingLabel,
-          child: Text("ชื่อตัวแทนสถานประกอบการ", style: textLabelStyle,),
+          child: Text("ชื่อสถานประกอบการ", style: textLabelStyle,),
         ),
         Padding(
           padding: paddingInputBox,

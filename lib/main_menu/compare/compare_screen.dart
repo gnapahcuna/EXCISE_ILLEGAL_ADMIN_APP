@@ -8,8 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/Model/choice.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_detail_screen.dart';
+import 'package:prototype_app_pang/main_menu/compare/compare_reward_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_form_list.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/tab_screen_compare_product.dart';
 import 'package:prototype_app_pang/main_menu/compare/tab_screen_compare_suspect.dart';
@@ -24,7 +26,7 @@ import 'package:prototype_app_pang/model/test/compare_case_information.dart';
 
 class CompareMainScreenFragment extends StatefulWidget {
   ItemsCompareMain itemsCompareMain;
-  var itemsCompareArrestMain;
+  ItemsCompareArrestMain itemsCompareArrestMain;
   ItemsPersonInformation ItemsPerson;
   bool IsPreview;
   bool IsEdit;
@@ -63,7 +65,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
   //item หลักทั้งหมด
   ItemsCompareMain itemMain;
 
-  var _compareArrestMain;
+  ItemsCompareArrestMain _compareArrestMain;
 
   //item forms
   List<ItemsCompareForms> itemsFormsTab=[];
@@ -96,6 +98,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
 
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
+  TextStyle textDataTitleStyle = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
   TextStyle textStyleBill = TextStyle(color: Colors.black,fontFamily: FontStyles().FontFamily);
@@ -165,7 +168,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
       //เพิ่ม tab แบบฟอร์ม
       choices.add(Choice(title: 'แบบฟอร์ม'));
       //เพิ่ม item forms
-      itemsFormsTab.add(new ItemsCompareForms("บันทึกตรวจรับของกลาง","นายสมชาย ไขแสง"));
+      itemsFormsTab.add(new ItemsCompareForms("แบบฟอร์มบันทึกการเปรียบเทียบคดี",""));
+      itemsFormsTab.add(new ItemsCompareForms("แบบฟอร์มคำให้การของผู้ต้องหา","นายสมชาย ไขแสง"));
+      itemsFormsTab.add(new ItemsCompareForms("ใบเสร็จรับเงิน","นายสมชาย ไขแสง"));
     }
     tabController =
         TabController(length: choices.length, vsync: this);
@@ -399,18 +404,22 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
   }
 
   //************************end_tab_1*******************************
-  _navigate(BuildContext context,ItemsCompareCaseInformation itemsInfor,ItemsCompareSuspect itemSuspect,ItemsCompareSuspectDetail itemSuspectDetail,index) async {
+  _navigate(BuildContext context,String law_name,ItemsCompareListIndicmentDetail indicmentDetail,bool IsCreate,bool IsPreview,double fine_value) async {
     final result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CompareDetailScreenFragment(
-          ItemInformations: itemsInfor,
-          ItemSuspect: itemSuspect,
-          ItemSuspectDetail: itemSuspectDetail,
-          /*IsEdit: false,
-          IsPreview: false,*/
+          Title: law_name,
+          ItemsPerson: widget.ItemsPerson,
+          itemsCompareMain: itemMain,
+          itemsCompareArrestMain: widget.itemsCompareArrestMain,
+          itemsCompareListIndicmentDetail: indicmentDetail,
+          IsCreate: IsCreate,
+          IsPreview: IsPreview,
+          FINE_VALUE: fine_value,
         )),
       );
       if(result.toString()!="Back") {
+        itemMain = result;
         /*itemMain.Informations.Suspects[index] = result;
         if(itemMain.Informations.IsCompare){
           _setDataSaved();
@@ -430,7 +439,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
             padding: EdgeInsets.only(bottom: 4.0),
             child: Column(
               children: <Widget>[
-                /*itemMain.Informations.IsCompare ? Padding(
+                itemMain!=null ? Padding(
                     padding: EdgeInsets.only(bottom: 4.0),
                     child: Container(
                       padding: EdgeInsets.all(22.0),
@@ -464,10 +473,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                       padding: paddingData,
                                       child: Text(
                                         'น. ' +
-                                            itemMain.Informations
-                                                .CompareNumber +
+                                            itemMain.COMPARE_NO.toString() +
                                             "/" +
-                                            itemMain.Informations.CompareYear,
+                                            _convertYear(itemMain.COMPARE_NO_YEAR),
                                         style: textStyleTitleData,),
                                     ),
                                   ]
@@ -477,28 +485,56 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         ],
                       ),
                     )
-                ) : Container(),*/
+                ) : Container(),
                 Container(
                   width: size.width,
                   child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: _compareArrestMain.LawsuitArrestIndictmentDetail.length,
+                    itemCount: _compareArrestMain.CompareArrestIndictmentDetail.length,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
+                      final formatter = new NumberFormat("#,###.##");
+                      double fine_value;
+                      if(_compareArrestMain.FINE_TYPE==0||
+                          _compareArrestMain.FINE_TYPE==1||
+                          _compareArrestMain.FINE_TYPE==2){
+                        fine_value=0;
+                        _compareArrestMain.CompareGuiltbaseFine.forEach((item){
+                          if(_compareArrestMain.SUBSECTION_RULE_ID==item.SUBSECTION_RULE_ID){
+                            fine_value+=item.FINE_AMOUNT;
+                          }
+                        });
+                      }else{
+                        fine_value=0;
+                        /*_compareArrestMain.CompareProveProduct.forEach((item){
+                          fine_value+=item.VAT*item.F
+                        });*/
+                      }
+
+                      bool IsCompare=false;
+                      if(itemMain!=null) {
+                        itemMain.CompareMapping.forEach((item) {
+                          if (item.INDICTMENT_DETAIL_ID == _compareArrestMain
+                              .CompareArrestIndictmentDetail[index]
+                              .INDICTMENT_DETAIL_ID) {
+                            IsCompare = true;
+                          }
+                        });
+                      }
+
                       return GestureDetector(
                         onTap: () {
-                          /*itemMain.Informations.Suspects[index].IsActive
-                              ? _navigate(
+                          IsCompare? _navigate(
                               context,
-                              itemMain.Informations,
-                              itemMain.Informations
-                                  .Suspects[index],
-                              itemMain.Informations
-                                  .Suspects[index].SuspectDetails,
-                            index
-                          )
-                              : null;*/
+                              _compareArrestMain.CompareArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
+                                  _compareArrestMain.CompareArrestIndictmentDetail[index].FIRST_NAME+" "+
+                                  _compareArrestMain.CompareArrestIndictmentDetail[index].LAST_NAME,
+                              _compareArrestMain.CompareArrestIndictmentDetail[index],
+                              false,
+                              true,
+                            fine_value,
+                          ) : null;
                         },
                         child: Container(
                           //padding: EdgeInsets.only(top: 1.0, bottom: 1.0),
@@ -535,9 +571,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                         Padding(
                                           padding: paddingData,
                                           child: Text(
-                                            _compareArrestMain.LawsuitArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
-                                                _compareArrestMain.LawsuitArrestIndictmentDetail[index].FIRST_NAME+" "+
-                                                _compareArrestMain.LawsuitArrestIndictmentDetail[index].LAST_NAME,
+                                            _compareArrestMain.CompareArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
+                                                _compareArrestMain.CompareArrestIndictmentDetail[index].FIRST_NAME+" "+
+                                                _compareArrestMain.CompareArrestIndictmentDetail[index].LAST_NAME,
                                             style: textStyleData,),
                                         ),
                                         Container(
@@ -548,16 +584,12 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                         Padding(
                                           padding: paddingData,
                                           child: Text(
-                                            /*itemMain.Informations
-                                                .Suspects[index]
-                                                .FineValue
-                                                .toString(),*/"",
+                                            formatter.format(fine_value).toString(),
                                             style: textStyleData,),
                                         ),
                                       ],
                                     ),
-                                    /*itemMain.Informations.Suspects[index]
-                                        .IsActive
+                                    IsCompare
                                         ? Column(
                                       mainAxisAlignment: MainAxisAlignment
                                           .spaceEvenly,
@@ -577,8 +609,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                             ],
                                           ),
                                         ),
-                                        itemMain.Informations.Suspects[index]
-                                            .SuspectDetails.IsRelease ?
+                                        /*itemMain.CompareMapping[0].CompareDetail[0].IsRelease ?
                                         Padding(
                                           padding: EdgeInsets.only(
                                               top: 22.0, bottom: 22.0),
@@ -593,7 +624,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                               ),
                                             ],
                                           ),
-                                        ) :
+                                        ) :*/
                                         Padding(
                                           padding: EdgeInsets.only(
                                               top: 22.0, bottom: 22.0),
@@ -603,7 +634,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                             children: <Widget>[
                                               Padding(
                                                 padding: paddingData,
-                                                child: Text("เลขใบเสร็จ : " +
+                                                child: Text("เลขใบเสร็จ : " /*+
                                                     itemMain.Informations
                                                         .Suspects[index]
                                                         .SuspectDetails
@@ -611,7 +642,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                                     + itemMain.Informations
                                                         .Suspects[index]
                                                         .SuspectDetails
-                                                        .BillBookNo,
+                                                        .BillBookNo*/,
                                                   style: textStyleBill,),
                                               ),
                                             ],
@@ -619,7 +650,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                         )
                                       ],
                                     )
-                                        : */Row(
+                                        : Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
                                         /*itemMain.Informations.Suspects[index]
@@ -643,15 +674,16 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                                   child: Center(
                                                     child: MaterialButton(
                                                       onPressed: () {
-                                                        /*_navigate(
+                                                        _navigate(
                                                             context,
-                                                            itemMain
-                                                                .Informations,
-                                                            itemMain
-                                                                .Informations
-                                                                .Suspects[index],
-                                                            itemMain.Informations
-                                                                .Suspects[index].SuspectDetails,index);*/
+                                                          _compareArrestMain.CompareArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
+                                                              _compareArrestMain.CompareArrestIndictmentDetail[index].FIRST_NAME+" "+
+                                                              _compareArrestMain.CompareArrestIndictmentDetail[index].LAST_NAME,
+                                                            _compareArrestMain.CompareArrestIndictmentDetail[index],
+                                                          true,
+                                                          false,
+                                                          fine_value
+                                                        );
                                                       },
                                                       splashColor: Color(
                                                           0xff087de1),
@@ -677,13 +709,13 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                     },
                   ),
                 ),
-                /*itemMain.Informations.IsCompare ? GestureDetector(
+                itemMain!=null ? GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) =>
                           CompareRewardScreenFragment(
-                            itemsInformations: itemMain.Informations,
+                            itemsCompareListIndicmentDetail: _compareArrestMain,
                           )),
                     );
                   },
@@ -714,7 +746,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         )
                     ),
                   ),
-                ) : Container()*/
+                ) : Container()
               ],
             ),
           )
@@ -761,13 +793,6 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
 
   //************************start_tab_2*****************************
   buildCollapsed() {
-    String arrest_date = "";
-    DateTime dt_occourrence = DateTime.parse(_compareArrestMain.OCCURRENCE_DATE);
-    print(dt_occourrence.toString());
-    List splits = dateFormatDate.format(dt_occourrence).toString().split(
-        " ");
-    arrest_date = splits[0] + " " + splits[1] + " " +
-        (int.parse(splits[3]) + 543).toString();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -779,8 +804,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            "test/2562",
-            style: textStyleData,),
+            _compareArrestMain.LAWSUIT_NO.toString()+"/"+
+                _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -806,7 +832,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            arrest_date,
+            _convertDate(_compareArrestMain.OCCURRENCE_DATE)+" "+
+                _convertTime(_compareArrestMain.OCCURRENCE_DATE),
             style: textStyleData,),
         ),
         Container(
@@ -829,7 +856,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             // new
-            itemCount: _compareArrestMain.LawsuitArrestIndictmentDetail.length,
+            itemCount: _compareArrestMain.CompareArrestIndictmentDetail.length,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int j) {
@@ -841,9 +868,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                     child:  new Padding(
                       padding: paddingData,
                       child: Text((j + 1).toString() + '. ' +
-                          _compareArrestMain.LawsuitArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
-                          _compareArrestMain.LawsuitArrestIndictmentDetail[j].FIRST_NAME+" "+
-                          _compareArrestMain.LawsuitArrestIndictmentDetail[j].LAST_NAME,
+                          _compareArrestMain.CompareArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
+                          _compareArrestMain.CompareArrestIndictmentDetail[j].FIRST_NAME+" "+
+                          _compareArrestMain.CompareArrestIndictmentDetail[j].LAST_NAME,
                         style: textStyleData,),
                     ),
                   ),
@@ -858,7 +885,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         onPressed: () {
                           Map map={
                             "TEXT_SEARCH" : "",
-                            "PERSON_ID" : _compareArrestMain.LawsuitArrestIndictmentDetail[j].PERSON_ID
+                            "PERSON_ID" : _compareArrestMain.CompareArrestIndictmentDetail[j].PERSON_ID
                           };
                           _navigatePreviewIndicmentDetail(context, map);
                           /* Navigator.of(context)
@@ -897,20 +924,33 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
       ],
     );
   }
-  buildExpanded() {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double Width = (size.width * 80) / 100;
 
-    String arrest_date = "";
-    DateTime dt_occourrence = DateTime.parse(_compareArrestMain.OCCURRENCE_DATE);
-    print(dt_occourrence.toString());
-    List splits = dateFormatDate.format(dt_occourrence).toString().split(
+  String _convertDate(String sDate){
+    String result;
+    DateTime dt = DateTime.parse(sDate);
+    List splits = dateFormatDate.format(dt).toString().split(
         " ");
-    arrest_date = splits[0] + " " + splits[1] + " " +
+    result = splits[0] + " " + splits[1] + " " +
         (int.parse(splits[3]) + 543).toString();
 
+
+    return result;
+  }
+  String _convertTime(String sDate){
+    DateTime dt = DateTime.parse(sDate);
+    String result = "เวลา " +
+        dateFormatTime.format(dt).toString();
+    return result;
+  }
+  String _convertYear(String sDate){
+    DateTime dt = DateTime.parse(sDate);
+    List splits = dateFormatDate.format(dt).toString().split(
+        " ");
+    String year = (int.parse(splits[3]) + 543).toString();
+    return year;
+  }
+
+  buildExpanded() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -922,8 +962,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            "test/2562",
-            style: textStyleData,),
+            _compareArrestMain.LAWSUIT_NO.toString()+"/"+
+                _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -949,7 +990,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            arrest_date,
+            _convertDate(_compareArrestMain.OCCURRENCE_DATE)+" "+
+            _convertTime(_compareArrestMain.OCCURRENCE_DATE),
             style: textStyleData,),
         ),
         Container(
@@ -972,7 +1014,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             // new
-            itemCount: _compareArrestMain.LawsuitArrestIndictmentDetail.length,
+            itemCount: _compareArrestMain.CompareArrestIndictmentDetail.length,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int j) {
@@ -983,9 +1025,9 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                   new Padding(
                     padding: paddingData,
                     child: Text((j + 1).toString() + '. ' +
-                        _compareArrestMain.LawsuitArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
-                        _compareArrestMain.LawsuitArrestIndictmentDetail[j].FIRST_NAME+" "+
-                        _compareArrestMain.LawsuitArrestIndictmentDetail[j].LAST_NAME,
+                        _compareArrestMain.CompareArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
+                        _compareArrestMain.CompareArrestIndictmentDetail[j].FIRST_NAME+" "+
+                        _compareArrestMain.CompareArrestIndictmentDetail[j].LAST_NAME,
                       style: textStyleData,),
                   ),
                   Container(
@@ -999,7 +1041,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         onPressed: () {
                           Map map={
                             "TEXT_SEARCH" : "",
-                            "PERSON_ID" : _compareArrestMain.LawsuitArrestIndictmentDetail[j].PERSON_ID
+                            "PERSON_ID" : _compareArrestMain.CompareArrestIndictmentDetail[j].PERSON_ID
                           };
                           _navigatePreviewIndicmentDetail(context, map);
                           /*Navigator.of(context)
@@ -1042,7 +1084,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            "Lawsuit Date",
+            _convertDate(_compareArrestMain.LAWSUIT_DATE)+" "+
+                _convertTime(_compareArrestMain.LAWSUIT_DATE),
             style: textStyleData,),
         ),
         Container(
@@ -1052,7 +1095,11 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            "Proof Date",
+            /*_convertDate(_compareArrestMain.RECEIVE_DOC_DATE)*/
+            _compareArrestMain.RECEIVE_DOC_DATE!=null
+                ?_convertDate( _compareArrestMain.RECEIVE_DOC_DATE)+" "+
+                _convertTime(_compareArrestMain.LAWSUIT_DATE)
+                :"-",
             style: textStyleData,),
         ),
         Column(
@@ -1064,7 +1111,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
               child: Text("ของกลาง", style: textStyleLabel,),
             ),
             _compareArrestMain
-                .LawsuitArrestIndictmentProduct.length==0
+                .CompareProveProduct.length==0
                 ?Container(
               padding: paddingData,
               child: Text(
@@ -1077,7 +1124,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                   physics: NeverScrollableScrollPhysics(),
                   // new
                   itemCount: _compareArrestMain
-                      .LawsuitArrestIndictmentProduct.length,
+                      .CompareProveProduct.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
@@ -1094,10 +1141,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                   builder: (context) =>
                                       TabScreenCompareProduct(
                                         ItemsProduct:  _compareArrestMain
-                                            .LawsuitArrestIndictmentProduct[index],
+                                            .CompareProveProduct[index],
                                         IsComplete: true,
                                         Title: _compareArrestMain
-                                            .LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_TH,
+                                            .CompareProveProduct[index].PRODUCT_BRAND_NAME_TH,
                                       )),
                             );
                           },
@@ -1111,15 +1158,15 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                   child: Text(
                                     (index + 1).toString() + ". " +
                                         _compareArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
+                                            .CompareProveProduct[index]
                                             .PRODUCT_CATEGORY_NAME +
                                         '/' +
                                         _compareArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
+                                            .CompareProveProduct[index]
                                             .PRODUCT_TYPE_NAME + '/' +
                                         //_arrestMain.ArrestIndictment[index].ArrestIndictmentProduct[j].PRODUCT_SUBTYPE_NAME + '/' +
                                         _compareArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
+                                            .CompareProveProduct[index]
                                             .PRODUCT_BRAND_NAME_TH,
                                     style: textStyleData,),
                                 ),

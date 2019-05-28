@@ -44,6 +44,7 @@ class ItemsListArrestPerson {
   String ID_CARD;
   String PASSPORT_NO;
   String COMPANY_REGISTRATION_NO;
+  int TITLE_ID;
   String TITLE_NAME_TH;
   String TITLE_NAME_EN;
   String TITLE_SHORT_NAME_TH;
@@ -68,6 +69,7 @@ class ItemsListArrestPerson {
     this.ID_CARD,
     this.PASSPORT_NO,
     this.COMPANY_REGISTRATION_NO,
+    this.TITLE_ID,
     this.TITLE_NAME_TH,
     this.TITLE_NAME_EN,
     this.TITLE_SHORT_NAME_TH,
@@ -93,6 +95,7 @@ class ItemsListArrestPerson {
         ID_CARD: js['ID_CARD'],
         PASSPORT_NO: js['PASSPORT_NO'],
         COMPANY_REGISTRATION_NO: js['COMPANY_REGISTRATION_NO'],
+        TITLE_ID: js['TITLE_ID'],
         TITLE_NAME_TH: js['TITLE_NAME_TH']==null?"":js['TITLE_NAME_TH'],
         TITLE_NAME_EN: js['TITLE_NAME_EN'],
         TITLE_SHORT_NAME_TH: js['TITLE_SHORT_NAME_TH']==null?"":js['TITLE_SHORT_NAME_TH'],

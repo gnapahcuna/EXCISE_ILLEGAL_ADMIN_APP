@@ -7,12 +7,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/compare/compare_screen.dart';
+import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_deatail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_staff.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
+import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/lawsuit_accept_screen_sentence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/lawsuit_not_accept_screen_suspect.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/tab_screen_lawsuit_product.dart';
@@ -211,6 +217,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
 
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
+  TextStyle textDataTitleStyle = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleSubData = TextStyle(fontSize: 16, color: Colors.black38,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
@@ -373,7 +380,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   'ยกเลิก', style: ButtonCancelStyle)),
           new CupertinoButton(
               onPressed: () {
-                Navigator.pop(context,"Back");
+                Navigator.pop(context);
                 setState(() {
                   onDeleted();
                 });
@@ -396,7 +403,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
           );
         });
     await onLoadActionInsLawsuitDelete(map);
-    Navigator.pop(context);
+    Navigator.pop(context,"Back");
   }
   Future<bool> onLoadActionInsLawsuitDelete(Map map) async {
     Map map_indic={
@@ -412,6 +419,16 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       print("Delete ArrestComplete : "+onValue.Msg);
     });
 
+    List<Map> map_mistreat=[];
+    _itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail.forEach((law) {
+      map_mistreat.add({
+        "PERSON_ID": law.PERSON_ID
+      });
+    });
+    print("mistreat : "+map_mistreat.toString());
+    /*await new LawsuitFuture().apiRequestLawsuitMistreatNoupdDelete(map_mistreat).then((onValue) {
+      print("Update ArrestComplete : "+onValue.Msg);
+    });*/
 
     List<Map> map_pay=[];
     /*_itemsLawsuitMain.LawsuitDetail.forEach((item){
@@ -629,6 +646,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
             "PAYMENT_PERIOD": "",
             "PAYMENT_PERIOD_DUE": "",
             "PAYMENT_PERIOD_DUE_UNIT": "",
+            "PAYMENT_CHANNEL": "",
+            "PAYMENT_BANK": "",
+            "PAYMENT_REF_NO": "",
+            "PAYMENT_DATE": "",
+            "IS_DISMISS": "",
             "IS_ACTIVE": 1
           });
         });
@@ -783,6 +805,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
             "PAYMENT_PERIOD": item.PAYMENT_PERIOD,
             "PAYMENT_PERIOD_DUE": item.PAYMENT_PERIOD_DUE,
             "PAYMENT_PERIOD_DUE_UNIT": item.IMPRISON_TIME_UNIT,
+            "PAYMENT_CHANNEL": "",
+            "PAYMENT_BANK": "",
+            "PAYMENT_REF_NO": "",
+            "PAYMENT_DATE": "",
+            "IS_DISMISS": "",
             "IS_ACTIVE": 1
           });
         });
@@ -899,6 +926,16 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     await new LawsuitFuture().apiRequestLawsuiltArrestIndictmentupdArrestComplete(map_arrest).then((onValue) {
       print("Update ArrestComplete : "+onValue.Msg);
     });
+    List<Map> map_mistreat=[];
+    _itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail.forEach((law) {
+      map_mistreat.add({
+        "PERSON_ID": law.PERSON_ID
+      });
+    });
+    print("mistreat : "+map_mistreat.toString());
+    /*await new LawsuitFuture().apiRequestLawsuitMistreatNoupdByCon(map_mistreat).then((onValue) {
+      print("Update ArrestComplete : "+onValue.Msg);
+    });*/
 
     if(IsPayment){
       await new LawsuitFuture().apiRequestLawsuitPaymentinsAll(map_pay).then((onValue) {
@@ -937,7 +974,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
   Future<bool> onLoadActionInsLawsuitUpAll(Map map,bool IsStaffUpdate,List<Map> map_staff) async {
     await new LawsuitFuture().apiRequestLawsuitupdAll(map).then((onValue) {
     });
-
     if(!IsStaffUpdate){
       await new LawsuitFuture().apiRequestLawsuitStaffupdAll(map_staff).then((onValue) {
       });
@@ -1052,6 +1088,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   child: FlatButton(
                     onPressed: (){
                       //เมื่อชำระค่าปรับ
+                      _navigate_compare(context,_itemsLawsuitArrestMain.INDICTMENT_ID);
                     },
                     child: Row(
                       children: <Widget>[
@@ -1154,6 +1191,52 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       ),
     );
   }
+
+  ItemsCompareArrestMain compareMain;
+  Future<bool> onLoadActionGetCompareIndicment(Map map) async {
+    await new CompareFuture()
+        .apiRequestCompareArrestgetByIndictmentID(map)
+        .then((onValue) {
+      compareMain = onValue[0];
+      print(onValue.length);
+    });
+    setState(() {});
+    return true;
+  }
+
+  _navigate_compare(BuildContext context, int INDICTMENT_ID) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(
+            ),
+          );
+        });
+    Map map = {
+      "INDICTMENT_ID": INDICTMENT_ID
+    };
+    print(map.toString());
+    await onLoadActionGetCompareIndicment(map);
+    Navigator.pop(context);
+    if (compareMain != null) {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>
+            CompareMainScreenFragment(
+              itemsCompareMain: null,
+              itemsCompareArrestMain: compareMain,
+              IsEdit: false,
+              IsPreview: false,
+            )),
+      );
+      /*if (result.toString() != "Back") {
+        itemMain = result;
+      }*/
+    }
+  }
+
+
   Widget _buildBottomPicker(Widget picker) {
     return Container(
       height: _kPickerSheetHeight,
@@ -1603,12 +1686,22 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                                 physics: NeverScrollableScrollPhysics(),
                                 // new
                                 itemCount: _itemsLawsuitArrestMain
-                                    .LawsuitArrestIndictmentDetail
-                                    .length,
+                                    .LawsuitArrestIndictmentDetail.length,
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int j) {
-                                  int LAWSUIT_TYPE = 0;
+                                  int LAWSUIT_TYPE;
+                                  /*ItemsListLawsuitDetail lawDetail =_itemsLawsuitMain.LawsuitDetail[j];
+                                  var lawIndicDetail = _itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail[j];
+                                  if(_itemsLawsuitMain.LawsuitDetail[j].LAWSUIT_TYPE==0||
+                                      _itemsLawsuitMain.LawsuitDetail[j].LAWSUIT_TYPE==2){
+                                    LAWSUIT_TYPE=1;
+                                  }else{
+                                    LAWSUIT_TYPE=0;
+                                  }
+                                  print("type : "+_itemsLawsuitMain.LawsuitDetail[j].LAWSUIT_TYPE.toString());*/
+
+
                                   ItemsListLawsuitDetail lawDetail;
                                   var lawIndicDetail;
                                   if(_itemsLawsuitMain==null){
@@ -1854,9 +1947,10 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                             itemBuilder: (BuildContext context, int index) {
                               EdgeInsets paddingSuspect = EdgeInsets.only(
                                   left: 8.0, top: 4, bottom: 4);
-                              int LAWSUIT_TYPE=0;
+                              int LAWSUIT_TYPE;
                               ItemsListLawsuitDetail lawDetail;
                               for(int i=0;i<_itemsLawsuitMain.LawsuitDetail.length;i++){
+                                lawDetail=_itemsLawsuitMain.LawsuitDetail[i];
                                 if(_itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail[index].INDICTMENT_DETAIL_ID ==
                                     _itemsLawsuitMain.LawsuitDetail[i].INDICTMENT_DETAIL_ID){
                                   if(_itemsLawsuitMain.LawsuitDetail[i].LAWSUIT_TYPE==0||
@@ -1865,10 +1959,21 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                                   }else if(_itemsLawsuitMain.LawsuitDetail[i].LAWSUIT_TYPE==1){
                                     LAWSUIT_TYPE = 0;
                                   }
-                                  lawDetail=_itemsLawsuitMain.LawsuitDetail[i];
                                   break;
                                 }
                               }
+                              /*int LAWSUIT_TYPE;
+                              ItemsListLawsuitDetail lawDetail =_itemsLawsuitMain.LawsuitDetail[index];
+                              var lawIndicDetail = _itemsLawsuitArrestMain.LawsuitArrestIndictmentDetail[index];
+                              if(_itemsLawsuitMain.LawsuitDetail[index].LAWSUIT_TYPE==0||
+                                  _itemsLawsuitMain.LawsuitDetail[index].LAWSUIT_TYPE==2){
+                                LAWSUIT_TYPE=1;
+                              }else{
+                                LAWSUIT_TYPE=0;
+                              }*/
+                              print("type : "+_itemsLawsuitMain.LawsuitDetail[index].LAWSUIT_TYPE.toString());
+                              print("lawDetail : "+lawDetail.toString());
+
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
@@ -2023,7 +2128,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
           padding: paddingData,
           child: Text(
             _itemsLawsuitArrestMain.ARREST_CODE,
-            style: textStyleData,),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -2131,10 +2236,15 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     );
   }
   buildExpanded() {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double Width = (size.width * 80) / 100;
+    String address = "error";
+    /*_itemsLawsuitArrestMain.LawsuitLocale.forEach((item) {
+      address = item.ADDRESS_NO+(item.ALLEY==null?"":" ซอย "+item.ALLEY)
+          +(item.ROAD==null?"":" ถนน "+item.ROAD)
+          + " อำเภอ/เขต " +  item.DISTRICT_NAME_TH
+          + " ตำบล/แขวง " +
+          item.SUB_DISTRICT_NAME_TH + " จังหวัด " +
+          item.PROVINCE_NAME_TH;
+    });*/
 
     String arrest_date = "";
     DateTime dt_occourrence = DateTime.parse(_itemsLawsuitArrestMain.OCCURRENCE_DATE);
@@ -2155,7 +2265,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
           padding: paddingData,
           child: Text(
             _itemsLawsuitArrestMain.ARREST_CODE,
-            style: textStyleData,),
+            style: textDataTitleStyle,),
         ),
         Padding(
           padding: paddingData,
@@ -2264,7 +2374,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         Padding(
           padding: paddingData,
           child: Text(
-            _itemsLawsuitArrestMain.ARREST_OFFICE_NAME,
+            address,
             style: textStyleData,),
         ),
         /*Padding(

@@ -24,7 +24,7 @@ class ChatFragment extends StatelessWidget {
     TextStyle(fontSize: 18.0, fontFamily: FontStyles().FontFamily);
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text('ห้องสนทนา',style: textLabelStyle1, ),
         centerTitle: true,
         backgroundColor: Color(0xff5887f9),
@@ -43,7 +43,7 @@ class ChatFragment extends StatelessWidget {
             },
           )
         ],
-      ),
+      ),*/
       drawer: Drawer(
         child: ListView(
           children: <Widget>[],

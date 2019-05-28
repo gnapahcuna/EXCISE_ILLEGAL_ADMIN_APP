@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_5.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_indictment_product.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_product.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_search.dart';
 
 class TabScreenLawsuitProduct extends StatefulWidget {
   var ItemsProduct;
@@ -309,7 +305,9 @@ class _state extends State<TabScreenLawsuitProduct>  {
                       Container(
                         padding: paddingLabel,
                         child: Text(
-                          formatter_money.format( ItemsProduct.FINE_ESTIMATE).toString()+ " บาท",
+                          ItemsProduct.FINE_ESTIMATE!=null
+                              ?formatter_money.format( ItemsProduct.FINE_ESTIMATE).toString()
+                              :ItemsProduct.FINE_ESTIMATE.toString()+ " บาท",
                           style: textInputStyle,),
                       ),
                     ],

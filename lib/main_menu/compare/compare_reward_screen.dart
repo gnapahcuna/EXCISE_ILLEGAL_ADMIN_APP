@@ -1,21 +1,24 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
+import 'package:prototype_app_pang/main_menu/compare/model/compare_indicment_detail.dart';
 import 'package:prototype_app_pang/model/test/compare_case_information.dart';
 
 class CompareRewardScreenFragment extends StatefulWidget {
-  ItemsCompareCaseInformation itemsInformations;
+  ItemsCompareArrestMain itemsCompareListIndicmentDetail;
   CompareRewardScreenFragment({
     Key key,
-    @required this.itemsInformations,
+    @required this.itemsCompareListIndicmentDetail,
   }) : super(key: key);
   @override
   _FragmentState createState() => new _FragmentState();
 }
 class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProviderStateMixin {
 
-  ItemsCompareCaseInformation itemMain;
+  ItemsCompareArrestMain itemMain;
 
 
   TextStyle textStyleLabel = TextStyle(
@@ -36,7 +39,7 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
   @override
   void initState() {
     super.initState();
-    itemMain=widget.itemsInformations;
+    itemMain=widget.itemsCompareListIndicmentDetail;
   }
 
   @override
@@ -142,11 +145,28 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
                 width: size.width,
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: itemMain.Suspects.length,
+                  itemCount: itemMain.CompareArrestIndictmentDetail.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
-                    return _buildExpandableContent(index);
+                    final formatter = new NumberFormat("#,###.##");
+                    double fine_value;
+                    if(itemMain.FINE_TYPE==0||
+                        itemMain.FINE_TYPE==1||
+                        itemMain.FINE_TYPE==2){
+                      fine_value=0;
+                      itemMain.CompareGuiltbaseFine.forEach((item){
+                        if(itemMain.SUBSECTION_RULE_ID==item.SUBSECTION_RULE_ID){
+                          fine_value+=item.FINE_AMOUNT;
+                        }
+                      });
+                    }else{
+                      fine_value=0;
+                      /*_compareArrestMain.CompareProveProduct.forEach((item){
+                          fine_value+=item.VAT*item.F
+                        });*/
+                    }
+                    return _buildExpandableContent(index,formatter.format(fine_value).toString());
                   },
                 ),
               ),
@@ -156,7 +176,7 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
     );
   }
 
-  Widget _buildExpandableContent(int index) {
+  Widget _buildExpandableContent(int index,String fine_value) {
     Widget _buildExpanded(index) {
       return Container(
         //padding: EdgeInsets.only(top: 1.0, bottom: 1.0),
@@ -180,13 +200,15 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
                       Container(
                         padding: paddingData,
                         child: Text(
-                          itemMain.Suspects[index].SuspectName,
+                          itemMain.CompareArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
+                              itemMain.CompareArrestIndictmentDetail[index].FIRST_NAME+" "+
+                              itemMain.CompareArrestIndictmentDetail[index].LAST_NAME,
                           style: textStyleData,),
                       ),
                       Container(
                         padding: paddingLabel,
                         child: Text(
-                          'ค่าปรับ : '+itemMain.Suspects[index].FineValue.toString(),
+                          'ค่าปรับ : '+fine_value,
                           style: textStyleDataSub,),
                       ),
                       Container(
@@ -225,7 +247,7 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
                         padding: paddingLabel,
                         child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: itemMain.Evidenses.length,
+                          itemCount: itemMain.CompareProveProduct.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
@@ -236,7 +258,7 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
                                 Container(
                                   padding: paddingData,
                                   child: Text(
-                                    itemMain.Evidenses[index].MainBrand,
+                                    itemMain.CompareProveProduct[index].PRODUCT_BRAND_NAME_TH,
                                     style: textStyleDetailData,),
                                 ),
                                 Container(
@@ -324,13 +346,15 @@ class _FragmentState extends State<CompareRewardScreenFragment>  with TickerProv
                       Container(
                         padding: paddingData,
                         child: Text(
-                          itemMain.Suspects[index].SuspectName,
+                          itemMain.CompareArrestIndictmentDetail[index].TITLE_SHORT_NAME_TH+
+                              itemMain.CompareArrestIndictmentDetail[index].FIRST_NAME+" "+
+                              itemMain.CompareArrestIndictmentDetail[index].LAST_NAME,
                           style: textStyleData,),
                       ),
                       Container(
                         padding: paddingLabel,
                         child: Text(
-                          'ค่าปรับ : '+itemMain.Suspects[index].FineValue.toString(),
+                          'ค่าปรับ : '+fine_value,
                           style: textStyleDataSub,),
                       ),
                       Container(

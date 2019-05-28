@@ -94,28 +94,30 @@ class _TabScreenArrest3CreateState extends State<TabScreenArrest3Create> {
     var size = MediaQuery
         .of(context)
         .size;
-    final double Width = (size.width * 80) / 100;
+    //final double Width = (size.width * 80) / 100;
     Widget _buildLine = Container(
       padding: EdgeInsets.only(top: 0.0, bottom: 4.0),
-      width: Width,
+      //width: Width,
       height: 1.0,
       color: Colors.grey[300],
     );
 
     return Container(
+      padding: EdgeInsets.all(22.0),
+      height: size.height,
         decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               top: BorderSide(color: Colors.grey[300], width: 1.0),
-              bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
             )
         ),
       width: size.width,
       child: Center(
         child: Container(
           padding: EdgeInsets.only(top: 4.0, bottom: 12.0),
-          width: Width,
+          //width: Width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

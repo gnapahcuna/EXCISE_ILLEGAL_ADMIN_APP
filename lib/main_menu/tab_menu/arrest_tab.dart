@@ -7,6 +7,7 @@ import 'package:prototype_app_pang/main_menu/future/transection_future.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1.dart';
 import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ArrestFragment extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
@@ -106,6 +107,7 @@ class _ArrestFragmentState extends State<ArrestFragment> {
                         fontFamily: FontStyles().FontFamily,fontSize: 12.0)),
               ),
             ),*/
+            BackgroundContent(),
             new Center(
                 child: new Container(
                   padding: EdgeInsets.only(top: size.height / 4.5),
