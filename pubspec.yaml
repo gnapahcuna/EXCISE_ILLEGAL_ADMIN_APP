@@ -18,7 +18,7 @@ environment:
 
 dependencies:
   #flutter_localizations:
-    #sdk: flutter
+  #sdk: flutter
   flutter:
     sdk: flutter
 
@@ -32,6 +32,7 @@ dependencies:
   #google_maps_flutter: 0.3.0+1
   google_maps_flutter: ^0.5.13
   geocoder: ^0.1.2
+  flutter_google_places: ^0.2.2
   #location: ^2.1.0
   location: 2.3.2
   image_picker: ^0.5.0+3
@@ -41,6 +42,9 @@ dependencies:
   queries: ^0.1.12
 
   flutter_progress_hud: ^1.0.1
+  charts_flutter: ^0.6.0
+  autocomplete_textfield: ^1.6.6
+  flutter_typeahead: ^1.6.0
 
   #Guy
   dio: ^1.0.0     #ใส่ค้นหา
@@ -106,17 +110,17 @@ flutter:
     - assets/images/zan/person_3.JPEG
 
   fonts:
-  - family: Kanit
-    fonts:
-    - asset: assets/fonts/Kanit-Black.ttf
-    - asset: assets/fonts/Kanit-BlackItalic.ttf
-    - asset: assets/fonts/Kanit-Bold.ttf
-    - asset: assets/fonts/Kanit-BoldItalic.ttf
-    - asset: assets/fonts/Kanit-Italic.ttf
-    - asset: assets/fonts/Kanit-Light.ttf
-    - asset: assets/fonts/Kanit-Medium.ttf
-    - asset: assets/fonts/Kanit-Regular.ttf
-    - asset: assets/fonts/Kanit-Thin.ttf
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/Kanit-Black.ttf
+        - asset: assets/fonts/Kanit-BlackItalic.ttf
+        - asset: assets/fonts/Kanit-Bold.ttf
+        - asset: assets/fonts/Kanit-BoldItalic.ttf
+        - asset: assets/fonts/Kanit-Italic.ttf
+        - asset: assets/fonts/Kanit-Light.ttf
+        - asset: assets/fonts/Kanit-Medium.ttf
+        - asset: assets/fonts/Kanit-Regular.ttf
+        - asset: assets/fonts/Kanit-Thin.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

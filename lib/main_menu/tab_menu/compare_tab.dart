@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_list.dart';
-import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_master_response.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class CompareFragment extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
@@ -107,17 +106,18 @@ class _FragmentState extends State<CompareFragment> {
               String compare_year = "";
               /*DateTime dt_lawsuit_year = DateTime.parse(
                   itemMain[index].LAWSUIT_NO_YEAR);*/
-              DateTime dt_lawsuit_year = itemMain[index].LAWSUIT_NO_YEAR!=null
-                  ?DateTime.parse(itemMain[index].LAWSUIT_NO_YEAR)
-                  :DateTime.now();
+              DateTime dt_lawsuit_year = itemMain[index].LAWSUIT_NO_YEAR != null
+                  ? DateTime.parse(itemMain[index].LAWSUIT_NO_YEAR)
+                  : DateTime.now();
               List splitslawYear = dateFormatDate.format(dt_lawsuit_year)
                   .toString()
                   .split(
                   " ");
 
-              String title_lawsuit_name = itemMain[index].LAWSUIT_TITLE_SHORT_NAME_TH!=null
-                  ?itemMain[index].LAWSUIT_TITLE_SHORT_NAME_TH
-                  :itemMain[index].LAWSUIT_TITLE_NAME_TH;
+              String title_lawsuit_name = itemMain[index]
+                  .LAWSUIT_TITLE_SHORT_NAME_TH != null
+                  ? itemMain[index].LAWSUIT_TITLE_SHORT_NAME_TH
+                  : itemMain[index].LAWSUIT_TITLE_NAME_TH;
 
               compare_year = (int.parse(splitslawYear[3]) + 543).toString();
               return Padding(
@@ -125,7 +125,6 @@ class _FragmentState extends State<CompareFragment> {
                 child: Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -155,9 +154,10 @@ class _FragmentState extends State<CompareFragment> {
                         ),
                         Container(
                           padding: paddingData,
-                          child: Text(title_lawsuit_name+
-                              itemMain[index].LAWSUIT_FIRST_NAME+" "+
-                              itemMain[index].LAWSUIT_LAST_NAME, style: textStyleData,),
+                          child: Text(title_lawsuit_name +
+                              itemMain[index].LAWSUIT_FIRST_NAME + " " +
+                              itemMain[index].LAWSUIT_LAST_NAME,
+                            style: textStyleData,),
                         ),
                       ],
                     ),
@@ -182,7 +182,7 @@ class _FragmentState extends State<CompareFragment> {
                                       onPressed: () {
                                         _navigate(
                                             context,
-                                            /*itemMain[index].INDICTMENT_ID*/366);
+                                            itemMain[index].INDICTMENT_ID);
                                       },
                                       splashColor: Color(0xff087de1),
                                       //highlightColor: Colors.blue,
@@ -280,22 +280,24 @@ class _FragmentState extends State<CompareFragment> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      //height: 34.0,
+                      decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                                color: Colors.grey[300], width: 1.0),
+                          )
+                      ),
+                      /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -309,13 +311,15 @@ class _FragmentState extends State<CompareFragment> {
                   ),
                   ],
                 )*/
-              ),
-              Expanded(
-                child: _buildContent(context),
-              ),
-            ],
-          )
-      ),
+                    ),
+                    Expanded(
+                      child: _buildContent(context),
+                    ),
+                  ],
+                )
+            ),
+          ],
+        )
     );
   }
 }

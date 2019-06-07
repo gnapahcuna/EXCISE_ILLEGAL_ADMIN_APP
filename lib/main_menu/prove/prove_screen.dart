@@ -9,13 +9,14 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_form_list.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/delivered_for_storage.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_check_evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_main.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_screen.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 import 'package:prototype_app_pang/model/choice.dart';
 
@@ -119,7 +120,7 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
   TextStyle appBarStylePay = TextStyle(fontSize: 16.0, color: Colors.white,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
-  TextStyle textStyleData = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleStar = TextStyle(color: Colors.red,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
   TextStyle textStyleLink = TextStyle(color: Color(0xff4564c2),fontFamily: FontStyles().FontFamily);
@@ -554,23 +555,28 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                     }).toList(),
                   ),
                 ),
-                body: TabBarView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: _onFinish ? <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                    _buildContent_tab_4(),
-                    _buildContent_tab_5(),
-                  ] :
-                  <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                    _buildContent_tab_4(),
+                body: Stack(
+                  children: <Widget>[
+                    BackgroundContent(),
+                    TabBarView(
+                      //physics: NeverScrollableScrollPhysics(),
+                      controller: tabController,
+                      children: _onFinish ? <Widget>[
+                        _buildContent_tab_1(),
+                        _buildContent_tab_2(),
+                        _buildContent_tab_3(),
+                        _buildContent_tab_4(),
+                        _buildContent_tab_5(),
+                      ] :
+                      <Widget>[
+                        _buildContent_tab_1(),
+                        _buildContent_tab_2(),
+                        _buildContent_tab_3(),
+                        _buildContent_tab_4(),
+                      ],
+                    ),
                   ],
-                ),
+                )
               ),
             ),
           ],
@@ -969,7 +975,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
         padding: EdgeInsets.only(
             left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
         decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1011,24 +1016,21 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
       );
     }
     //data result when search data
-    return Scaffold(
-        backgroundColor: Colors.grey[300],
-        body: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Row(
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            //height: 34.0,
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                )
+            ),
+            /*child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -1039,18 +1041,17 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                     )
                   ],
                 ),*/
-              ),
-              Expanded(
-                child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(context),
-                  ),
-                ),
-              ),
-            ],
           ),
-        )
+          Expanded(
+            child: new ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: SingleChildScrollView(
+                child: _buildContent(context),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1068,7 +1069,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1380,7 +1380,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1513,23 +1512,20 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            //height: 34.0,
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300], width: 1.0),
-                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                )
-            ),
-            /*child: Row(
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          //height: 34.0,
+          decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.grey[300], width: 1.0),
+                //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              )
+          ),
+          /*child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -1540,13 +1536,12 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 )
               ],
             ),*/
-          ),
-          Expanded(
-            child: _onSaved ? _buildContent_saved(context) : _buildContent(
-                context),
-          ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: _onSaved ? _buildContent_saved(context) : _buildContent(
+              context),
+        ),
+      ],
     );
   }
 //************************end_tab_2*******************************
@@ -1597,7 +1592,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2014,7 +2008,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                     width: size.width,
                     padding: EdgeInsets.all(18.0),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         shape: BoxShape.rectangle,
                         border: Border(
                           top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2097,7 +2090,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                   padding: EdgeInsets.only(
                       left: 18.0, right: 18.0, top: 18.0, bottom: 18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2223,7 +2215,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 child: Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2295,23 +2286,21 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            //height: 34.0,
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300], width: 1.0),
-                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                )
-            ),
-            /*child: Row(
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          //height: 34.0,
+          decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border(
+                top: BorderSide(color: Colors.grey[300], width: 1.0),
+                //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              )
+          ),
+          /*child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -2322,13 +2311,12 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 )
               ],
             ),*/
-          ),
-          Expanded(
-            child: _onSaved ? _buildContent_saved(context) : _buildContent(
-                context),
-          ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: _onSaved ? _buildContent_saved(context) : _buildContent(
+              context),
+        ),
+      ],
     );
   }
 //************************end_tab_3*******************************
@@ -2347,7 +2335,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2684,7 +2671,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2837,23 +2823,21 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            //height: 34.0,
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300], width: 1.0),
-                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                )
-            ),
-            /*child: Row(
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          //height: 34.0,
+          decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border(
+                top: BorderSide(color: Colors.grey[300], width: 1.0),
+                //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              )
+          ),
+          /*child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -2864,13 +2848,12 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 )
               ],
             ),*/
-          ),
-          Expanded(
-            child: _onSaved ? _buildContent_saved(context) : _buildContent(
-                context),
-          ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: _onSaved ? _buildContent_saved(context) : _buildContent(
+              context),
+        ),
+      ],
     );
   }
 //************************end_tab_4*******************************
@@ -2891,7 +2874,6 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                 child: Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         //top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2918,24 +2900,21 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
       );
     }
     //data result when search data
-    return  Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                  )
-              ),
-              /*child: Row(
+    return  Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            //height: 34.0,
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                )
+            ),
+            /*child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -2946,17 +2925,16 @@ class _FragmentState extends State<ProveMainScreenFragment>  with TickerProvider
                   )
                 ],
               ),*/
-            ),
-            Expanded(
-              child: new ConstrainedBox(
-                constraints: const BoxConstraints.expand(),
-                child: SingleChildScrollView(
-                  child: _buildContent(),
-                ),
+          ),
+          Expanded(
+            child: new ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: SingleChildScrollView(
+                child: _buildContent(),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -10,6 +10,7 @@ import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/evidence_description.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_search_screen.dart';
 import 'package:prototype_app_pang/model/choice.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ProveManageEvidenceScreenFragment extends StatefulWidget {
   ItemsEvidence ItemsEvidences;
@@ -724,7 +725,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
           padding: EdgeInsets.only(
               left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
           decoration: BoxDecoration(
-              color: Colors.white,
               shape: BoxShape.rectangle,
               border: Border(
                 bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -983,7 +983,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
             padding: EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1034,7 +1033,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
             padding: EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1220,7 +1218,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1271,7 +1268,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1387,7 +1383,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
               child: Container(
                 padding: EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     shape: BoxShape.rectangle,
                     border: Border(
                       top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1798,7 +1793,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
           padding: EdgeInsets.only(
               left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
           decoration: BoxDecoration(
-              color: Colors.white,
               shape: BoxShape.rectangle,
               border: Border(
                 bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1956,7 +1950,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
             padding: EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2002,7 +1995,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
             padding: EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2123,7 +2115,6 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2350,22 +2341,23 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
                 }),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Row(
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                          //top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                    ),
+                    /*child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -2376,18 +2368,20 @@ class _FragmentState extends State<ProveManageEvidenceScreenFragment>  with Tick
                     )
                   ],
                 ),*/
-              ),
-              Expanded(
-                child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _onSaved ? _buildContent_saved() : _buildContent(),
                   ),
-                ),
+                  Expanded(
+                    child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _onSaved ? _buildContent_saved() : _buildContent(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        )
       ),
     );
   }

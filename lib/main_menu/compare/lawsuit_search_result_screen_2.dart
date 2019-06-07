@@ -1,28 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_select_evidence_screen.dart';
-import 'package:prototype_app_pang/main_menu/check_evidence/delivery_book_select_evidence_screen.dart';
-import 'package:prototype_app_pang/main_menu/check_evidence/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_list.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
-import 'package:prototype_app_pang/main_menu/destroy/select_book_select_evidence_screen.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/lawsuit_accept_case_screen.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/lawsuit_not_accept_case_screen_1.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_search.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
-import 'package:prototype_app_pang/picker/date_picker.dart';
-import 'package:prototype_app_pang/picker/date_picker_lawsuit_search.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class CompareMainScreenFragmentSearchResult extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
@@ -135,7 +122,6 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
           child: Container(
             padding: EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -214,7 +200,7 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
                                   child: MaterialButton(
                                     onPressed: () {
                                       _navigatePreview(
-                                        context, 366, _searchResult[index].COMPARE_ID,);
+                                        context, _searchResult[index].INDICTMENT_ID, _searchResult[index].COMPARE_ID,);
                                     },
                                     splashColor: labelColor,
                                     //highlightColor: Colors.blue,
@@ -250,7 +236,7 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
                               child: MaterialButton(
                                 onPressed: () {
                                   _navigate(
-                                      context, /*_searchResult[index].INDICTMENT_ID*/366);
+                                      context, _searchResult[index].INDICTMENT_ID);
                                 },
                                 splashColor: Color(0xff087de1),
                                 //highlightColor: Colors.blue,
@@ -364,7 +350,6 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
       onWillPop: () {
         //
       }, child: Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0), // here the desired height
         child: AppBar(
@@ -380,22 +365,24 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
               }),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                  )
-              ),
-              /*child: Row(
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  //height: 34.0,
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                        //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  /*child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -406,14 +393,16 @@ class _FragmentState extends State<CompareMainScreenFragmentSearchResult> {
                   )
                 ],
               ),*/
+                ),
+                Expanded(
+                  child: _searchResult.length != 0
+                      ? _buildSearchResults() : new Container(),
+                ),
+              ],
             ),
-            Expanded(
-              child: _searchResult.length != 0
-                  ? _buildSearchResults() : new Container(),
-            ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     ),
     );
   }

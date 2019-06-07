@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_master_response.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/arrest_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/compare_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/lawsuit_tab.dart';

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_5.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_5/tab_screen_arrest_5_search.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_select_evidence_screen.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ProveManageEvidenceSearchScreenFragment extends StatefulWidget {
   @override
@@ -50,7 +49,6 @@ class _FragmentState extends State<ProveManageEvidenceSearchScreenFragment> {
     final double Width = (size.width * 85) / 100;
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -403,7 +401,6 @@ class _FragmentState extends State<ProveManageEvidenceSearchScreenFragment> {
       onWillPop: () {
         //
       }, child: Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0), // here the desired height
         child: AppBar(
@@ -419,21 +416,22 @@ class _FragmentState extends State<ProveManageEvidenceSearchScreenFragment> {
               }),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -447,18 +445,20 @@ class _FragmentState extends State<ProveManageEvidenceSearchScreenFragment> {
                   ),
                   ],
                 )*/
+                ),
+                Expanded(
+                  child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _buildContent(context),
+                      )
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(context),
-                  )
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     ),
     );
   }

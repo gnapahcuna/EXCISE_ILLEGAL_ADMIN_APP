@@ -3,8 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/zan/search/SearchPerson.dart';
-import 'package:prototype_app_pang/zan/search/result/Search_result_Camera.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:prototype_app_pang/zan/zan/search/result/Search_result_Camera.dart';
+
+
+Color labelColor = Color(0xff087de1);
+TextStyle textInputStyle = TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: FontStyles().FontFamily);
+TextStyle textappbar = TextStyle(fontSize: 18.0,color: Colors.white,fontFamily: FontStyles().FontFamily);
+TextStyle textLabelStyle = TextStyle(fontSize: 16.0, fontFamily: FontStyles().FontFamily);
+TextStyle textStyleSelect = TextStyle(fontSize: 16.0,color: Colors.black,fontFamily: FontStyles().FontFamily);
+EdgeInsets paddingInputBox = EdgeInsets.only(top: 4.0, bottom: 4.0);
+EdgeInsets paddingLabel = EdgeInsets.only(top: 12.0);
+
+List _itemsData = [];
 
 class NetworkFragment extends StatefulWidget {
   @override
@@ -12,114 +23,52 @@ class NetworkFragment extends StatefulWidget {
 }
 
 class _MainPageState extends State<NetworkFragment> {
-  File imageFile;
-  _openGallory() async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
-    this.setState(() {
-      imageFile = picture;
+  Future<File> _imageFile;
+
+  void _showImage(context) {
+    _onImageButtonPressed(ImageSource.camera,context);
+  }
+
+  void _showDialogPicker(){
+    showDialog(context: context,builder: (context) => _onTapImage(context)); // Call the Dialog.
+  }
+
+
+  void _onImageButtonPressed(ImageSource source,mContext) {
+    setState(() {
+      _imageFile = ImagePicker.pickImage(source: source);
+      print(_imageFile.toString());
+      _imageFile.then((f){
+        List splits = f.path.split("/");
+        print(splits[splits.length-1]);
+        _navigateSearchFace(context,_imageFile);
+      });
+      Navigator.pop(mContext);
     });
   }
-
-  _openCamera() async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
-    this.setState(() {
-      imageFile = picture;
-    });
-  }
-
-  _openvalue() async {
-    var picture = null;
-    this.setState(() {
-      imageFile = picture;
-    });
-  }
-
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('ทางเลือก...'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.image,color: Color(0xff2e76bc)),
-                        Text('   อัลบั้มรูป'),
-                      ],
-                    ),
-                    onTap: () {
-                      _openGallory();
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  GestureDetector(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.camera_alt,color: Color(0xff2e76bc)),
-                        Text('   กล้องถ่ายรูป')
-                      ],
-                    ),
-                    onTap: () {
-                      _openCamera();
-                    },
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Widget _decideImageView() {
-    if (imageFile != null) {
-      return AlertDialog(
-          title: Text('ทดสอบรูปภาพ'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Image.file(imageFile,width: 150,height: 150),
-                Padding(padding: EdgeInsets.all(5),),
-                RaisedButton(
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.check),
-                      Text('   ตกลง ( Next page )')],
-                  ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          SearchResultCamera(),
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                    child: Row(
-
-                      children: <Widget>[Icon(Icons.clear),Text('   Reset Picture')],
-                    ),
-                    onPressed: () {
-                      _openvalue();
-                    })
-              ],
-            ),
-          ));
-    } else {
-      return Text('');
+  _navigateSearchFace(BuildContext mContext,_imageFile) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (mContext) => SearchResultCamera(ImageFile: _imageFile,)),
+    );
+    if(result.toString()!="back"){
+      _itemsData = result;
+      Navigator.pop(context,result);
     }
   }
+
+
+
+
+
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      /*appBar: AppBar(
+        resizeToAvoidBottomPadding: false,
+        /*appBar: AppBar(
         title: Text('วิเคราะห์ข้อมูลผู้ต้องหา',
             style: TextStyle(fontFamily: 'Kanit')),
         centerTitle: true,
@@ -134,33 +83,95 @@ class _MainPageState extends State<NetworkFragment> {
                   ))),
         ],
       ),*/
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _decideImageView(),
-            FlatButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+
+                FlatButton(
+                    onPressed: () {
+                      _showDialogPicker();
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.camera_alt,
+                          size: 200,
+                          color: Color(0xff2e76bc),
+                        ),
+                        Text(
+                          'ค้นหาด้วยรูปภาพ',
+                          style: TextStyle(
+                              fontFamily: FontStyles().FontFamily, fontSize: 25),
+                        )
+                      ],
+                    ))
+              ],
+            ),
+          ),)
+
+
+    );
+
+
+
+
+  }
+
+  _onTapImage(BuildContext context) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    return Padding(
+      padding: EdgeInsets.all(12.0),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                child:  Container(
+                  width: width/3,
+                  height: height/7,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child:Icon(Icons.camera_alt,color: Colors.blue,size: 38.0,),
+                ),
+                onTap: (){_showImage(context);},
+              ),
+              GestureDetector(
+                child: Container(
+                  width: width/3,
+                  height: height/7,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Icon(Icons.image,color: Colors.blue,size: 38.0,),
+                ),
+                onTap: (){
+                  _onImageButtonPressed(ImageSource.gallery,context);
                 },
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Icon(
-                      Icons.camera_alt,
-                      size: 200,
-                      color: Color(0xff2e76bc),
-                    ),
-                    Text(
-                      'ค้นหาด้วยภาพ',
-                      style: TextStyle(
-                          fontFamily: FontStyles().FontFamily, fontSize: 25),
-                    )
-                  ],
-                ))
-          ],
-        ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
+
+
 }

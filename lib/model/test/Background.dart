@@ -28,162 +28,218 @@ class BackgroundContent extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topRight,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
-                  style: TextStyle(
-                      fontFamily: FontStyles().FontFamily,
-                      color: Colors.grey[100],
-                      fontSize: 18.0),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                      ],
+                    )
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: new RotationTransition(
-                  turns: new AlwaysStoppedAnimation(-35 / 360),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: 75,
-                        width:  140,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: new AssetImage(
-                                'assets/images/logo_page.png'),
-                            fit: BoxFit.contain,
-                            alignment: Alignment.center,),
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: Center(
+                        child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                          style: TextStyle(
+                              fontFamily: FontStyles().FontFamily,
+                              color: Colors.grey[100],
+                              fontSize: 18.0),
                         ),
                       ),
-                      Container(
-                        height: 75,
-                        width:  140,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: new AssetImage(
-                                'assets/images/logo_page.png'),
-                            fit: BoxFit.contain,
-                            alignment: Alignment.center,),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
-                  style: TextStyle(
-                      fontFamily: FontStyles().FontFamily,
-                      color: Colors.grey[100],
-                      fontSize: 18.0),
+                    )
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 75,
-                      width:  140,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: new AssetImage(
-                              'assets/images/logo_page.png'),
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,),
-                      ),
-                    ),
-                    Container(
-                      height: 75,
-                      width:  140,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: new AssetImage(
-                              'assets/images/logo_page.png'),
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,),
-                      ),
-                    ),
-                  ],
-                )
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                      ],
+                    )
+                ),
               ),
-            ),
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: Center(
+                        child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                          style: TextStyle(
+                              fontFamily: FontStyles().FontFamily,
+                              color: Colors.grey[100],
+                              fontSize: 18.0),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                      ],
+                    )
+                ),
+              ),
 
-            Align(
-              alignment: Alignment.bottomRight,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
-                  style: TextStyle(
-                      fontFamily: FontStyles().FontFamily,
-                      color: Colors.grey[100],
-                      fontSize: 18.0),
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: Center(
+                        child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                          style: TextStyle(
+                              fontFamily: FontStyles().FontFamily,
+                              color: Colors.grey[100],
+                              fontSize: 18.0),
+                        ),
+                      ),
+                    )
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 75,
-                      width:  140,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: new AssetImage(
-                              'assets/images/logo_page.png'),
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,),
-                      ),
-                    ),
-                    Container(
-                      height: 75,
-                      width:  140,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: new AssetImage(
-                              'assets/images/logo_page.png'),
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,),
-                      ),
-                    ),
-                  ],
-                )
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: new RotationTransition(
-                turns: new AlwaysStoppedAnimation(-35 / 360),
-                child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
-                  style: TextStyle(
-                      fontFamily: FontStyles().FontFamily,
-                      color: Colors.grey[100],
-                      fontSize: 18.0),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                        Container(
+                          height: 75,
+                          width:  140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: new AssetImage(
+                                  'assets/images/logo_page.png'),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,),
+                          ),
+                        ),
+                      ],
+                    )
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.topRight,
+                child: new RotationTransition(
+                    turns: new AlwaysStoppedAnimation(-35 / 360),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: Center(
+                        child: new Text("ใช้เฉพาะเจ้าหน้าที่กรมสรรพสามิตเท่านั้น",
+                          style: TextStyle(
+                              fontFamily: FontStyles().FontFamily,
+                              color: Colors.grey[100],
+                              fontSize: 18.0),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+            ],
+          ),
         )
     );
   }
@@ -225,8 +281,8 @@ class WavyHeader extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: new AssetImage(
-                  'assets/images/opacity.png'),
+                image: new AssetImage(
+                    'assets/images/opacity.png'),
                 fit: BoxFit.contain,
                 alignment: Alignment.topRight,
                 /*colorFilter: new ColorFilter.mode(Color(0xff4098cb).withOpacity(0.2), BlendMode.dstATop),*/),
@@ -286,10 +342,10 @@ class WavyFooter extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           image: new DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            image: new AssetImage(
-                'assets/images/opacity.png')
+              fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              image: new AssetImage(
+                  'assets/images/opacity.png')
           ),
           gradient: LinearGradient(
               colors: aquaGradients,

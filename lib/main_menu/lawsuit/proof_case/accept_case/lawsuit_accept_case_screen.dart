@@ -1,47 +1,43 @@
 import 'dart:async';
 
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:prototype_app_pang/Model/choice.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_office.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_get_office.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_creen_arrest/tab_arrest_4/tab_screen_arrest_4_suspect2.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_creen_arrest/tab_arrest_6/tab_screen_arrest_6_product.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/future/compare_future.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_deatail.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_staff.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/lawsuit_accept_screen_sentence.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/lawsuit_not_accept_screen_suspect.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/tab_screen_lawsuit_product.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/tab_screen_lawsuit_staff_search.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/tab_screen_lawsuit_suspect.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_case_information.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_evidence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_form_list.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_proof.dart';
 import 'package:flutter/services.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_person.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
+import 'package:prototype_app_pang/main_menu/arrest/future/arrest_future.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_person.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_screen.dart';
 import 'package:prototype_app_pang/model/Constants.dart';
+import 'package:prototype_app_pang/model/Issue_Alert.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 
 const double _kPickerSheetHeight = 216.0;
 class LawsuitAcceptCaseMainScreenNonProofFragment extends StatefulWidget {
   ItemsLawsuitArrestMain itemsLawsuitMain ;
   ItemsPersonInformation ItemsPerson;
+  ItemsArrestResponseGetOffice itemsOffice;
   bool IsPreview;
   bool IsEdit;
   bool IsCreate;
@@ -54,6 +50,7 @@ class LawsuitAcceptCaseMainScreenNonProofFragment extends StatefulWidget {
     @required this.IsEdit,
     @required this.IsCreate,
     @required this.itemsPreview,
+    @required this.itemsOffice,
   }) : super(key: key);
   @override
   _FragmentState createState() => new _FragmentState();
@@ -98,8 +95,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     super.initState();
 
     /*****************************controller main tab**************************/
-    tabController = TabController(length: choices.length, vsync: this);
-    _tabPageSelector = new TabPageSelector(controller: tabController);
+    setAutoCompleteOffice();
 
     var formatter = new DateFormat('yyyy');
     String year = formatter.format(DateTime.now());
@@ -141,6 +137,9 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       editProofPerson.text = title + firstname + " " + lastname;
       choices.insert(1, Choice(title: "นำส่งเพื่อพิสูจน์"));
     }
+
+    tabController = TabController(length: choices.length, vsync: this);
+    _tabPageSelector = new TabPageSelector(controller: tabController);
 
 
     _currentDateProof = date;
@@ -217,7 +216,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
 
   TextStyle textStyleLabel = TextStyle(
       fontSize: 16, color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
-  TextStyle textDataTitleStyle = TextStyle(fontSize: 18, color: Colors.black,fontFamily: FontStyles().FontFamily);
+  TextStyle textDataTitleStyle = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleData = TextStyle(fontSize: 16, color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleSubData = TextStyle(fontSize: 16, color: Colors.black38,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
@@ -327,7 +326,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     editLawsuitYear.text=lawsuit_year;
     editLawsuitDate.text=lawsuit_date;
     editLawsuitTime.text = dateFormatTime.format(dt_lawsuit_date).toString();
-    editLawsuitPlace.text=_itemsLawsuitMain.OFFICE_NAME;
+
+    sOffice = _itemsLawsuitMain.OFFICE;
+    editOffice.text = sOffice.OFFICE_NAME;
+    //editLawsuitPlace.text=_itemsLawsuitMain.OFFICE_NAME;
+
     editTestimony.text=_itemsLawsuitMain.TESTIMONY;
     _itemsLawsuitMain.LawsuitStaff.forEach((f){
       //editLawsuitPersonName.text = f.TITLE_SHORT_NAME_TH+f.FIRST_NAME+" "+f.LAST_NAME;
@@ -574,45 +577,16 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       lastDate: DateTime(2025),
     );
   }
-  CupertinoAlertDialog _cupertinoSearchEmpty(mContext,text) {
-    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text(text,
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(mContext);
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-  }
-
-  void _showSearchEmptyAlertDialog(context,text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _cupertinoSearchEmpty(context,text);
-      },
-    );
-  }
 
   void onSaved(BuildContext mContext)async{
     if (editLawsuitNumber.text.isEmpty) {
-      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกเลขที่รับคำกล่าวโทษ');
-    }else if (editLawsuitPlace.text.isEmpty) {
-      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกสถานที่ทำการ');
+      new VerifyDialog(mContext, 'กรุณากรอกเลขที่รับคำกล่าวโทษ');
+    }else if (/*editLawsuitPlace.text.isEmpty*/sOffice==null) {
+      new VerifyDialog(mContext, 'กรุณากรอกสถานที่ทำการ');
     }else if (editTestimony.text.isEmpty) {
-      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกคำให้การของผู้กล่าวโทษ');
+      new VerifyDialog(mContext, 'กรุณากรอกคำให้การของผู้กล่าวโทษ');
     }else if (_itemsLawsuitArrestMain.IS_PROVE==1&&(editProofNumber.text.isEmpty||editProofYear.text.isEmpty)) {
-      _showSearchEmptyAlertDialog(mContext, 'กรุณากรอกเลขที่หนังสือนำส่งให้ครบทุกช่อง');
+      new VerifyDialog(mContext, 'กรุณากรอกเลขที่หนังสือนำส่งให้ครบทุกช่อง');
     }else{
       if(!_onEdited){
         List<Map> LawsuitDetail =[];
@@ -658,9 +632,9 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         Map map = {
           "LAWSUIT_ID": "",
           "INDICTMENT_ID": _itemsLawsuitArrestMain.INDICTMENT_ID,
-          "OFFICE_ID": "1",
-          "OFFICE_CODE": "000000",
-          "OFFICE_NAME": "สำนักงานสรรพสเทพฯ 3",
+          "OFFICE_ID": sOffice.OFFICE_ID,
+          "OFFICE_CODE": sOffice.OFFICE_CODE,
+          "OFFICE_NAME": sOffice.OFFICE_NAME,
           "IS_LAWSUIT": 1,
           "REMARK_NOT_LAWSUIT": "",
           "LAWSUIT_NO": int.parse(editLawsuitNumber.text),
@@ -780,9 +754,9 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
             "LAWSUIT_DETAIL_ID": item.LAWSUIT_DETAIL_ID,
             "LAWSUIT_ID": item.LAWSUIT_ID,
             "INDICTMENT_DETAIL_ID": item.INDICTMENT_DETAIL_ID,
-            "COURT_ID": 0,
-            "LAWSUIT_TYPE": 0,
-            "LAWSUIT_END": 0,
+            "COURT_ID": "",
+            "LAWSUIT_TYPE": 1,
+            "LAWSUIT_END": 1,
             "COURT_NAME": item.COURT_NAME,
             "UNDECIDE_NO_1": 1,
             "UNDECIDE_NO_YEAR_1": "",
@@ -814,12 +788,13 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
           });
         });
 
+        print(sOffice.OFFICE_NAME.toString());
         Map map = {
           "LAWSUIT_ID": _itemsLawsuitMain.LAWSUIT_ID,
           "INDICTMENT_ID": _itemsLawsuitArrestMain.INDICTMENT_ID,
-          "OFFICE_ID": _itemsLawsuitMain.OFFICE_ID,
-          "OFFICE_CODE": _itemsLawsuitMain.OFFICE_CODE,
-          "OFFICE_NAME": _itemsLawsuitMain.OFFICE_NAME,
+          "OFFICE_ID": sOffice.OFFICE_ID,
+          "OFFICE_CODE": sOffice.OFFICE_CODE,
+          "OFFICE_NAME": sOffice.OFFICE_NAME,
           "IS_LAWSUIT": _itemsLawsuitMain.IS_LAWSUIT,
           "REMARK_NOT_LAWSUIT": "",
           "LAWSUIT_NO": int.parse(editLawsuitNumber.text),
@@ -1068,11 +1043,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   },
                   child: Text('บันทึก', style: appBarStyle))
                   :
-              widget.itemsLawsuitMain.IS_PROVE==1 ? ButtonTheme(
+              widget.itemsLawsuitMain.IS_PROVE == 1 ? ButtonTheme(
                   minWidth: 44.0,
                   padding: new EdgeInsets.all(0.0),
                   child: FlatButton(
-                    onPressed: (){
+                    onPressed: () {
                       //เมื่อพิสูจน์
                       //onProve();
                     },
@@ -1082,13 +1057,15 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                         Icon(Icons.arrow_forward_ios, color: Colors.white,)
                       ],
                     ),
-                  )) : (_itemsLawsuitArrestMain.IS_COMPARE==1 ? new ButtonTheme(
+                  )) : (_itemsLawsuitArrestMain.IS_COMPARE == 1
+                  ? new ButtonTheme(
                   minWidth: 44.0,
                   padding: new EdgeInsets.all(0.0),
                   child: FlatButton(
-                    onPressed: (){
+                    onPressed: () {
                       //เมื่อชำระค่าปรับ
-                      _navigate_compare(context,_itemsLawsuitArrestMain.INDICTMENT_ID);
+                      _navigate_compare(
+                          context, _itemsLawsuitArrestMain.INDICTMENT_ID);
                     },
                     child: Row(
                       children: <Widget>[
@@ -1097,7 +1074,8 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                       ],
                     ),
                   )
-              ) : Container())
+              )
+                  : Container())
               )
                   :
               new FlatButton(
@@ -1149,7 +1127,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                     unselectedLabelColor: Colors.grey[500],
                     labelStyle: tabStyle,
                     controller: tabController,
-                    isScrollable: choices.length >3  ? true : false,
+                    isScrollable: choices.length > 3 ? true : false,
                     tabs: choices.map((Choice choice) {
                       return Tab(
                         text: choice.title,
@@ -1157,31 +1135,37 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                     }).toList(),
                   ),
                 ),
-                body: TabBarView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: widget.itemsLawsuitMain.IS_PROVE==1 ? (_onFinish ? <
-                      Widget>[
-                    //กรณีพิสูจน์
-                    _buildContent_tab_1(),
-                    _buildContent_tab_proof(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                  ] :
-                  <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_proof(),
-                    _buildContent_tab_2(),
-                  ])
-                      : _onFinish ? <Widget>[
-                    //กรณีไม่พิสูจน์
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                  ] :
-                  <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
+                body: Stack(
+                  children: <Widget>[
+                    BackgroundContent(),
+                    TabBarView(
+                      //physics: NeverScrollableScrollPhysics(),
+                      controller: tabController,
+                      children: widget.itemsLawsuitMain.IS_PROVE == 1
+                          ? (_onFinish ? <
+                          Widget>[
+                        //กรณีพิสูจน์
+                        _buildContent_tab_1(),
+                        _buildContent_tab_proof(),
+                        _buildContent_tab_2(),
+                        _buildContent_tab_3(),
+                      ] :
+                      <Widget>[
+                        _buildContent_tab_1(),
+                        _buildContent_tab_proof(),
+                        _buildContent_tab_2(),
+                      ])
+                          : _onFinish ? <Widget>[
+                        //กรณีไม่พิสูจน์
+                        _buildContent_tab_1(),
+                        _buildContent_tab_2(),
+                        _buildContent_tab_3(),
+                      ] :
+                      <Widget>[
+                        _buildContent_tab_1(),
+                        _buildContent_tab_2(),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -1198,7 +1182,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         .apiRequestCompareArrestgetByIndictmentID(map)
         .then((onValue) {
       compareMain = onValue[0];
-      print(onValue.length);
     });
     setState(() {});
     return true;
@@ -1216,7 +1199,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     Map map = {
       "INDICTMENT_ID": INDICTMENT_ID
     };
-    print(map.toString());
     await onLoadActionGetCompareIndicment(map);
     Navigator.pop(context);
     if (compareMain != null) {
@@ -1259,30 +1241,42 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     );
   }
 
-  _navigateSearchStaff(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TabScreenLawsuitStaffSearch()),
+  //************************start_tab_1*****************************
+  ItemsListOffice sOffice;
+  AutoCompleteTextField _textListOffice;
+  TextEditingController editOffice = new TextEditingController();
+  GlobalKey key = new GlobalKey<AutoCompleteTextFieldState<ItemsListOffice>>();
+  void setAutoCompleteOffice(){
+    _textListOffice = new AutoCompleteTextField<ItemsListOffice>(
+      style: textStyleData,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+      ),
+      clearOnSubmit: false,
+      submitOnSuggestionTap: true,
+      itemSubmitted: (item){
+        setState(() {
+          _textListOffice.controller.text = item.OFFICE_NAME.toString();
+          sOffice = item;
+        });
+      },
+      key: key,
+      controller: editOffice,
+      suggestions: widget.itemsOffice.RESPONSE_DATA,
+      itemBuilder: (context, suggestion) =>
+      sOffice==null
+          ?new Padding(
+          child: new ListTile(
+            title: new Text(suggestion.OFFICE_NAME.toString(),style: textStyleData),),
+          padding: EdgeInsets.all(8.0)):Container(),
+      itemSorter: (a, b) => a.OFFICE_ID == b.OFFICE_ID ? 0 : a.OFFICE_ID > b.OFFICE_ID ? -1 : 1,
+      itemFilter: (suggestion, input){
+        sOffice=null;
+        return suggestion.OFFICE_NAME.toLowerCase().startsWith(input.toLowerCase());
+      },
     );
-    if(result.toString()!="Back"){
-      var itemStaff = result;
-      _itemsStaff = itemStaff;
-      _itemStaffUpdate = itemStaff;
-      String title = itemStaff.TITLE_SHORT_NAME_TH!=null
-          ?itemStaff.TITLE_SHORT_NAME_TH
-          :itemStaff.TITLE_NAME_TH;
-      String firstname = itemStaff.FIRST_NAME!=null
-          ?itemStaff.FIRST_NAME
-          :"";
-      String lastname =  itemStaff.LAST_NAME!=null
-          ?itemStaff.LAST_NAME
-          :"";
-      editLawsuitPersonName.text = title+firstname+" "+lastname;
-
-    }
   }
 
-  //************************start_tab_1*****************************
   Widget _buildContent_tab_1() {
 
     _navigateLawsuitAcceptCaseSentence(BuildContext context,
@@ -1320,7 +1314,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                 Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1557,7 +1550,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new Container(
+                            /*new Container(
                               //padding: paddingData,
                               child: TextField(
                                 focusNode: myFocusNodeLawsuitPlace,
@@ -1569,7 +1562,8 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                                   border: InputBorder.none,
                                 ),
                               ),
-                            ),
+                            ),*/
+                        _textListOffice,
                             Container(
                               height: 1.0,
                               color: Colors.grey[300],
@@ -1663,7 +1657,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   child: Container(
                       padding: EdgeInsets.all(18.0),
                       decoration: BoxDecoration(
-                          color: Colors.white,
                           shape: BoxShape.rectangle,
                           border: Border(
                             top: BorderSide(
@@ -1707,15 +1700,12 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                                   if(_itemsLawsuitMain==null){
                                     lawIndicDetail=_itemsLawsuitArrestMain
                                         .LawsuitArrestIndictmentDetail[j];
+
+                                    LAWSUIT_TYPE=0;
                                   }else {
                                     for (int i = 0; i <
                                         _itemsLawsuitMain.LawsuitDetail.length;
                                     i++) {
-                                      print(_itemsLawsuitMain.LawsuitDetail[i]
-                                          .INDICTMENT_DETAIL_ID.toString() +
-                                          " : " + _itemsLawsuitArrestMain
-                                          .LawsuitArrestIndictmentDetail[j]
-                                          .INDICTMENT_DETAIL_ID.toString());
 
                                       if (_itemsLawsuitArrestMain
                                           .LawsuitArrestIndictmentDetail[j]
@@ -1877,7 +1867,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
               decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.rectangle,
                   border: Border(
                     bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2026,7 +2015,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                       Padding(
                         padding: paddingData,
                         child: Text(
-                          _itemsLawsuitMain.OFFICE_NAME, style: textStyleData,),
+                          _itemsLawsuitMain.OFFICE.OFFICE_NAME, style: textStyleData,),
                       ),
                       Container(
                         padding: paddingLabel,
@@ -2069,23 +2058,20 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            //height: 34.0,
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300], width: 1.0),
-                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                )
-            ),
-            /*child: Row(
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          //height: 34.0,
+          decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.grey[300], width: 1.0),
+                //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+              )
+          ),
+          /*child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -2096,13 +2082,12 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                 )
               ],
             ),*/
-          ),
-          Expanded(
-            child: _onSaved ? _buildContent_saved(context) : _buildContent(
-                context),
-          ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: _onSaved ? _buildContent_saved(context) : _buildContent(
+              context),
+        ),
+      ],
     );
   }
 
@@ -2219,7 +2204,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         Padding(
           padding: paddingData,
           child: Text(
-            _itemsLawsuitArrestMain.SECTION_NAME,
+            _itemsLawsuitArrestMain.SUBSECTION_NAME,
             style: textStyleData,),
         ),
         Container(
@@ -2574,12 +2559,10 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      TabScreenLawsuitProduct(
-                                        ItemsProduct:  _itemsLawsuitArrestMain
+                                      TabScreenArrest6Product(
+                                        ItemsProduct: _itemsLawsuitArrestMain
                                             .LawsuitArrestIndictmentProduct[index],
                                         IsComplete: true,
-                                        Title: _itemsLawsuitArrestMain
-                                            .LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_TH,
                                       )),
                             );
                           },
@@ -2592,17 +2575,49 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                                   padding: paddingData,
                                   child: Text(
                                     (index + 1).toString() + ". " +
-                                        _itemsLawsuitArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
-                                            .PRODUCT_CATEGORY_NAME +
-                                        '/' +
-                                        _itemsLawsuitArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
-                                            .PRODUCT_TYPE_NAME + '/' +
-                                        //_arrestMain.ArrestIndictment[index].ArrestIndictmentProduct[j].PRODUCT_SUBTYPE_NAME + '/' +
-                                        _itemsLawsuitArrestMain
-                                            .LawsuitArrestIndictmentProduct[index]
-                                            .PRODUCT_BRAND_NAME_TH,
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_GROUP_NAME != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_GROUP_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_CATEGORY_NAME != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_CATEGORY_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_TYPE_NAME != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_TYPE_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_TH != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_EN != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_BRAND_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_SUBBRAND_NAME_TH != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_SUBBRAND_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_SUBBRAND_NAME_EN != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_SUBBRAND_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_MODEL_NAME_TH != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_MODEL_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_MODEL_NAME_EN != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].PRODUCT_MODEL_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].DEGREE != null
+                                            ? (_itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].DEGREE.toString() +
+                                            ' ดีกรี ')
+                                            : ' ') +
+                                        _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].SIZES.toString() + ' ' +
+                                        _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index].SIZES_UNIT.toString(),
                                     style: textStyleData,),
                                 ),
                               ),
@@ -2653,7 +2668,7 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     if(Success){
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TabScreenLawsuitDeatilSuspect(ItemsSuspect: ItemsPreviewIndicmentDetail,)),
+        MaterialPageRoute(builder: (context) => TabScreenArrest4Suspect2(ItemsSuspect: ItemsPreviewIndicmentDetail,)),
       );
       /*_itemsData=result;
       Navigator.pop(context,_itemsData);*/
@@ -2669,7 +2684,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
         padding: EdgeInsets.only(
             left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
         decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -2711,24 +2725,21 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       );
     }
     //data result when search data
-    return Scaffold(
-        backgroundColor: Colors.grey[300],
-        body: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Row(
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            //height: 34.0,
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                )
+            ),
+            /*child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -2739,18 +2750,17 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                     )
                   ],
                 ),*/
-              ),
-              Expanded(
-                child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(context),
-                  ),
-                ),
-              ),
-            ],
           ),
-        )
+          Expanded(
+            child: new ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: SingleChildScrollView(
+                child: _buildContent(context),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -2774,12 +2784,15 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   child: Container(
                     padding: EdgeInsets.all(18.0),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         shape: BoxShape.rectangle,
-                        border: Border(
+                        border: index==0
+                            ?Border(
+                          top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                            :Border(
                           //top: BorderSide(color: Colors.grey[300], width: 1.0),
-                          bottom: BorderSide(
-                              color: Colors.grey[300], width: 1.0),
+                          bottom: BorderSide(color: Colors.grey[300], width: 1.0),
                         )
                     ),
                     child: ListTile(
@@ -2803,24 +2816,22 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
       );
     }
     //data result when search data
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                  )
-              ),
-              /*child: Row(
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            //height: 34.0,
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                )
+            ),
+            /*child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -2831,12 +2842,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   )
                 ],
               ),*/
-            ),
-            Expanded(
-              child: _buildContent(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _buildContent(),
+          ),
+        ],
       ),
     );
   }
@@ -2857,10 +2867,9 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                 Container(
                   padding: EdgeInsets.all(18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
-                        bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
                       )
                   ),
                   child: Column(
@@ -3075,199 +3084,6 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                     ],
                   ),
                 ),
-               /* _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.length>0
-                    ?Container(
-                  padding: EdgeInsets.only(left:22.0,right: 22.0,top: 12.0,bottom: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        child: Text("เลือกของกลางทั้งหมด",
-                          style: textInputStyleCheckAll,),
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isCheckAll =
-                            !isCheckAll;
-                            if (isCheckAll) {
-                              _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.forEach((
-                                  item) {
-                                item.IsCkecked = true;
-                              });
-                            } else {
-                              _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.forEach((
-                                  item) {
-                                item.IsCkecked = false;
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            color: isCheckAll
-                                ? Color(0xff3b69f3)
-                                : Colors.grey[200],
-                            border: isCheckAll
-                                ? Border.all(color: Color(0xff3b69f3), width: 2)
-                                : Border.all(color: Colors.grey[400], width: 2),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: isCheckAll
-                                  ? Icon(
-                                Icons.check,
-                                size: 18.0,
-                                color: Colors.white,
-                              )
-                                  : Container(
-                                height: 18.0,
-                                width: 18.0,
-                                color: Colors.transparent,
-                              )
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-                    :Container(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: paddingLabel,
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.length,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.2, bottom: 0.2),
-                            child: Container(
-                              padding: EdgeInsets.all(22.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.rectangle,
-                                  border: Border(
-                                    top: BorderSide(
-                                        color: Colors.grey[300],
-                                        width: 1.0),
-                                    bottom: BorderSide(
-                                        color: Colors.grey[300],
-                                        width: 1.0),
-                                  )
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .start,
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Container(
-                                          padding: paddingLabel,
-                                          child: Text(
-                                            _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                .PRODUCT_CATEGORY_NAME +
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .PRODUCT_TYPE_NAME + '/' +
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .PRODUCT_BRAND_NAME_TH +
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .PRODUCT_MODEL_NAME_TH +
-                                                '/' +
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .QUANTITY.toString() +
-                                                ' ' +
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .QUANTITY_UNIT+
-                                                '/'+
-                                              _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                              .VOLUMN.toString() +
-                                              ' ' +
-                                              _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                  .VOLUMN_UNIT,
-                                            style: textStyleData,),
-                                        ),
-                                      ),
-                                      Center(
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .IsCkecked =
-                                                ! _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .IsCkecked;
-
-                                                int count = 0;
-                                                _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.forEach((ev){
-                                                  if(ev.IsCkecked){
-                                                    count++;
-                                                  }
-                                                });
-                                                count== _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct.length?isCheckAll=true:isCheckAll=false;
-                                              });
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.all(
-                                                  2.0),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                color:  _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .IsCkecked
-                                                    ? Color(0xff3b69f3)
-                                                    : Colors.white,
-                                                border: _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                    .IsCkecked
-                                                    ? Border.all(
-                                                    color: Color(
-                                                        0xff3b69f3),
-                                                    width: 2)
-                                                    : Border.all(
-                                                    color: Colors
-                                                        .grey[400],
-                                                    width: 2),
-                                              ),
-                                              child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .all(0.0),
-                                                  child: _itemsLawsuitArrestMain.LawsuitArrestIndictmentProduct[index]
-                                                      .IsCkecked
-                                                      ? Icon(
-                                                    Icons.check,
-                                                    size: 18.0,
-                                                    color: Colors.white,
-                                                  )
-                                                      : Container(
-                                                    height: 18.0,
-                                                    width: 18.0,
-                                                    color: Colors
-                                                        .transparent,
-                                                  )
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                )*/
               ],
             ),
           )
@@ -3302,10 +3118,9 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   padding: EdgeInsets.only(
                       left: 18.0, right: 18.0, top: 18.0, bottom: 18.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       border: Border(
-                        bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
                       )
                   ),
                   child: Stack(
@@ -3474,24 +3289,21 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
     }
 
     //data result when search data
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                  )
-              ),
-              /*child: Row(
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            //height: 34.0,
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                )
+            ),
+            /*child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -3502,12 +3314,11 @@ class _FragmentState extends State<LawsuitAcceptCaseMainScreenNonProofFragment> 
                   )
                 ],
               ),*/
-            ),
-            Expanded(
-              child: _onSaved&&widget.itemsLawsuitMain.IS_PROVE!=0?_buildContent_saved(context):_buildContent(context),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _onSaved&&widget.itemsLawsuitMain.IS_PROVE!=0?_buildContent_saved(context):_buildContent(context),
+          ),
+        ],
       ),
     );
   }

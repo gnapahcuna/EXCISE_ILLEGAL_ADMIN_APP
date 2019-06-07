@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_office.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_deatail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_staff.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_detail.dart';
@@ -9,9 +12,10 @@ import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/
 class ItemsLawsuitMain {
   int LAWSUIT_ID;
   int INDICTMENT_ID;
-  int OFFICE_ID;
+  ItemsListOffice OFFICE;
+  /*int OFFICE_ID;
   String OFFICE_CODE;
-  String OFFICE_NAME;
+  String OFFICE_NAME;*/
   int IS_LAWSUIT;
   String REMARK_NOT_LAWSUIT;
   int LAWSUIT_NO;
@@ -30,9 +34,10 @@ class ItemsLawsuitMain {
   ItemsLawsuitMain({
     this.LAWSUIT_ID,
     this.INDICTMENT_ID,
-    this.OFFICE_ID,
+    this.OFFICE,
+    /*this.OFFICE_ID,
     this.OFFICE_CODE,
-    this.OFFICE_NAME,
+    this.OFFICE_NAME,*/
     this.IS_LAWSUIT,
     this.REMARK_NOT_LAWSUIT,
     this.LAWSUIT_NO,
@@ -49,27 +54,35 @@ class ItemsLawsuitMain {
     this.LawsuitDetail,
   });
 
-  factory ItemsLawsuitMain.fromJson(Map<String, dynamic> json) {
+  factory ItemsLawsuitMain.fromJson(Map<String, dynamic> js) {
+    Map map_office = {
+      "OFFICE_ID": js['OFFICE_ID'],
+      "OFFICE_CODE": js['OFFICE_CODE'],
+      "OFFICE_NAME": js['OFFICE_NAME'],
+      "IS_ACTIVE": 1
+    };
+    var body_office = json.encode(map_office);
     return ItemsLawsuitMain(
-      LAWSUIT_ID: json['LAWSUIT_ID'],
-      INDICTMENT_ID: json['INDICTMENT_ID'],
-      OFFICE_ID: json['OFFICE_ID'],
-      OFFICE_CODE: json['OFFICE_CODE'],
-      OFFICE_NAME: json['OFFICE_NAME'],
-      IS_LAWSUIT: json['IS_LAWSUIT'],
-      REMARK_NOT_LAWSUIT: json['REMARK_NOT_LAWSUIT'],
-      LAWSUIT_NO: json['LAWSUIT_NO'],
-      LAWSUIT_NO_YEAR: json['LAWSUIT_NO_YEAR'],
-      LAWSUIT_DATE: json['LAWSUIT_DATE'],
-      TESTIMONY: json['TESTIMONY'],
-      DELIVERY_DOC_NO_1: json['DELIVERY_DOC_NO_1'],
-      DELIVERY_DOC_NO_2: json['DELIVERY_DOC_NO_2'],
-      DELIVERY_DOC_DATE: json['DELIVERY_DOC_DATE'],
-      IS_OUTSIDE: json['IS_OUTSIDE'],
-      IS_SEIZE: json['IS_SEIZE'],
-      IS_ACTIVE: json['IS_ACTIVE'],
-      LawsuitStaff: List.from(json['LawsuitStaff'].map((m) => ItemsListLawsuitStaff.fromJson(m))),
-      LawsuitDetail: List.from(json['LawsuitDetail'].map((m) => ItemsListLawsuitDetail.fromJson(m))),
+      LAWSUIT_ID: js['LAWSUIT_ID'],
+      INDICTMENT_ID: js['INDICTMENT_ID'],
+      OFFICE:  ItemsListOffice.fromJson(json.decode(body_office)),
+      /*OFFICE_ID: js['OFFICE_ID'],
+      OFFICE_CODE: js['OFFICE_CODE'],
+      OFFICE_NAME: js['OFFICE_NAME'],*/
+      IS_LAWSUIT: js['IS_LAWSUIT'],
+      REMARK_NOT_LAWSUIT: js['REMARK_NOT_LAWSUIT'],
+      LAWSUIT_NO: js['LAWSUIT_NO'],
+      LAWSUIT_NO_YEAR: js['LAWSUIT_NO_YEAR'],
+      LAWSUIT_DATE: js['LAWSUIT_DATE'],
+      TESTIMONY: js['TESTIMONY'],
+      DELIVERY_DOC_NO_1: js['DELIVERY_DOC_NO_1'],
+      DELIVERY_DOC_NO_2: js['DELIVERY_DOC_NO_2'],
+      DELIVERY_DOC_DATE: js['DELIVERY_DOC_DATE'],
+      IS_OUTSIDE: js['IS_OUTSIDE'],
+      IS_SEIZE: js['IS_SEIZE'],
+      IS_ACTIVE: js['IS_ACTIVE'],
+      LawsuitStaff: List.from(js['LawsuitStaff'].map((m) => ItemsListLawsuitStaff.fromJson(m))),
+      LawsuitDetail: List.from(js['LawsuitDetail'].map((m) => ItemsListLawsuitDetail.fromJson(m))),
     );
   }
 }

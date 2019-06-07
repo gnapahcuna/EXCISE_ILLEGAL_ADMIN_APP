@@ -1,37 +1,14 @@
-import 'dart:async';
-import 'dart:io';
-
-import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/Model/choice.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
-import 'package:prototype_app_pang/main_menu/auction/auction_book_search_screen.dart';
-import 'package:prototype_app_pang/main_menu/auction/model/auction_main.dart';
-import 'package:prototype_app_pang/main_menu/destroy/destroy_book_search_screen.dart';
-import 'package:prototype_app_pang/main_menu/destroy/model/approve.dart';
-import 'package:prototype_app_pang/main_menu/destroy/model/destroy.dart';
 import 'package:prototype_app_pang/main_menu/destroy/model/destroy_evidence.dart';
 import 'package:prototype_app_pang/main_menu/destroy/model/destroy_form_list.dart';
-import 'package:prototype_app_pang/main_menu/destroy/model/destroy_main.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
-import 'package:prototype_app_pang/main_menu/musuim/model/approve.dart';
-import 'package:prototype_app_pang/main_menu/musuim/model/musuim.dart';
-import 'package:prototype_app_pang/main_menu/musuim/model/musuim_main.dart';
-import 'package:prototype_app_pang/main_menu/musuim/musuim_book_search_screen.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_screen.dart';
-import 'package:prototype_app_pang/main_menu/stock/model/balance_type.dart';
 import 'package:prototype_app_pang/main_menu/stock/model/stock_main.dart';
 import 'package:prototype_app_pang/main_menu/stock/stock_book_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/stock/stock_list_screen.dart';
-import 'package:prototype_app_pang/main_menu/transfer/model/approve.dart';
-import 'package:prototype_app_pang/main_menu/transfer/model/tranfer.dart';
-import 'package:prototype_app_pang/main_menu/transfer/model/transfer_main.dart';
-import 'package:prototype_app_pang/picker/date_picker.dart';
 
 class StockMainScreenFragment extends StatefulWidget {
   ItemsStockMain ItemsstockMain;

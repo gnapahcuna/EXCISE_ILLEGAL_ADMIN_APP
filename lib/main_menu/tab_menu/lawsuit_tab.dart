@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_get_office.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/lawsuit_accept_case_screen.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
@@ -11,12 +12,15 @@ import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_evidence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_offense.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class LawsuitFragment extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
+  ItemsArrestResponseGetOffice itemsOffice;
   LawsuitFragment({
     Key key,
     @required this.ItemsPerson,
+    @required this.itemsOffice,
   }) : super(key: key);
   @override
   _LawsuitFragmentState createState() => new _LawsuitFragmentState();
@@ -70,7 +74,6 @@ class _LawsuitFragmentState extends State<LawsuitFragment> {
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
-        print(itemsLawsuit[index].IndicmentDetail.length);
         String suspect = "";
         String subSuspect = "";
         if (itemsLawsuit[index].IndicmentDetail.length > 0) {
@@ -107,7 +110,6 @@ class _LawsuitFragmentState extends State<LawsuitFragment> {
           child: Container(
             padding: EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(
@@ -140,7 +142,7 @@ class _LawsuitFragmentState extends State<LawsuitFragment> {
                   Padding(
                     padding: paddingData,
                     child: Text(
-                      itemsLawsuit[index].SECTION_NAME,
+                      itemsLawsuit[index].SUBSECTION_NAME,
                       style: textStyleData,),
                   ),
                   Container(
@@ -301,6 +303,7 @@ class _LawsuitFragmentState extends State<LawsuitFragment> {
             LawsuitAcceptCaseMainScreenNonProofFragment(
               itemsLawsuitMain: lawsuitMain,
               ItemsPerson: widget.ItemsPerson,
+              itemsOffice: widget.itemsOffice,
               IsEdit: false,
               IsPreview: false,
               IsCreate: true,
@@ -342,71 +345,49 @@ class _LawsuitFragmentState extends State<LawsuitFragment> {
         if (snapshot.hasData) {
           itemsLawsuit = snapshot.data;
           return new Scaffold(
-            backgroundColor: Colors.grey[200],
-            body:
-            Center(
-              child: itemsLawsuit.length != 0 ?Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    //height: 34.0,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border(
-                            top: BorderSide(color: Colors.grey[300], width: 1.0),
-                          )
+            body: Stack(
+              children: <Widget>[
+                BackgroundContent(),
+                Center(
+                  child: itemsLawsuit.length != 0 ?Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Colors.grey[300], width: 1.0),
+                            )
+                        ),
                       ),
-                      /*child: Column(
-                        children: <Widget>[Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: new Text('ILG60_B_02_00_01_00',
-                                  style: textStylePageName),
-                            ),
-                          ],
-                        ),
-                        ],
-                      )*/
-                  ),
-                  Expanded(
-                    child: _buildContent(context),
-                  ),
-                ],
-              )
-                  :Stack(
-                children: <Widget>[
-                  /*Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: new Text('ILG60_B_02_00_01_00',
-                          style: TextStyle(color: Colors.grey[400],
-                              fontFamily: FontStyles().FontFamily,fontSize: 12.0)),
-                    ),
-                  ),*/
-                  new Center(
-                      child: new Container(
-                        child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "ไม่มีรายการเปรียบเทียบคดี", style: TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.grey[500],
-                                fontFamily: FontStyles().FontFamily),)
-                          ],
-                        ),
-                      )
+                      Expanded(
+                        child: _buildContent(context),
+                      ),
+                    ],
                   )
-                ],
-              ),
-            ),
+                      :Stack(
+                    children: <Widget>[
+                      new Center(
+                          child: new Container(
+                            child: new Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "ไม่มีรายการเปรียบเทียบคดี", style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.grey[500],
+                                    fontFamily: FontStyles().FontFamily),)
+                              ],
+                            ),
+                          )
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");

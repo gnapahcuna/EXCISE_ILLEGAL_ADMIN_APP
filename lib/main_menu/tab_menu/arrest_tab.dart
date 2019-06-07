@@ -1,13 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/future/arrest_future.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_6_section.dart';
 import 'package:prototype_app_pang/main_menu/future/item_transection.dart';
 import 'package:prototype_app_pang/main_menu/future/transection_future.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/arrest/arrest_screen_1.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_master_response.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/Issue_Alert.dart';
 import 'package:prototype_app_pang/model/test/Background.dart';
+import 'package:prototype_app_pang/server/server.dart' as serv;
+import 'package:http/http.dart' as http;
 
 class ArrestFragment extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
@@ -22,9 +29,12 @@ class ArrestFragment extends StatefulWidget {
 }
 class _ArrestFragmentState extends State<ArrestFragment> {
 
+
   List<ItemsListTransection> _itemTransection=[];
   String transection_no;
   bool IsArrestCode;
+
+  List<ItemsListArrest6Section> _searchResult = [];
 
   Future<bool> onLoadActionGetTransection(Map map) async {
     await new TransectionFuture()
@@ -39,7 +49,8 @@ class _ArrestFragmentState extends State<ArrestFragment> {
           for (int i = 0; i < 5 - transection_no.length; i++) {
             sum += "0";
           }
-          transection_no = "TN"+_itemTransection.last.RUNNING_OFFICE_CODE+
+          transection_no = _itemTransection.last.RUNNING_PREFIX
+              +_itemTransection.last.RUNNING_OFFICE_CODE+
               _itemTransection.last.RUNNING_YEAR+
               sum+transection_no;
         }
@@ -49,8 +60,13 @@ class _ArrestFragmentState extends State<ArrestFragment> {
         String date_auto = (int.parse(format_auto.format(DateTime.now()).toString())+543).toString().substring(2);
         transection_no = "TN"+widget.ItemsPerson.WorkOffCode+date_auto+"00001";
       }
-      print(transection_no);
+    });
 
+    Map map_guiltbase = {
+      "TEXT_SEARCH": ""
+    };
+    await new ArrestFuture().apiRequestArrestMasGuiltbasegetByKeyword(map_guiltbase).then((onValue) {
+      _searchResult=onValue;
     });
     setState(() {});
     return true;
@@ -73,21 +89,26 @@ class _ArrestFragmentState extends State<ArrestFragment> {
     await onLoadActionGetTransection(map);
     Navigator.pop(context);
 
-    final result = await  Navigator.of(context)
-        .push(
-        new MaterialPageRoute(
-            builder: (context) =>
-                ArrestMainScreenFragment(
-                  IsPreview: false,
-                  IsCreate: true,
-                  IsUpdate: false,
-                  ItemsPerson: widget.ItemsPerson,
-                  itemsTitle: widget.itemsTitle,
-                  ARREST_CODE: transection_no,
-                  IsArrestCode: IsArrestCode,
-                  itemsListTransection:_itemTransection.length==0?null:_itemTransection.last,
-                ))
-    );
+    if(_searchResult==null){
+      new NetworkDialog(context,"การเชื่อมต่อกับ Server มีปัญหา");
+    }else{
+      final result = await  Navigator.of(context)
+          .push(
+          new MaterialPageRoute(
+              builder: (context) =>
+                  ArrestMainScreenFragment(
+                    IsPreview: false,
+                    IsCreate: true,
+                    IsUpdate: false,
+                    ItemsPerson: widget.ItemsPerson,
+                    itemsTitle: widget.itemsTitle,
+                    ARREST_CODE: transection_no,
+                    IsArrestCode: IsArrestCode,
+                    itemsListTransection:_itemTransection.length==0?null:_itemTransection.last,
+                    ItemsGuiltbase: _searchResult,
+                  ))
+      );
+    }
   }
 
   @override

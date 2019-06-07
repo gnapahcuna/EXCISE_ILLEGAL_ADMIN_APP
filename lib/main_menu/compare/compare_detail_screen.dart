@@ -1492,6 +1492,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
     var size = MediaQuery
         .of(context)
         .size;
+    final formatter = new NumberFormat("#,###.00");
     return SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(bottom: 4.0),
@@ -1534,7 +1535,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        _convertDate(_itemsCompareMain.COMPARE_DATE)+" เวลา "+
+                        _convertDate(_itemsCompareMain.COMPARE_DATE)+
                         _convertTime(_itemsCompareMain.COMPARE_DATE),
                         style: textStyleData,),
                     ),
@@ -1545,7 +1546,10 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     Padding(
                       padding: paddingData,
                       child: Text(
-                        "Staff", style: textStyleData,),
+                      _itemsCompareMain.CompareStaff[0].TITLE_SHORT_NAME_TH.toString()+
+                          _itemsCompareMain.CompareStaff[0].FIRST_NAME.toString()+" "+
+                          _itemsCompareMain.CompareStaff[0].LAST_NAME.toString()
+                        , style: textStyleData,),
                     ),
                     Container(
                       padding: paddingLabel,
@@ -1562,8 +1566,8 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     ),
                     Padding(
                       padding: paddingData,
-                      /*child: Text(
-                        itemMain.SuspectDetails.IsRequested?"ร้องขอ":"ไม่ร้องขอ", style: textStyleData,),*/
+                      child: Text(
+                        _itemsCompareMain.CompareMapping[0].CompareDetail[0].IS_REQUEST==1?"ร้องขอ":"ไม่ร้องขอ", style: textStyleData,),
                     ),
                     Container(
                       padding: paddingLabel,
@@ -1571,10 +1575,10 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                     ),
                     Padding(
                       padding: paddingData,
-                      /*child: Text(
-                        itemMain.SuspectDetails.TaxDueDate, style: textStyleData,),*/
+                      child: Text(
+                        _convertDate(_itemsCompareMain.CompareMapping[0].CompareDetail[0].PAYMENT_VAT_DUE_DATE), style: textStyleData,),
                     ),
-                    /*IsRelease?
+                    IsRelease?
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -1585,7 +1589,8 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                         Padding(
                           padding: paddingData,
                           child: Text(
-                            itemMain.SuspectDetails.Bail, style: textStyleData,),
+                            _itemsCompareMain.CompareMapping[0].CompareDetail[0].RECEIPT_NO.toString()
+                            , style: textStyleData,),
                         ),
                         Container(
                           padding: paddingLabel,
@@ -1594,7 +1599,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                         Padding(
                           padding: paddingData,
                           child: Text(
-                            itemMain.SuspectDetails.DepositBail, style: textStyleData,),
+                            "-", style: textStyleData,),
                         ),
                         Container(
                           padding: paddingLabel,
@@ -1603,7 +1608,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                         Padding(
                           padding: paddingData,
                           child: Text(
-                            itemMain.FineValue.toString(), style: textStyleData,),
+                              "-", style: textStyleData,),
                         ),
                       ]
                     ):Column(
@@ -1616,7 +1621,10 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                         Padding(
                           padding: paddingData,
                           child: Text(
-                            itemMain.SuspectDetails.BillNumber+"/"+itemMain.SuspectDetails.BillBookNo, style: textStyleData,),
+                            _itemsCompareMain.CompareMapping[0].CompareDetail[0].RECEIPT_NO.toString()
+                                +"/"+
+                                _itemsCompareMain.CompareMapping[0].CompareDetail[0].RECEIPT_BOOK_NO.toString(),
+                            style: textStyleData,),
                         ),
                         Container(
                           padding: paddingLabel,
@@ -1625,7 +1633,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                         Padding(
                           padding: paddingData,
                           child: Text(
-                            itemMain.FineValue.toString(), style: textStyleData,),
+                            formatter.format(_itemsCompareMain.CompareMapping[0].CompareDetail[0].PAYMENT_FINE).toString(), style: textStyleData,),
                         ),
                         Container(
                           padding: paddingLabel,
@@ -1638,7 +1646,7 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                             children: <Widget>[
                               Container(
                                 padding: EdgeInsets.only(
-                                    right: 18.0, left: 12.0),
+                                    right: 18.0),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
@@ -1665,26 +1673,30 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
                                   ),
                                 ),
                               ),
-                              itemMain.SuspectDetails.IsCash?Container(
+                              Container(
+                                child: Text(
+                                  "เงินสด", style: textStyleLabel,),
+                              )
+                              /*itemMain.SuspectDetails.IsCash?Container(
                                 child: Text(
                                   "เงินสด", style: textStyleLabel,),
                               ):Container(
                                 child: Text(
                                   "บัตรเครดิต", style: textStyleLabel,),
-                              )
+                              )*/
                             ],
                           ),
                         ),
                       ],
-                    ),*/
+                    ),
                   ],
                 ),
               ),
-              Container(
+              /*Container(
                 width: size.width,
                 child: _buildButtonImgPicker(),
               ),
-              _buildDataImage(context),
+              _buildDataImage(context),*/
             ],
           ),
         )
@@ -1885,180 +1897,174 @@ class _FragmentState extends State<CompareDetailScreenFragment>  with TickerProv
           "CREATE_USER_ACCOUNT_ID": 1,
           "UPDATE_DATE": "",
           "UPDATE_USER_ACCOUNT_ID": "",
-          "CompareMapping":
-          [
-            {
-              "COMPARE_MAPPING_ID": "",
-              "COMPARE_ID": "",
-              "INDICTMENT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
-              "PAST_LAWSUIT_ID": 2,
-              "IS_EVER_WRONG": 1,
-              "IS_ACTIVE": 1
-            }
-          ],
-          "CompareDetail":
-          [
-            {
-              "COMPARE_DETAIL_ID": "",
-              "COMPARE_MAPPING_ID": "",
-              "RECEIPT_OFFICE_ID": "",
-              "APPROVE_OFFICE_ID": "",
-              "MISTREAT_NO": _indicmentDetail.MISTREAT_NO,
-              "OLD_PAYMENT_FINE": "",
-              "PAYMENT_FINE": "1000",
-              "DIFFERENCE_PAYMENT_FINE": "",
-              "TREASURY_MONEY": "600",
-              "BRIBE_MONEY": "200",
-              "REWARD_MONEY": "200",
-              "PAYMENT_FINE_DUE_DATE": IsRelease
-                  ? _dtFineDueDate.toString()
-                  : "",
-              "PAYMENT_VAT_DUE_DATE": _dtTaxDueDate.toString(),
-              "INSURANCE": editCompareBail.text,
-              "GAURANTEE": editCompareDepositBail.text,
-              "PAYMENT_DATE": _dtCompare.toString(),
-              "RECEIPT_TYPE": 0,
-              "RECEIPT_BOOK_NO": editCompareBillBookNo.text,
-              "RECEIPT_NO": editCompareBillNumber.text,
-              "RECEIPT_OFFICE_CODE": "",
-              "RECEIPT_OFFICE_NAME": "ส่วนคดี",
-              "APPROVE_OFFICE_CODE": "",
-              "APPROVE_OFFICE_NAME": "",
-              "APPROVE_DATE": "",
-              "APPROVE_TYPE": "",
-              "COMMAND_NO": "",
-              "COMMAND_DATE": "",
-              "REMARK_NOT_AGREE": "",
-              "REMARK_NOT_APPROVE": "",
-              "FACT": "",
-              "COMPARE_REASON": "",
-              "ADJUST_REASON": "",
-              "COMPARE_TYPE": 1,
-              "IS_REQUEST": IsRequested ? 1 : 0,
-              "IS_TEMP_RELEASE": IsRelease ? 1 : 0,
-              "IS_INSURANCE": editCompareBail.text.isEmpty ? 0 : 1,
-              "IS_GAURANTEE": editCompareDepositBail.text.isEmpty ? 0 : 1,
-              "IS_PAYMENT": 1,
-              "IS_REVENUE": 0,
-              "IS_AGREE": 0,
-              "IS_APPROVE": 0,
-              "IS_AUTHORITY": 1,
-              "IS_ACTIVE": 1,
-              "CompareDetailPayment":
-              [
-                {
-                  "PAYMENT_ID": "",
-                  "COMPARE_DETAIL_ID": "",
-                  "PAYMENT_TYPE": 0,
-                  "PAYMENT_FINE": "2000",
-                  "REFFERENCE_NO": "",
-                  "IS_ACTIVE": 1
-                }
-              ],
-              "CompareDetailFine":
-              [
-                {
-                  "FINE_ID": "",
-                  "COMPARE_DETAIL_ID": "",
-                  "PRODUCT_ID": 23,
-                  "FINE_RATE": 1,
-                  "VAT": "1000",
-                  "FINE": "",
-                  "NET_FINE": "1000",
-                  "OLD_PAYMENT_FINE": "",
-                  "PAYMENT_FINE": "1000",
-                  "DIFFERENCE_PAYMENT_FINE": "",
-                  "TREASURY_MONEY": "600",
-                  "BRIBE_MONEY": "200",
-                  "REWARD_MONEY": "200",
-                  "IS_ACTIVE": 1
-                }
-              ],
-              "ComparePayment":
-              [
-                {
-                  "PAYMENT_ID": "",
-                  "LAWSUIT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
-                  "COMPARE_DETAIL_ID": "",
-                  "FINE_TYPE": 1,
-                  "FINE": "1000",
-                  "PAYMENT_PERIOD_NO": "",
-                  "PAYMENT_DATE": IsRelease?_dtFineDueDate.toString():DateTime.now().toString(),
-                  "IS_REQUEST_REWARD": 0,
-                  "IS_ACTIVE": 1,
-                  "ComparePaymentDetail":
-                  [
-                    {
-                      "PAYMENT_DETAIL_ID": "",
-                      "PAYMENT_ID": "",
-                      "NOTICE_ID": 2,
-                      "IS_REQUEST_BRIBE": 0,
-                      "IS_ACTIVE": 1
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "CompareStaff":
-          [
-            {
-              "STAFF_ID": "",
-              "COMPARE_ID": "",
-              "COMPARE_DETAIL_ID": "",
-              "STAFF_REF_ID": "",
-              "TITLE_ID": "1",
-              "STAFF_CODE": "4842",
-              "ID_CARD": "127896325",
-              "STAFF_TYPE": 1,
-              "TITLE_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
-              "TITLE_NAME_EN": "",
-              "TITLE_SHORT_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
-              "TITLE_SHORT_NAME_EN": "",
-              "FIRST_NAME":widget.ItemsPerson.FIRST_NAME,
-              "LAST_NAME": widget.ItemsPerson.LAST_NAME,
-              "AGE": "27",
-              "OPERATION_POS_CODE": "",
-              "OPREATION_POS_NAME": widget.ItemsPerson.OPREATION_POS_NAME,
-              "OPREATION_POS_LEVEL": "",
-              "OPERATION_POS_LEVEL_NAME": widget.ItemsPerson.OPREATION_POS_LAVEL_NAME,
-              "OPERATION_DEPT_CODE": "",
-              "OPERATION_DEPT_NAME": "",
-              "OPERATION_DEPT_LEVEL": "",
-              "OPERATION_UNDER_DEPT_CODE": "",
-              "OPERATION_UNDER_DEPT_NAME": "",
-              "OPERATION_UNDER_DEPT_LEVEL": "",
-              "OPERATION_OFFICE_CODE":"000000",
-              "OPERATION_OFFICE_NAME":"",
-              "OPERATION_OFFICE_SHORT_NAME":"",
-              "MANAGEMENT_WORK_DEPT_CODE": "",
-              "MANAGEMENT_WORK_DEPT_NAME": "",
-              "MANAGEMENT_WORK_DEPT_LEVEL": "",
-              "MANAGEMENT_OFFICE_CODE": "",
-              "MANAGEMENT_OFFICE_NAME": widget.ItemsPerson.OPERATION_OFFICE_NAME,
-              "MANAGEMENT_OFFICE_SHORT_NAME": "",
-              "REPRESENT_POS_CODE": "",
-              "REPRESENT_POS_NAME": "",
-              "REPRESENT_POS_LEVEL": "",
-              "REPRESENT_POS_LEVEL_NAME": "",
-              "REPRESENT_DEPT_CODE": "",
-              "REPRESENT_DEPT_NAME": "",
-              "REPRESENT_DEPT_LEVEL": "",
-              "REPRESENT_UNDER_DEPT_CODE": "",
-              "REPRESENT_UNDER_DEPT_NAME": "",
-              "REPRESENT_UNDER_DEPT_LEVEL": "",
-              "REPRESENT_WORK_DEPT_CODE": "",
-              "REPRESENT_WORK_DEPT_NAME": "",
-              "REPRESENT_WORK_DEPT_LEVEL": "",
-              "REPRESENT_OFFICE_CODE": "",
-              "REPRESENT_OFFICE_NAME": "",
-              "REPRESENT_OFFICE_SHORT_NAME": "",
-              "STATUS": 1,
-              "REMARK": "",
-              "CONTRIBUTOR_ID": 16,
-              "IS_ACTIVE": 1
-            }
-          ]
+            "CompareMapping": [
+              {
+                "COMPARE_MAPPING_ID": "",
+                "COMPARE_ID": "",
+                "INDICTMENT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
+                "PAST_LAWSUIT_ID": _itemsCompareArrestMain.LAWSUIT_ID,
+                "IS_EVER_WRONG": 1,
+                "IS_ACTIVE": 1,
+                "CompareDetail": [
+                  {
+                    "COMPARE_DETAIL_ID": "",
+                    "COMPARE_MAPPING_ID": "",
+                    "RECEIPT_OFFICE_ID": "",
+                    "APPROVE_OFFICE_ID": "",
+                    "MISTREAT_NO": _indicmentDetail.MISTREAT_NO,
+                    "OLD_PAYMENT_FINE": "",
+                    "PAYMENT_FINE": "1000",
+                    "DIFFERENCE_PAYMENT_FINE": "",
+                    "TREASURY_MONEY": "600",
+                    "BRIBE_MONEY": "200",
+                    "REWARD_MONEY": "200",
+                    "PAYMENT_FINE_DUE_DATE": IsRelease
+                        ? _dtFineDueDate.toString()
+                        : DateTime.now().toString(),
+                    "PAYMENT_VAT_DUE_DATE": _dtTaxDueDate.toString(),
+                    "INSURANCE": editCompareBail.text,
+                    "GAURANTEE": editCompareDepositBail.text,
+                    "PAYMENT_DATE": _dtCompare.toString(),
+                    "RECEIPT_TYPE": 0,
+                    "RECEIPT_BOOK_NO": editCompareBillBookNo.text,
+                    "RECEIPT_NO": editCompareBillNumber.text,
+                    "RECEIPT_OFFICE_CODE": "080700",
+                    "RECEIPT_OFFICE_NAME": "ส่วนคดี",
+                    "APPROVE_OFFICE_CODE": "",
+                    "APPROVE_OFFICE_NAME": "",
+                    "APPROVE_DATE": "",
+                    "APPROVE_TYPE": "",
+                    "COMMAND_NO": "",
+                    "COMMAND_DATE": "",
+                    "REMARK_NOT_AGREE": "",
+                    "REMARK_NOT_APPROVE": "",
+                    "FACT": "",
+                    "COMPARE_REASON": "",
+                    "ADJUST_REASON": "",
+                    "COMPARE_TYPE": 1,
+                    "IS_REQUEST": IsRequested ? 1 : 0,
+                    "IS_TEMP_RELEASE": IsRelease ? 1 : 0,
+                    "IS_INSURANCE": editCompareBail.text.isEmpty ? 0 : 1,
+                    "IS_GAURANTEE": editCompareDepositBail.text.isEmpty ? 0 : 1,
+                    "IS_PAYMENT": 1,
+                    "IS_REVENUE": 0,
+                    "IS_AGREE": 0,
+                    "IS_APPROVE": 0,
+                    "IS_AUTHORITY": 1,
+                    "IS_ACTIVE": 1,
+                    "CompareDetailPayment": [
+                      {
+                        "PAYMENT_ID": "",
+                        "COMPARE_DETAIL_ID": "",
+                        "PAYMENT_TYPE": 0,
+                        "PAYMENT_FINE": "2000",
+                        "REFFERENCE_NO": "",
+                        "IS_ACTIVE": 1
+                      }
+                    ],
+                    "CompareDetailFine": [
+                      {
+                        "FINE_ID": "",
+                        "COMPARE_DETAIL_ID": "",
+                        "PRODUCT_ID": 23,
+                        "FINE_RATE": 1,
+                        "VAT": "1000",
+                        "FINE": "",
+                        "NET_FINE": "1000",
+                        "OLD_PAYMENT_FINE": "",
+                        "PAYMENT_FINE": "1000",
+                        "DIFFERENCE_PAYMENT_FINE": "",
+                        "TREASURY_MONEY": "600",
+                        "BRIBE_MONEY": "200",
+                        "REWARD_MONEY": "200",
+                        "IS_ACTIVE": 1
+                      }
+                    ],
+                    "ComparePayment": [
+                      {
+                        "PAYMENT_ID": "",
+                        "LAWSUIT_DETAIL_ID": _indicmentDetail.INDICTMENT_DETAIL_ID,
+                        "COMPARE_DETAIL_ID": "",
+                        "FINE_TYPE": 1,
+                        "FINE": "1000",
+                        "PAYMENT_PERIOD_NO": "",
+                        "PAYMENT_DATE": IsRelease?_dtFineDueDate.toString():DateTime.now().toString(),
+                        "IS_REQUEST_REWARD": 0,
+                        "IS_ACTIVE": 1,
+                        /*"ComparePaymentDetail":
+                        [
+                          {
+                            "PAYMENT_DETAIL_ID": "",
+                            "PAYMENT_ID": "",
+                            "NOTICE_ID": 2,
+                            "IS_REQUEST_BRIBE": 0,
+                            "IS_ACTIVE": 1
+                          }
+                        ]*/
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "CompareStaff": [
+              {
+                "STAFF_ID": "",
+                "COMPARE_ID": "",
+                "COMPARE_DETAIL_ID": "",
+                "STAFF_REF_ID": "",
+                "TITLE_ID": "1",
+                "STAFF_CODE": "4842",
+                "ID_CARD": "127896325",
+                "STAFF_TYPE": 1,
+                "TITLE_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+                "TITLE_NAME_EN": "",
+                "TITLE_SHORT_NAME_TH": widget.ItemsPerson.TITLE_SHORT_NAME_TH,
+                "TITLE_SHORT_NAME_EN": "",
+                "FIRST_NAME":widget.ItemsPerson.FIRST_NAME,
+                "LAST_NAME": widget.ItemsPerson.LAST_NAME,
+                "AGE": "27",
+                "OPERATION_POS_CODE": "",
+                "OPREATION_POS_NAME": widget.ItemsPerson.OPREATION_POS_NAME,
+                "OPREATION_POS_LEVEL": "",
+                "OPERATION_POS_LEVEL_NAME": widget.ItemsPerson.OPREATION_POS_LAVEL_NAME,
+                "OPERATION_DEPT_CODE": "",
+                "OPERATION_DEPT_NAME": "",
+                "OPERATION_DEPT_LEVEL": "",
+                "OPERATION_UNDER_DEPT_CODE": "",
+                "OPERATION_UNDER_DEPT_NAME": "",
+                "OPERATION_UNDER_DEPT_LEVEL": "",
+                "OPERATION_OFFICE_CODE":"000000",
+                "OPERATION_OFFICE_NAME":"",
+                "OPERATION_OFFICE_SHORT_NAME":"",
+                "MANAGEMENT_WORK_DEPT_CODE": "",
+                "MANAGEMENT_WORK_DEPT_NAME": "",
+                "MANAGEMENT_WORK_DEPT_LEVEL": "",
+                "MANAGEMENT_OFFICE_CODE": "",
+                "MANAGEMENT_OFFICE_NAME": widget.ItemsPerson.OPERATION_OFFICE_NAME,
+                "MANAGEMENT_OFFICE_SHORT_NAME": "",
+                "REPRESENT_POS_CODE": "",
+                "REPRESENT_POS_NAME": "",
+                "REPRESENT_POS_LEVEL": "",
+                "REPRESENT_POS_LEVEL_NAME": "",
+                "REPRESENT_DEPT_CODE": "",
+                "REPRESENT_DEPT_NAME": "",
+                "REPRESENT_DEPT_LEVEL": "",
+                "REPRESENT_UNDER_DEPT_CODE": "",
+                "REPRESENT_UNDER_DEPT_NAME": "",
+                "REPRESENT_UNDER_DEPT_LEVEL": "",
+                "REPRESENT_WORK_DEPT_CODE": "",
+                "REPRESENT_WORK_DEPT_NAME": "",
+                "REPRESENT_WORK_DEPT_LEVEL": "",
+                "REPRESENT_OFFICE_CODE": "",
+                "REPRESENT_OFFICE_NAME": "",
+                "REPRESENT_OFFICE_SHORT_NAME": "",
+                "STATUS": 1,
+                "REMARK": "",
+                "CONTRIBUTOR_ID": 16,
+                "IS_ACTIVE": 1
+              }
+            ]
         };
         showDialog(
             context: context,

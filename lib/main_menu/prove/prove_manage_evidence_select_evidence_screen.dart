@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ProveManageSelectEvidenceScreenFragment extends StatefulWidget {
   @override
@@ -70,7 +71,6 @@ class _FragmentState extends State<ProveManageSelectEvidenceScreenFragment> {
           child: Container(
             padding: EdgeInsets.all(22.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -216,21 +216,22 @@ class _FragmentState extends State<ProveManageSelectEvidenceScreenFragment> {
               }),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -244,15 +245,17 @@ class _FragmentState extends State<ProveManageSelectEvidenceScreenFragment> {
                   ),
                   ],
                 )*/
+                ),
+                Expanded(
+                  child: new ConstrainedBox(
+                    constraints: const BoxConstraints.expand(),
+                    child: _buildSearchResults(),
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: new ConstrainedBox(
-                constraints: const BoxConstraints.expand(),
-                child: _buildSearchResults(),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: _buildBottom(),
     ),

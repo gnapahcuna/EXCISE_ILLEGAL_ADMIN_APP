@@ -1,6 +1,7 @@
 class ItemsPersonInformation {
   int STAFF_ID;
   String PersonType;
+  int STAFF_TYPE;
   String TITLE_SHORT_NAME_TH;
   String FIRST_NAME;
   String LAST_NAME;
@@ -33,6 +34,7 @@ class ItemsPersonInformation {
   /*ItemsPersonInformation({
     this.STAFF_ID,
     this.PersonType,
+    this.STAFF_TYPE,
     this.TITLE_SHORT_NAME_TH,
     this.FIRST_NAME,
     this.LAST_NAME,
@@ -66,6 +68,7 @@ class ItemsPersonInformation {
     return ItemsPersonInformation(
       PersonID: json['PersonID'],
       PersonType: json['PersonType'],
+      STAFF_TYPE: 0,
       TITLE_SHORT_NAME_TH: json['PersonTHTitle'],
       FIRST_NAME: json['PersonTHName'],
       LAST_NAME: json['PersonTHSurName'],
@@ -98,6 +101,7 @@ class ItemsPersonInformation {
   }*/
   ItemsPersonInformation(this.STAFF_ID,
       this.PersonType,
+      this.STAFF_TYPE,
       this.TITLE_SHORT_NAME_TH,
       this.FIRST_NAME,
       this.LAST_NAME,

@@ -7,22 +7,19 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/Model/choice.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_creen_arrest/tab_arrest_4/tab_screen_arrest_4_suspect2.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_creen_arrest/tab_arrest_6/tab_screen_arrest_6_product.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_detail_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_reward_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_form_list.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/compare/model/compare_main.dart';
-import 'package:prototype_app_pang/main_menu/compare/tab_screen_compare_product.dart';
-import 'package:prototype_app_pang/main_menu/compare/tab_screen_compare_suspect.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_person.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
+import 'package:prototype_app_pang/main_menu/arrest/future/arrest_future.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_person.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_screen.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
-import 'package:prototype_app_pang/model/test/compare_%20suspect.dart';
-import 'package:prototype_app_pang/model/test/compare_%20suspect_detail.dart';
-import 'package:prototype_app_pang/model/test/compare_case_information.dart';
 
 class CompareMainScreenFragment extends StatefulWidget {
   ItemsCompareMain itemsCompareMain;
@@ -106,7 +103,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
   EdgeInsets paddingData = EdgeInsets.only(top: 4.0, bottom: 4.0);
   EdgeInsets paddingLabel = EdgeInsets.only(top: 4.0, bottom: 4.0);
 
-  TextStyle textStyleTitleLabel = TextStyle(fontSize: 16,color: Colors.grey[400],fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleTitleLabel = TextStyle(fontSize: 16,color: Colors.black54,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleTitleData = TextStyle(fontSize: 18,color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleLink = TextStyle(color: Color(0xff4564c2),fontFamily: FontStyles().FontFamily);
 
@@ -494,7 +491,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
-                      final formatter = new NumberFormat("#,###.##");
+                      final formatter = new NumberFormat("#,###.00");
                       double fine_value;
                       if(_compareArrestMain.FINE_TYPE==0||
                           _compareArrestMain.FINE_TYPE==1||
@@ -506,7 +503,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                           }
                         });
                       }else{
-                        fine_value=0;
+                        fine_value=1000;
                         /*_compareArrestMain.CompareProveProduct.forEach((item){
                           fine_value+=item.VAT*item.F
                         });*/
@@ -522,6 +519,16 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                           }
                         });
                       }
+
+                      //ใบเสร็จ
+                      String BillNumber="",BookNo="";
+                      itemMain.CompareMapping.forEach((mapp){
+                        mapp.CompareDetail.forEach((detail){
+                          BillNumber = detail.RECEIPT_NO.toString();
+                          BookNo = detail.RECEIPT_BOOK_NO.toString();
+                        });
+                      });
+
 
                       return GestureDetector(
                         onTap: () {
@@ -634,16 +641,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                             children: <Widget>[
                                               Padding(
                                                 padding: paddingData,
-                                                child: Text("เลขใบเสร็จ : " /*+
-                                                    itemMain.Informations
-                                                        .Suspects[index]
-                                                        .SuspectDetails
-                                                        .BillNumber + "/"
-                                                    + itemMain.Informations
-                                                        .Suspects[index]
-                                                        .SuspectDetails
-                                                        .BillBookNo*/,
-                                                  style: textStyleBill,),
+                                                child: Text("เลขใบเสร็จ : " +BillNumber+"/"+BookNo,
+                                                  style: tabStyle,),
                                               ),
                                             ],
                                           ),
@@ -804,8 +803,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _compareArrestMain.LAWSUIT_NO.toString()+"/"+
-                _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR),
+            _compareArrestMain.LAWSUIT_NO.toString() + "/" +
+                (_compareArrestMain.LAWSUIT_NO_YEAR != null
+                    ? _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR)
+                    : "-"),
             style: textDataTitleStyle,),
         ),
         Padding(
@@ -832,7 +833,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _convertDate(_compareArrestMain.OCCURRENCE_DATE)+" "+
+            _convertDate(_compareArrestMain.OCCURRENCE_DATE) + " " +
                 _convertTime(_compareArrestMain.OCCURRENCE_DATE),
             style: textStyleData,),
         ),
@@ -843,8 +844,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _compareArrestMain.ACCUSER_TITLE_NAME_TH+
-                _compareArrestMain.ACCUSER_FIRST_NAME+" "+
+            _compareArrestMain.ACCUSER_TITLE_NAME_TH +
+                _compareArrestMain.ACCUSER_FIRST_NAME + " " +
                 _compareArrestMain.ACCUSER_LAST_NAME,
             style: textStyleData,),
         ),
@@ -865,12 +866,15 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child:  new Padding(
+                    child: new Padding(
                       padding: paddingData,
                       child: Text((j + 1).toString() + '. ' +
-                          _compareArrestMain.CompareArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
-                          _compareArrestMain.CompareArrestIndictmentDetail[j].FIRST_NAME+" "+
-                          _compareArrestMain.CompareArrestIndictmentDetail[j].LAST_NAME,
+                          _compareArrestMain.CompareArrestIndictmentDetail[j]
+                              .TITLE_SHORT_NAME_TH +
+                          _compareArrestMain.CompareArrestIndictmentDetail[j]
+                              .FIRST_NAME + " " +
+                          _compareArrestMain.CompareArrestIndictmentDetail[j]
+                              .LAST_NAME,
                         style: textStyleData,),
                     ),
                   ),
@@ -883,9 +887,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         child: new Text("ดูประวัติผู้ต้องหา",
                           style: textStyleLink,),
                         onPressed: () {
-                          Map map={
-                            "TEXT_SEARCH" : "",
-                            "PERSON_ID" : _compareArrestMain.CompareArrestIndictmentDetail[j].PERSON_ID
+                          Map map = {
+                            "TEXT_SEARCH": "",
+                            "PERSON_ID": _compareArrestMain
+                                .CompareArrestIndictmentDetail[j].PERSON_ID
                           };
                           _navigatePreviewIndicmentDetail(context, map);
                           /* Navigator.of(context)
@@ -962,8 +967,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _compareArrestMain.LAWSUIT_NO.toString()+"/"+
-                _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR),
+            _compareArrestMain.LAWSUIT_NO.toString() + "/" +
+                (_compareArrestMain.LAWSUIT_NO_YEAR != null
+                    ? _convertYear(_compareArrestMain.LAWSUIT_NO_YEAR)
+                    : "-"),
             style: textDataTitleStyle,),
         ),
         Padding(
@@ -990,8 +997,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _convertDate(_compareArrestMain.OCCURRENCE_DATE)+" "+
-            _convertTime(_compareArrestMain.OCCURRENCE_DATE),
+            _compareArrestMain.OCCURRENCE_DATE != null
+                ? _convertDate(_compareArrestMain.OCCURRENCE_DATE) + " " +
+                _convertTime(_compareArrestMain.OCCURRENCE_DATE)
+                : "null",
             style: textStyleData,),
         ),
         Container(
@@ -1001,8 +1010,8 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _compareArrestMain.ACCUSER_TITLE_NAME_TH+
-                _compareArrestMain.ACCUSER_FIRST_NAME+" "+
+            _compareArrestMain.ACCUSER_TITLE_NAME_TH +
+                _compareArrestMain.ACCUSER_FIRST_NAME + " " +
                 _compareArrestMain.ACCUSER_LAST_NAME,
             style: textStyleData,),
         ),
@@ -1025,9 +1034,12 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                   new Padding(
                     padding: paddingData,
                     child: Text((j + 1).toString() + '. ' +
-                        _compareArrestMain.CompareArrestIndictmentDetail[j].TITLE_SHORT_NAME_TH+
-                        _compareArrestMain.CompareArrestIndictmentDetail[j].FIRST_NAME+" "+
-                        _compareArrestMain.CompareArrestIndictmentDetail[j].LAST_NAME,
+                        _compareArrestMain.CompareArrestIndictmentDetail[j]
+                            .TITLE_SHORT_NAME_TH +
+                        _compareArrestMain.CompareArrestIndictmentDetail[j]
+                            .FIRST_NAME + " " +
+                        _compareArrestMain.CompareArrestIndictmentDetail[j]
+                            .LAST_NAME,
                       style: textStyleData,),
                   ),
                   Container(
@@ -1039,9 +1051,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                         child: new Text("ดูประวัติผู้ต้องหา",
                           style: textStyleLink,),
                         onPressed: () {
-                          Map map={
-                            "TEXT_SEARCH" : "",
-                            "PERSON_ID" : _compareArrestMain.CompareArrestIndictmentDetail[j].PERSON_ID
+                          Map map = {
+                            "TEXT_SEARCH": "",
+                            "PERSON_ID": _compareArrestMain
+                                .CompareArrestIndictmentDetail[j].PERSON_ID
                           };
                           _navigatePreviewIndicmentDetail(context, map);
                           /*Navigator.of(context)
@@ -1084,8 +1097,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
         Padding(
           padding: paddingData,
           child: Text(
-            _convertDate(_compareArrestMain.LAWSUIT_DATE)+" "+
-                _convertTime(_compareArrestMain.LAWSUIT_DATE),
+            _compareArrestMain.LAWSUIT_DATE!=null
+                ?_convertDate(_compareArrestMain.LAWSUIT_DATE) + " " +
+                _convertTime(_compareArrestMain.LAWSUIT_DATE)
+                :"null",
             style: textStyleData,),
         ),
         Container(
@@ -1096,10 +1111,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
           padding: paddingData,
           child: Text(
             /*_convertDate(_compareArrestMain.RECEIVE_DOC_DATE)*/
-            _compareArrestMain.RECEIVE_DOC_DATE!=null
-                ?_convertDate( _compareArrestMain.RECEIVE_DOC_DATE)+" "+
+            _compareArrestMain.RECEIVE_DOC_DATE != null
+                ? _convertDate(_compareArrestMain.RECEIVE_DOC_DATE) + " " +
                 _convertTime(_compareArrestMain.LAWSUIT_DATE)
-                :"-",
+                : "null",
             style: textStyleData,),
         ),
         Column(
@@ -1111,14 +1126,14 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
               child: Text("ของกลาง", style: textStyleLabel,),
             ),
             _compareArrestMain
-                .CompareProveProduct.length==0
-                ?Container(
+                .CompareProveProduct.length == 0
+                ? Container(
               padding: paddingData,
               child: Text(
-                "ไม่มีของกลาง",style: textStyleData,
+                "ไม่มีของกลาง", style: textStyleData,
               ),
             )
-                :Container(
+                : Container(
               padding: paddingLabel,
               child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -1139,12 +1154,10 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      TabScreenCompareProduct(
-                                        ItemsProduct:  _compareArrestMain
+                                      TabScreenArrest6Product(
+                                        ItemsProduct: _compareArrestMain
                                             .CompareProveProduct[index],
                                         IsComplete: true,
-                                        Title: _compareArrestMain
-                                            .CompareProveProduct[index].PRODUCT_BRAND_NAME_TH,
                                       )),
                             );
                           },
@@ -1157,17 +1170,93 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
                                   padding: paddingData,
                                   child: Text(
                                     (index + 1).toString() + ". " +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_GROUP_NAME != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_GROUP_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_CATEGORY_NAME != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_CATEGORY_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_TYPE_NAME != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_TYPE_NAME
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_BRAND_NAME_TH != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_BRAND_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_BRAND_NAME_EN != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_BRAND_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_SUBBRAND_NAME_TH != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_SUBBRAND_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_SUBBRAND_NAME_EN != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_SUBBRAND_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_MODEL_NAME_TH != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_MODEL_NAME_TH
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_MODEL_NAME_EN != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .PRODUCT_MODEL_NAME_EN
+                                            .toString() + ' ')
+                                            : '') +
+                                        (_compareArrestMain
+                                            .CompareProveProduct[index]
+                                            .DEGREE != null
+                                            ? (_compareArrestMain
+                                            .CompareProveProduct[index].DEGREE
+                                            .toString() +
+                                            ' ดีกรี ')
+                                            : ' ') +
+                                        _compareArrestMain
+                                            .CompareProveProduct[index].SIZES
+                                            .toString() + ' ' +
                                         _compareArrestMain
                                             .CompareProveProduct[index]
-                                            .PRODUCT_CATEGORY_NAME +
-                                        '/' +
-                                        _compareArrestMain
-                                            .CompareProveProduct[index]
-                                            .PRODUCT_TYPE_NAME + '/' +
-                                        //_arrestMain.ArrestIndictment[index].ArrestIndictmentProduct[j].PRODUCT_SUBTYPE_NAME + '/' +
-                                        _compareArrestMain
-                                            .CompareProveProduct[index]
-                                            .PRODUCT_BRAND_NAME_TH,
+                                            .SIZES_UNIT.toString(),
                                     style: textStyleData,),
                                 ),
                               ),
@@ -1218,7 +1307,7 @@ class _FragmentState extends State<CompareMainScreenFragment>  with TickerProvid
     if(Success){
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TabScreenCompareDeatilSuspect(ItemsSuspect: ItemsPreviewIndicmentDetail,)),
+        MaterialPageRoute(builder: (context) => TabScreenArrest4Suspect2(ItemsSuspect: ItemsPreviewIndicmentDetail,)),
       );
       print(result);
       /*_itemsData=result;

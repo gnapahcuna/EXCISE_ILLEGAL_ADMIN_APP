@@ -98,6 +98,7 @@ class CompareFuture{
       body: body,
     );
     if (response.statusCode == 200) {
+      print(response.body);
       return ItemsArrestResponseInsAll.fromJson(json.decode(response.body));
 
     } else {

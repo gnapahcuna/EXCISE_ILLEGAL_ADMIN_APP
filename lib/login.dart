@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_get_office.dart';
 import 'package:prototype_app_pang/main_menu/home.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future_master.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/arrest/future/arrest_future_master.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/model/Issue_Alert.dart';
 import 'package:prototype_app_pang/model/ItemsEOfficeInfor.dart';
 import 'package:prototype_app_pang/model/ItemsLogin.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
@@ -96,6 +96,7 @@ class _SplashScreenState extends State<LoginScreen> {
   ItemsPersonInformation _information = new ItemsPersonInformation(
       1,
       "1",
+      0,
       "นาย",
       "โสภณ",
       "สุทธิพันธ์",
@@ -155,7 +156,7 @@ class _SplashScreenState extends State<LoginScreen> {
     await new ArrestFutureMaster().apiRequestMasTitlegetByCon(map_title).then((onValue) {
       itemsTitle = onValue;
     });
-    if (success.endsWith("OK")) {
+    if (success.endsWith("OK")||itemsTitle!=null) {
       Navigator.push(
         context,
         new MyCustomRoute(builder: (context) => new HomeScreen(
@@ -163,6 +164,8 @@ class _SplashScreenState extends State<LoginScreen> {
           itemsTitle: itemsTitle,
         )),
       );
+    }else{
+      new NetworkDialog(context,"การเชื่อมต่อกับ Server มีปัญหา");
     }
   }
 
@@ -170,7 +173,7 @@ class _SplashScreenState extends State<LoginScreen> {
   Future<bool> onLoadAction(Map map, username, password) async {
     await apiRequestLDPAGAuthen(map).then((onValue) {
       if (onValue == null) {
-        _showDialogErrorLogin(context, "Username หรือ Password ไม่ถูกต้อง");
+        new VerifyDialog(context, "Username หรือ Password ไม่ถูกต้อง");
       } else {
         getInfor("sso",
             "pccsso",
@@ -183,43 +186,9 @@ class _SplashScreenState extends State<LoginScreen> {
     return true;
   }
 
-  CupertinoAlertDialog _cupertinoDialogLogin(mContext, text) {
-    TextStyle TitleStyle = TextStyle(
-        fontSize: 16.0, fontFamily: _fontStyles.FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-        color: Colors.blue,
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        fontFamily: _fontStyles.FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text(text,
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(mContext);
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-  }
-
-  void _showDialogErrorLogin(context, text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _cupertinoDialogLogin(context, text);
-      },
-    );
-  }
-
   void _putDataLogin(String username, String password) async {
     if (username.isEmpty || password.isEmpty) {
-      _showDialogErrorLogin(context, "กรุณากรอกข้อมูลให้ครบ.");
+      new VerifyDialog(context, "กรุณากรอกข้อมูลให้ครบ.");
     } else {
       showDialog(
           context: context,
@@ -248,22 +217,32 @@ class _SplashScreenState extends State<LoginScreen> {
     await onLoadActionMaster();
     Navigator.pop(context);
 
-    if(itemsTitle!=null){
+    if(itemsTitle!=null&&itemsOffice!=null){
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
-            HomeScreen(ItemsData: _information,itemsTitle: itemsTitle,)),
+            HomeScreen(ItemsData: _information,itemsTitle: itemsTitle,itemsOffice: itemsOffice,)),
       );
+    }else{
+      new NetworkDialog(context,"การเชื่อมต่อกับ Server มีปัญหา");
     }
   }
 
   ItemsMasterTitleResponse itemsTitle;
+  ItemsArrestResponseGetOffice itemsOffice;
   Future<bool> onLoadActionMaster() async {
     Map map_title = {
       "TEXT_SEARCH" : ""
     };
     await new ArrestFutureMaster().apiRequestMasTitlegetByCon(map_title).then((onValue) {
       itemsTitle = onValue;
+    });
+    Map map_office = {
+      "TEXT_SEARCH" : "",
+      "STAFF_ID" : ""
+    };
+    await new ArrestFutureMaster().apiRequestMasOfficegetByCon(map_office).then((onValue) {
+      itemsOffice = onValue;
     });
 
     setState(() {});
@@ -297,6 +276,10 @@ class _SplashScreenState extends State<LoginScreen> {
               child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
         ]
     );
+  }
+
+  void onChange(text){
+    print(text);
   }
 
   void _showCloseAppAlertDialog() {
@@ -427,6 +410,7 @@ class _SplashScreenState extends State<LoginScreen> {
                 labelText: 'ชื่อผู้ใช้งาน',
                 labelStyle: textInputStyle
             ),
+            onChanged: onChange,
           ),
         ),
         _buildLine,
@@ -537,7 +521,7 @@ class _SplashScreenState extends State<LoginScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('เวอร์ชั่น 0.0.5 Admin', style: textInputStyleVersion,)
+              Text('เวอร์ชั่น 0.0.7 Admin', style: textInputStyleVersion,)
             ],
           )
       ),

@@ -1,5 +1,4 @@
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/item_lawsuit_staff.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_person.dart';
+
 
 class ItemsArrestResponsePaymentMessage {
   final String IsSuccess;

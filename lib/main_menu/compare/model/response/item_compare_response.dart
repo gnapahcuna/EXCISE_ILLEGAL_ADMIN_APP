@@ -4,7 +4,6 @@ class ItemsArrestResponseInsAll {
   final String Msg;
   final int COMPARE_ID;
   final List<ItemsArrestResponseCompareMapping> CompareMapping;
-  final List<ItemsArrestResponseCompareDetail> CompareDetail;
   final List<ItemsArrestResponseCompareStaff> CompareStaff;
 
   ItemsArrestResponseInsAll({
@@ -12,7 +11,6 @@ class ItemsArrestResponseInsAll {
     this.Msg,
     this.COMPARE_ID,
     this.CompareMapping,
-    this.CompareDetail,
     this.CompareStaff,
   });
 
@@ -22,7 +20,6 @@ class ItemsArrestResponseInsAll {
       Msg: json['Msg'],
       COMPARE_ID: json['COMPARE_ID'],
       CompareMapping: List<ItemsArrestResponseCompareMapping>.from(json['CompareMapping'].map((m) => ItemsArrestResponseCompareMapping.fromJson(m))),
-      //CompareDetail: List<ItemsArrestResponseCompareDetail>.from(json['CompareDetail'].map((m) => ItemsArrestResponseCompareDetail.fromJson(m))),
       CompareStaff: List<ItemsArrestResponseCompareStaff>.from(json['CompareStaff'].map((m) => ItemsArrestResponseCompareStaff.fromJson(m))),
     );
   }
@@ -30,12 +27,15 @@ class ItemsArrestResponseInsAll {
 
 class ItemsArrestResponseCompareMapping {
   final int COMPARE_MAPPING_ID;
+  final List<ItemsArrestResponseCompareDetail> CompareDetail;
   ItemsArrestResponseCompareMapping({
+    this.CompareDetail,
     this.COMPARE_MAPPING_ID,
   });
   factory ItemsArrestResponseCompareMapping.fromJson(Map<String, dynamic> json) {
     return ItemsArrestResponseCompareMapping(
       COMPARE_MAPPING_ID: json['COMPARE_MAPPING_ID'],
+      CompareDetail: List<ItemsArrestResponseCompareDetail>.from(json['CompareDetail'].map((m) => ItemsArrestResponseCompareDetail.fromJson(m))),
     );
   }
 }
@@ -91,7 +91,7 @@ class ItemsArrestResponseComparePayment {
   factory ItemsArrestResponseComparePayment.fromJson(Map<String, dynamic> json) {
     return ItemsArrestResponseComparePayment(
       PAYMENT_ID: json['PAYMENT_ID'],
-      ComparePaymentDetail: List<ItemsArrestResponseComparePaymentDetail>.from(json['ComparePaymentDetail'].map((m) => ItemsArrestResponseComparePaymentDetail.fromJson(m))),
+      //ComparePaymentDetail: List<ItemsArrestResponseComparePaymentDetail>.from(json['ComparePaymentDetail'].map((m) => ItemsArrestResponseComparePaymentDetail.fromJson(m))),
     );
   }
 }

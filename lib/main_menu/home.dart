@@ -1,25 +1,22 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:location/location.dart';
 import 'package:prototype_app_pang/color/text.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/guy/search.dart';
+import 'package:prototype_app_pang/main_menu/arrest/arrest_screen_1_search.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/master/item_master_response.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_get_office.dart';
 import 'package:prototype_app_pang/main_menu/auction/auction_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_search_main_screen.dart';
-import 'package:prototype_app_pang/main_menu/compare/compare_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_search_screen_2.dart';
 import 'package:prototype_app_pang/main_menu/destroy/destroy_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/export/export_search_screen.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/lawsuit_screen_1_search.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/lawsuit_screen_2_search.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1_search.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/future/arrest_future_master.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_master_response.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_2/tab_screen_arrest_2_search.dart';
 import 'package:prototype_app_pang/main_menu/musuim/musuim_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_search_screen.dart';
+import 'package:prototype_app_pang/main_menu/report/report_screen.dart';
+import 'package:prototype_app_pang/main_menu/report/report_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/stock/stock_book_search_screen.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/arrest_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/auction_tab.dart';
@@ -33,6 +30,7 @@ import 'package:prototype_app_pang/main_menu/tab_menu/lawsuit_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/musuim_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/network_page.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/prove_tab.dart';
+import 'package:prototype_app_pang/main_menu/tab_menu/return_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/stock_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/tacking_tab.dart';
 import 'package:prototype_app_pang/main_menu/tab_menu/transfer_tab.dart';
@@ -43,6 +41,7 @@ import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/text/text.dart';
 import 'package:flutter/services.dart';
 import 'package:prototype_app_pang/zan/search/SearchPerson.dart';
+import 'package:prototype_app_pang/zan/zan/search/SearchPerson.dart';
 
 class DrawerItem {
   String title;
@@ -52,10 +51,12 @@ class DrawerItem {
 class HomeScreen extends StatefulWidget {
   ItemsPersonInformation ItemsData;
   ItemsMasterTitleResponse itemsTitle;
+  ItemsArrestResponseGetOffice itemsOffice;
   HomeScreen({
     Key key,
     @required this.ItemsData,
     @required this.itemsTitle,
+    @required this.itemsOffice,
   }) : super(key: key);
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -115,7 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
   TextColors _colors = new TextColors();
 
   _getDrawerItemWidget(int pos) {
-    print(pos);
     switch (pos) {
       case 0:
         return _main_tab();
@@ -125,7 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ItemsPerson: widget.ItemsData, itemsTitle: widget.itemsTitle,);
       case 2:
         return new LawsuitFragment(
-            ItemsPerson: widget.ItemsData
+            ItemsPerson: widget.ItemsData,
+          itemsOffice: widget.itemsOffice,
         );
       case 3:
         return new ProveFragment();
@@ -137,6 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return new NetworkFragment();
       case 8:
         return new TrackingFragment();
+      case 9:
+        return new ReportMainScreenFragment();
       case 10:
         return new ChatFragment();
       case 11:
@@ -153,6 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return new MusuimFragment();
       case 17:
         return new ExportFragment();
+      case 18:
+        return new ReturnFragment();
       default:
         return new Text(drawerItems[pos].title,
           style: TextStyle(
@@ -733,6 +738,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (context) =>
                               LawsuitMainScreenFragmentSearch2(
                                 ItemsPerson: widget.ItemsData,
+                                itemsOffice: widget.itemsOffice,
                               )));
                   /*LawsuitMainScreenFragmentSearch(
                             ItemsPerson: widget.ItemsData,
@@ -813,13 +819,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       .push(
                       new MaterialPageRoute(
                           builder: (context) =>
-                              SearchPerson()));
+                              NetworkMainScreenFragmentSearch()));
                   break;
                 case 8 :
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) =>
                           TrackingBookSearchScreenFragment(),
+                      ));
+                  break;
+                case 9 :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>
+                          ReportMainScreenFragmentSearch(),
                       ));
                   break;
                 case 10 :
@@ -899,7 +912,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _onClickMenu(index) {
-    print(index);
     setState(() => _selectedDrawerIndex = index);
   }
 
@@ -907,7 +919,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var size = MediaQuery
         .of(context)
         .size;
-    print((size.width / 3).toString());
     return Container(
       //padding: EdgeInsets.all(12.0),
       child: Column(
@@ -1834,7 +1845,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     highlightColor: TextColors()
                                         .text_splash_color,
                                     onPressed: () {
-                                      //_onClickMenu(8);
+                                      _onClickMenu(9);
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.all(12.0),
@@ -1932,7 +1943,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return new ArrestFragment(
           ItemsPerson: widget.ItemsData, itemsTitle: widget.itemsTitle,);
       case 2:
-        return new LawsuitFragment(ItemsPerson: widget.ItemsData);
+        return new LawsuitFragment(ItemsPerson: widget.ItemsData,itemsOffice: widget.itemsOffice,);
       case 3:
         return new ProveFragment();
       case 4:
@@ -1943,6 +1954,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return new NetworkFragment();
       case 8:
         return new TrackingFragment();
+      case 8:
+        return new ReportMainScreenFragment();
       case 10:
         return new ChatFragment();
       case 11:
@@ -1959,6 +1972,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return new MusuimFragment();
       case 17:
         return new ExportFragment();
+      case 18:
+        return new ReturnFragment();
       default:
         return new Text(drawerItems[pos].title,
           style: TextStyle(

@@ -18,7 +18,6 @@ import 'package:prototype_app_pang/main_menu/menu/arrest/model/master/item_subdi
 import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map_custom.dart';
 
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_creen_arrest/tab_arrest_1/tab_screen_arrest_1_map_search.dart';
 class TabScreenArrest1Map extends StatefulWidget {
   ItemsListArrestLocation itemsLocale;
   TabScreenArrest1Map({
@@ -224,17 +223,6 @@ class _TabScreenArrest1MapState extends State<TabScreenArrest1Map> {
     }
   }
 
-  _navigateSearchPlace(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>
-          CustomSearchScaffold(
-          )),
-    );
-    if(result.toString()!="Back"){
-      Navigator.pop(context,result);
-    }
-  }
   void getPlaceAddress(latitude, longitude) async {
     _initDataAddress();
     final coordinates = new Coordinates(latitude, longitude);

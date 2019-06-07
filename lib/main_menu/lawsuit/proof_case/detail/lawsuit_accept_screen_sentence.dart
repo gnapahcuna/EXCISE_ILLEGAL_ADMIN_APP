@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prototype_app_pang/model/Constants.dart';
+import 'package:prototype_app_pang/model/Issue_Alert.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 
 const double _kPickerSheetHeight = 216.0;
@@ -548,7 +550,6 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
               Container(
                 padding: EdgeInsets.all(22.0),
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     shape: BoxShape.rectangle,
                     border: Border(
                       bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1437,13 +1438,11 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
     UNDECIDE_NO_YEAR_2=(int.parse(splitsUndecideDate[3]) + 543).toString();
 
     return Container(
-      color: Colors.white,
       child: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(
               left: 22.0, right: 22.0, top: 22.0, bottom: 44.0),
           decoration: BoxDecoration(
-              color: Colors.white,
               shape: BoxShape.rectangle,
               border: Border(
                 //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1690,7 +1689,6 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
               child: Container(
                 padding: EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     shape: BoxShape.rectangle,
                     border: Border(
                       top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -1744,36 +1742,6 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
     return true;
   }
 
-  CupertinoAlertDialog _cupertinoSearchEmpty(mContext,text) {
-    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text(text,
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(mContext);
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-  }
-
-  void _showSearchEmptyAlertDialog(context,text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _cupertinoSearchEmpty(context,text);
-      },
-    );
-  }
-
   Widget _buildBottom(BuildContext context){
     var size = MediaQuery
         .of(context)
@@ -1787,29 +1755,29 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
           bool success=false;
           if(_isDismissed){
             if(editCourtName.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกชื่อศาล");
+              new VerifyDialog(context,"กรุณากรอกชื่อศาล");
             }else if(editUndecidedCase.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกหมายเลขคดีดำ");
+              new VerifyDialog(context,"กรุณากรอกหมายเลขคดีดำ");
             }else if(editDecidedCase.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกหมายเลขคดีแดง");
+              new VerifyDialog(context,"กรุณากรอกหมายเลขคดีแดง");
             }else{
               success=true;
             }
           }else{
             if(editCourtName.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกชื่อศาล");
+              new VerifyDialog(context,"กรุณากรอกชื่อศาล");
             }else if(editUndecidedCase.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกหมายเลขคดีดำ");
+              new VerifyDialog(context,"กรุณากรอกหมายเลขคดีดำ");
             }else if(editDecidedCase.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกหมายเลขคดีแดง");
+              new VerifyDialog(context,"กรุณากรอกหมายเลขคดีแดง");
             }else if(editFineValue.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกจำนวนเงินค่าปรับ");
+              new VerifyDialog(context,"กรุณากรอกจำนวนเงินค่าปรับ");
             }else if(!_isOneTime&&(editPeriodNum.text.isEmpty||editPeriod.text.isEmpty)){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกจำนวนงวดหรือรอบชำระค่าปรับ");
+              new VerifyDialog(context,"กรุณากรอกจำนวนงวดหรือรอบชำระค่าปรับ");
             }else if(editImprison.text.isEmpty){
-              _showSearchEmptyAlertDialog(context,"กรุณากรอกจำนวนที่สั่งจำคุก");
+              new VerifyDialog(context,"กรุณากรอกจำนวนที่สั่งจำคุก");
             }else if(!_isFine&&!_isImprison){
-              _showSearchEmptyAlertDialog(context,"กรุณาติ๊กเลือก สั่งปรับเป็นจำนวน หรือ สั่งจำคุกเป็นจำนวน หรือ เลือกอย่างใดอย่างหนึ่ง");
+              new VerifyDialog(context,"กรุณาติ๊กเลือก สั่งปรับเป็นจำนวน หรือ สั่งจำคุกเป็นจำนวน หรือ เลือกอย่างใดอย่างหนึ่ง");
             }else{
               success=true;
             }
@@ -1956,23 +1924,24 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
             ),
             SliverFillRemaining(
               child: Scaffold(
-                backgroundColor: Colors.grey[200],
-                body: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        //height: 34.0,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border(
-                              top: BorderSide(color: Colors.grey[300], width: 1.0),
-                              //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                            )
-                        ),
-                        /*child: Row(
+                body: Stack(
+                  children: <Widget>[
+                    BackgroundContent(),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            //height: 34.0,
+                            decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(color: Colors.grey[300], width: 1.0),
+                                  //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                                )
+                            ),
+                            /*child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -1983,13 +1952,15 @@ class _FragmentState extends State<LawsuitAcceptSentenceScreenFragment>  with Ti
                             )
                           ],
                         ),*/
+                          ),
+                          Expanded(
+                            child: _onSaved?_buildContent_saved(context):_buildContent(),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: _onSaved?_buildContent_saved(context):_buildContent(),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  ],
+                )
               ),
             ),
           ],

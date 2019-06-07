@@ -1,10 +1,7 @@
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_detail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_indicment_product.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_notice.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_%20suspect.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_case_information.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_locale.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_locale.dart';
 
 class ItemsLawsuitArrestMain {
   int ARREST_ID;

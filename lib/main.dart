@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/login.dart';
 import 'package:prototype_app_pang/main_menu/home.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1.dart';
+import 'package:prototype_app_pang/main_menu/arrest/arrest_screen_1.dart';
+import 'package:prototype_app_pang/test.dart';
 import 'package:prototype_app_pang/text/text.dart';
 import 'package:prototype_app_pang/color/text.dart';
 
@@ -25,7 +26,16 @@ class MyApp extends StatelessWidget {
         '/Home': (BuildContext context) => new HomeScreen(),
         '/ArrstMain' : (BuildContext context) => new ArrestMainScreenFragment(),
         '/Login': (BuildContext context) => new LoginScreen(),
+        '/Test': (BuildContext context) => new TestPage(),
       },
+      /*localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('th', 'TH'),
+      ],*/
     );
   }
 }
@@ -54,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void navigationPage() async {
     //intent
     Navigator.of(context).pushReplacementNamed('/Login');
-    //Navigator.of(context).pushReplacementNamed('/Home');
+    //Navigator.of(context).pushReplacementNamed('/Test');
   }
 
   @override

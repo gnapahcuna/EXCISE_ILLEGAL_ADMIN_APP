@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_offense.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 class LawsuitNotAcceptOffenseDetailScreenFragment extends StatefulWidget {
   List<ItemsLawsuitOffense> ItemsOffense;
   int Indexs;
@@ -45,7 +46,6 @@ class _FragmentState extends State<LawsuitNotAcceptOffenseDetailScreenFragment> 
           padding: EdgeInsets.only(
               left: 18.0, right: 18.0, top: 18.0, bottom: 44.0),
           decoration: BoxDecoration(
-              color: Colors.white,
               shape: BoxShape.rectangle,
               border: Border(
                 bottom: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -166,22 +166,24 @@ class _FragmentState extends State<LawsuitNotAcceptOffenseDetailScreenFragment> 
                 }),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Row(
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    //height: 34.0,
+                    decoration: BoxDecoration(
+                        border: Border(
+                          //top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                    ),
+                    /*child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -191,19 +193,21 @@ class _FragmentState extends State<LawsuitNotAcceptOffenseDetailScreenFragment> 
                         'ILG60_B_02_00_10_00', style: textStylePageName,),
                     )
                   ],
-                ),
-              ),
-              Expanded(
-                child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(),
+                ),*/
                   ),
-                ),
+                  Expanded(
+                    child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _buildContent(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        )
       ),
     );
   }

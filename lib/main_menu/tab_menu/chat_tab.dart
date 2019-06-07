@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/guy/chat.dart';
 import 'package:prototype_app_pang/guy/search.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 DateTime now = DateTime.now();
 String formattedDate = DateFormat('hh:mm : EEE d MMM yyyy').format(now);
@@ -49,28 +50,33 @@ class ChatFragment extends StatelessWidget {
           children: <Widget>[],
         ),
       ),
-      body: ListView(
+      body: Stack(
         children: <Widget>[
-          Divider(),
-          //คืือการเคาะลงมา
+          BackgroundContent(),
+          ListView(
+            children: <Widget>[
+              Divider(),
+              //คืือการเคาะลงมา
 
-          ListTile(
-            leading: Icon(
-              Icons.person_pin,
-              size: 50,
-            ),
-            title: Text('จ่าตุ่น',style: textLabelStyle1,),
-            subtitle: Text('บิ้ก สำนวนคดีอย่าลืมส่งมานะ',style: textLabelStyle,),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => new MyApp()),
-              );
-            },
+              ListTile(
+                leading: Icon(
+                  Icons.person_pin,
+                  size: 50,
+                ),
+                title: Text('จ่าตุ่น',style: textLabelStyle1,),
+                subtitle: Text('บิ้ก สำนวนคดีอย่าลืมส่งมานะ',style: textLabelStyle,),
+                trailing: Icon(Icons.keyboard_arrow_right),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => new MyApp()),
+                  );
+                },
+              ),
+            ],
           ),
         ],
-      ),
+      )
     );
   }
 }

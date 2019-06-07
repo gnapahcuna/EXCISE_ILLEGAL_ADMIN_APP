@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/auction/auction_screen.dart';
-import 'package:prototype_app_pang/main_menu/destroy/destroy_screen.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/arrest_screen_1.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
 
 class AuctionFragment extends StatefulWidget {

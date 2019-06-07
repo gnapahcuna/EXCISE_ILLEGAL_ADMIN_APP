@@ -106,9 +106,9 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
   //dialog
   TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
   TextStyle ButtonAcceptStyle = TextStyle(
-    color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
+      color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
   TextStyle ButtonCancelStyle = TextStyle(
-    fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
+      fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
 
   //paffing
   EdgeInsets paddingInputBox = EdgeInsets.only(top: 4.0, bottom: 0.0);
@@ -222,7 +222,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         });
       });
       await future.apiRequestInsIndictment(ArrestIndictment).then((onValue) {
-          print(onValue.Msg);
+        print(onValue.Msg);
       });
 
       //add transection code
@@ -307,7 +307,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
       bool IsUpIndicmen,
       bool IsUpIndicmenPro,
       bool IsUpIndicmenDelt,
-  bool IsUpProduct) async {
+      bool IsUpProduct) async {
     await future.apiRequestArrestupdByCon(map_arrest).then((onValue) {
       if (onValue.IsSuccess.endsWith("True") &&
           onValue.Msg.endsWith("Complete")) {
@@ -1048,7 +1048,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         widget.IsCreate=false;
         widget.IsUpdate=true;
 
-       whenAnimationTab();
+        whenAnimationTab();
 
         List<String> list = [];
         list.add(_arrestMain.BEHAVIOR_1);
@@ -1075,9 +1075,9 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
         editArrestLocation.text=address;
         editArrestPlace.text=_arrestMain.OFFICE_NAME;
 
-       editArrestBehavior.text = behavior;
+        editArrestBehavior.text = behavior;
         TESTIMONY=_arrestMain.IS_REQUEST==1?true:false;
-       editNotificationOfRights.text=_arrestMain.IS_REQUEST==1?_arrestMain.REQUEST_DESC:"ได้ดำเนินการตามที่ข้าพเจ้าร้องขอ";
+        editNotificationOfRights.text=_arrestMain.IS_REQUEST==1?_arrestMain.REQUEST_DESC:"ได้ดำเนินการตามที่ข้าพเจ้าร้องขอ";
 
       } else {
         _showDeleteAlertDialog();
@@ -1324,7 +1324,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
     Map map={"ARREST_ID":_arrestMain.ARREST_ID};
     await onLoadActionDelete(map);
     Navigator.pop(context);
-   /* _onSaved = false;
+    /* _onSaved = false;
     _onEdited = false;
     _onSave = false;
     clearTextField();
@@ -2124,7 +2124,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             children: <Widget>[
               _onSaved ? (_onSave ? new FlatButton(
                   onPressed: () {
-                   /* setState(() {
+                    /* setState(() {
                       _onSaved = true;
                       _onSave = false;
                       _onEdited = false;
@@ -2197,44 +2197,44 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             ),
             SliverFillRemaining(
               child: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(140.0),
-                  child: TabBar(
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey[500],
-                    labelStyle: tabStyle,
-                    controller: tabController,
-                    isScrollable: true,
-                    tabs: choices.map((Choice choice) {
-                      return Tab(
-                        text: choice.title,
-                      );
-                    }).toList(),
+                  appBar: PreferredSize(
+                    preferredSize: Size.fromHeight(140.0),
+                    child: TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey[500],
+                      labelStyle: tabStyle,
+                      controller: tabController,
+                      isScrollable: true,
+                      tabs: choices.map((Choice choice) {
+                        return Tab(
+                          text: choice.title,
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-                body: TabBarView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: _onFinish ? <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                    _buildContent_tab_4(),
-                    _buildContent_tab_5(),
-                    _buildContent_tab_6(),
-                    _buildContent_tab_7(),
-                    _buildContent_tab_8(),
-                  ] :
-                  <Widget>[
-                    _buildContent_tab_1(),
-                    _buildContent_tab_2(),
-                    _buildContent_tab_3(),
-                    _buildContent_tab_4(),
-                    _buildContent_tab_5(),
-                    _buildContent_tab_6(),
-                    _buildContent_tab_7(),
-                  ],
-                )
+                  body: TabBarView(
+                    //physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: _onFinish ? <Widget>[
+                      _buildContent_tab_1(),
+                      _buildContent_tab_2(),
+                      _buildContent_tab_3(),
+                      _buildContent_tab_4(),
+                      _buildContent_tab_5(),
+                      _buildContent_tab_6(),
+                      _buildContent_tab_7(),
+                      _buildContent_tab_8(),
+                    ] :
+                    <Widget>[
+                      _buildContent_tab_1(),
+                      _buildContent_tab_2(),
+                      _buildContent_tab_3(),
+                      _buildContent_tab_4(),
+                      _buildContent_tab_5(),
+                      _buildContent_tab_6(),
+                      _buildContent_tab_7(),
+                    ],
+                  )
               ),
             ),
           ],
@@ -2251,8 +2251,8 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
       color: CupertinoColors.white,
       child: DefaultTextStyle(
         style: TextStyle(
-          color: CupertinoColors.black,
-          fontSize: 22.0,fontFamily: FontStyles().FontFamily
+            color: CupertinoColors.black,
+            fontSize: 22.0,fontFamily: FontStyles().FontFamily
         ),
         child: GestureDetector(
           // Blocks taps from propagating to the modal sheet and popping.
@@ -2323,48 +2323,48 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                             child: Text("วันที่จับกุม", style: textLabelStyle,),
                           ),
                           Padding(
-                              padding: paddingInputBox,
-                              child: TextField(
-                                enableInteractiveSelection: false,
-                                onTap: () {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ArrestDynamicDialog(
-                                            Current: _dtArrest,
-                                            MaxDate: _dtMaxDate,
-                                            MinDate: null);
-                                      }).then((s) {
-                                    _currentDateArrestEN = s.toString();
-                                    print(_currentDateArrestEN);
-                                    String date = "";
-                                    List splits = dateFormatDate.format(
-                                        s).toString().split(" ");
-                                    date = splits[0] + " " + splits[1] +
-                                        " " +
-                                        (int.parse(splits[3]) + 543)
-                                            .toString();
-                                    setState(() {
-                                      _dtArrest = s;
-                                      _currentDateArrestTH = date;
-                                      editArrestDate.text=_currentDateArrestTH;
-                                      _arrestDate = _dtArrest.toString();
-                                      //myFocusNodeArrestDate.dispose();
-                                    });
+                            padding: paddingInputBox,
+                            child: TextField(
+                              enableInteractiveSelection: false,
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ArrestDynamicDialog(
+                                          Current: _dtArrest,
+                                          MaxDate: _dtMaxDate,
+                                          MinDate: null);
+                                    }).then((s) {
+                                  _currentDateArrestEN = s.toString();
+                                  print(_currentDateArrestEN);
+                                  String date = "";
+                                  List splits = dateFormatDate.format(
+                                      s).toString().split(" ");
+                                  date = splits[0] + " " + splits[1] +
+                                      " " +
+                                      (int.parse(splits[3]) + 543)
+                                          .toString();
+                                  setState(() {
+                                    _dtArrest = s;
+                                    _currentDateArrestTH = date;
+                                    editArrestDate.text=_currentDateArrestTH;
+                                    _arrestDate = _dtArrest.toString();
+                                    //myFocusNodeArrestDate.dispose();
                                   });
-                                  //_selectDate(context);
-                                },
-                                focusNode: myFocusNodeArrestDate,
-                                controller: editArrestDate,
-                                keyboardType: TextInputType.text,
-                                textCapitalization: TextCapitalization.words,
-                                style: textInputStyle,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
-                                ),
+                                });
+                                //_selectDate(context);
+                              },
+                              focusNode: myFocusNodeArrestDate,
+                              controller: editArrestDate,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.words,
+                              style: textInputStyle,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
                               ),
+                            ),
                           ),
                           _buildLine,
                           Container(
@@ -2444,46 +2444,46 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                             child: Text("วันที่เขียน", style: textLabelStyle,),
                           ),
                           Padding(
-                              padding: paddingInputBox,
-                              child: TextField(
-                                enableInteractiveSelection: false,
-                                onTap: () {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ArrestDynamicDialog(
-                                          Current: _dtCreate,
-                                          MaxDate: _dtMaxDate,
-                                          MinDate: _dtArrest,
-                                        );
-                                      }).then((s) {
-                                    _currentDateCreateEN = s.toString();
-                                    String date = "";
-                                    List splits = dateFormatDate.format(
-                                        s).toString().split(" ");
-                                    date = splits[0] + " " + splits[1] +
-                                        " " +
-                                        (int.parse(splits[3]) + 543)
-                                            .toString();
-                                    setState(() {
-                                      _dtCreate = s;
-                                      _currentDateCreateTH = date;
-                                      editArrestDateCreate.text=_currentDateCreateTH;
-                                      //myFocusNodeArrestDateCreate.dispose();
-                                    });
+                            padding: paddingInputBox,
+                            child: TextField(
+                              enableInteractiveSelection: false,
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ArrestDynamicDialog(
+                                        Current: _dtCreate,
+                                        MaxDate: _dtMaxDate,
+                                        MinDate: _dtArrest,
+                                      );
+                                    }).then((s) {
+                                  _currentDateCreateEN = s.toString();
+                                  String date = "";
+                                  List splits = dateFormatDate.format(
+                                      s).toString().split(" ");
+                                  date = splits[0] + " " + splits[1] +
+                                      " " +
+                                      (int.parse(splits[3]) + 543)
+                                          .toString();
+                                  setState(() {
+                                    _dtCreate = s;
+                                    _currentDateCreateTH = date;
+                                    editArrestDateCreate.text=_currentDateCreateTH;
+                                    //myFocusNodeArrestDateCreate.dispose();
                                   });
-                                },
-                                focusNode: myFocusNodeArrestDateCreate,
-                                controller: editArrestDateCreate,
-                                keyboardType: TextInputType.text,
-                                textCapitalization: TextCapitalization.words,
-                                style: textInputStyle,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
-                                ),
+                                });
+                              },
+                              focusNode: myFocusNodeArrestDateCreate,
+                              controller: editArrestDateCreate,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.words,
+                              style: textInputStyle,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                suffixIcon: Icon(FontAwesomeIcons.calendarAlt,color: Colors.grey,),
                               ),
+                            ),
                           ),
                           _buildLine,
                           Container(
@@ -2855,36 +2855,36 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                       ),*/
                     ],
                   ),
-                  _onSaved ? Container()
-                      : Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: new Card(
-                        elevation: 0.0,
-                        color: Colors.grey[300],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        child: new GestureDetector(
-                          onTap: () {
-                            _navigateSearchTab2(context);
-                          },
-                          child: new ListTile(
-                            leading: new Icon(Icons.search),
-                            title: new Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Text('ค้นหาใบแจ้งความ', style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey[500],fontFamily: FontStyles().FontFamily),),
-                              ],
+                    _onSaved ? Container()
+                        : Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: new Card(
+                          elevation: 0.0,
+                          color: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: new GestureDetector(
+                            onTap: () {
+                              _navigateSearchTab2(context);
+                            },
+                            child: new ListTile(
+                              leading: new Icon(Icons.search),
+                              title: new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text('ค้นหาใบแจ้งความ', style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.grey[500],fontFamily: FontStyles().FontFamily),),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                   ],
                 )
             ),
@@ -2913,17 +2913,17 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
 
     List items = result;
     items.forEach((item){
-     if(widget.IsUpdate){
-       _arrestMain.ArrestStaff.add(item);
-       list_add_staff.add(item);
-     }else{
-       _itemsDataTab3.add(item);
-     }
+      if(widget.IsUpdate){
+        _arrestMain.ArrestStaff.add(item);
+        list_add_staff.add(item);
+      }else{
+        _itemsDataTab3.add(item);
+      }
     });
   }
 
 
-    Widget _buildContent_tab_3() {
+  Widget _buildContent_tab_3() {
     Widget _buildContent() {
       return Container(
         padding: EdgeInsets.only(bottom: 12.0),
@@ -3000,7 +3000,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                                       "สังกัด : " + (_itemsDataTab3[index].OPERATION_OFFICE_SHORT_NAME!=null
                                           ?_itemsDataTab3[index].OPERATION_OFFICE_SHORT_NAME
                                           :_itemsDataTab3[index].OPERATION_OFFICE_NAME),
-                                          //_itemsDataTab3[index].OPERATION_OFFICE_NAME,
+                                      //_itemsDataTab3[index].OPERATION_OFFICE_NAME,
                                       style: textDataStyleSub,),
                                   ),
                                 ),
@@ -3027,10 +3027,10 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                                           isDense: true,
                                           onChanged: (String newValue) {
                                             setState(() {
-                                             if(!_itemsDataTab3[index].ArrestType.endsWith("ผู้จับกุม")){
-                                               _itemsDataTab3[index].ArrestType =
-                                                   newValue;
-                                             }
+                                              if(!_itemsDataTab3[index].ArrestType.endsWith("ผู้จับกุม")){
+                                                _itemsDataTab3[index].ArrestType =
+                                                    newValue;
+                                              }
                                               if(_itemsDataTab3[index].ArrestType.endsWith("ผู้จับกุม")){
                                                 for(int i=0;i<_itemsDataTab3.length;i++){
                                                   if(index!=i){
@@ -3220,14 +3220,14 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             children: <Widget>[
               Container(
                 //height: 34.0,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border(
-                        top: BorderSide(color: Colors.grey[300], width: 1.0),
-                        //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                      )
-                  ),
-                  /*child: Column(
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border(
+                      top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                    )
+                ),
+                /*child: Column(
                     children: <Widget>[Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -3518,13 +3518,13 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
           children: <Widget>[
             Container(
               //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  )
+              ),
+              /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -4120,13 +4120,13 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             children: <Widget>[
               Container(
                 //height: 34.0,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border(
-                        top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      )
-                  ),
-                  /*child: Column(
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border(
+                      top: BorderSide(color: Colors.grey[300], width: 1.0),
+                    )
+                ),
+                /*child: Column(
                     children: <Widget>[Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -5183,39 +5183,39 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                       ),*/
                     ],
                   ),
-                  _onSaved ? Container()
-                      : Container(
-                    //width: itemWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: new Card(
-                        elevation: 0.0,
-                        color: Colors.grey[300],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        child: new GestureDetector(
-                          onTap: () {
-                            _onEdited?
-                            _navigateSearchSelection(context,_arrestMain.ArrestLawbreaker,_arrestMain.ArrestProduct)
-                                :_navigateSearchSelection(context,_itemsDataTab4,_itemsDataTab5);
-                          },
-                          child: new ListTile(
-                            leading: new Icon(Icons.search),
-                            title: new Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Text('ค้นหาข้อกล่าวหา', style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey[500],fontFamily: FontStyles().FontFamily),),
-                              ],
+                    _onSaved ? Container()
+                        : Container(
+                      //width: itemWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: new Card(
+                          elevation: 0.0,
+                          color: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: new GestureDetector(
+                            onTap: () {
+                              _onEdited?
+                              _navigateSearchSelection(context,_arrestMain.ArrestLawbreaker,_arrestMain.ArrestProduct)
+                                  :_navigateSearchSelection(context,_itemsDataTab4,_itemsDataTab5);
+                            },
+                            child: new ListTile(
+                              leading: new Icon(Icons.search),
+                              title: new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text('ค้นหาข้อกล่าวหา', style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.grey[500],fontFamily: FontStyles().FontFamily),),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                   ],
                 )
             ),
@@ -5254,45 +5254,45 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             new Container(
               padding: EdgeInsets.only(bottom: 8.0),
               child: new Container(
-                padding: EdgeInsets.all(18.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    border: Border(
-                      //top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: paddindTextTitle,
-                      child: Text(
-                        "พฤติกรรมการจับกุม", style: textLabelStyle,),
-                    ),
-                    TextField(
-                      style: textInputStyle,
-                      maxLines: 10,
-                      focusNode: myFocusNodeArrestBehavior,
-                      controller: editArrestBehavior,
-                      decoration: new InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.grey[500], width: 0.5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.grey[400], width: 0.5),
+                  padding: EdgeInsets.all(18.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      border: Border(
+                        //top: BorderSide(color: Colors.grey[300], width: 1.0),
+                        bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: paddindTextTitle,
+                        child: Text(
+                          "พฤติกรรมการจับกุม", style: textLabelStyle,),
+                      ),
+                      TextField(
+                        style: textInputStyle,
+                        maxLines: 10,
+                        focusNode: myFocusNodeArrestBehavior,
+                        controller: editArrestBehavior,
+                        decoration: new InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500], width: 0.5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[400], width: 0.5),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )
+                    ],
+                  )
               ),
             ),
-           /* new Container(
+            /* new Container(
               padding: EdgeInsets.only(bottom: 24.0),
               child: Container(
                 padding: EdgeInsets.all(18.0),
@@ -5337,87 +5337,87 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
             new Container(
               padding: EdgeInsets.only(bottom: 24.0),
               child: Container(
-                padding: EdgeInsets.all(18.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(top: 12.0,bottom: 12.0),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(right: 18.0, top: 4, bottom: 4.0),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  TESTIMONY = !TESTIMONY;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  color: TESTIMONY ? Color(0xff3b69f3) : Colors
-                                      .white,
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Colors.black38
+                  padding: EdgeInsets.all(18.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                        bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(top: 12.0,bottom: 12.0),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(right: 18.0, top: 4, bottom: 4.0),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    TESTIMONY = !TESTIMONY;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    color: TESTIMONY ? Color(0xff3b69f3) : Colors
+                                        .white,
+                                    border: Border.all(
+                                        width: 1,
+                                        color: Colors.black38
+                                    ),
                                   ),
-                                ),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: TESTIMONY
-                                        ? Icon(
-                                      Icons.check,
-                                      size: 16.0,
-                                      color: Colors.white,
-                                    )
-                                        : Container(
-                                      height: 16.0,
-                                      width: 16.0,
-                                      color: Colors.transparent,
-                                    )
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TESTIMONY
+                                          ? Icon(
+                                        Icons.check,
+                                        size: 16.0,
+                                        color: Colors.white,
+                                      )
+                                          : Container(
+                                        height: 16.0,
+                                        width: 16.0,
+                                        color: Colors.transparent,
+                                      )
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            child: Text(
-                              "ร้องขอ", style: textLabelStyle,),
-                          ),
-                        ],
-                      ),
-                    ),
-                    TextField(
-                      enabled: TESTIMONY?true:false,
-                      style: textInputStyle,
-                      focusNode: myFocusNodeNotificationOfRights,
-                      controller: editNotificationOfRights,
-                      maxLines: 10,
-                      decoration: new InputDecoration(
-                        filled: true,
-                        fillColor: TESTIMONY?Colors.white:Colors.grey[200],
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.grey[500], width: 0.5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.grey[400], width: 0.5),
+                            Container(
+                              child: Text(
+                                "ร้องขอ", style: textLabelStyle,),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
-                )
+                      TextField(
+                        enabled: TESTIMONY?true:false,
+                        style: textInputStyle,
+                        focusNode: myFocusNodeNotificationOfRights,
+                        controller: editNotificationOfRights,
+                        maxLines: 10,
+                        decoration: new InputDecoration(
+                          filled: true,
+                          fillColor: TESTIMONY?Colors.white:Colors.grey[200],
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500], width: 0.5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[400], width: 0.5),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
               ),
             ),
           ],
@@ -5452,7 +5452,7 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
               )
           ),
           padding: EdgeInsets.only(
-              /*top: 4.0,*/ bottom: 12.0, left: 22.0, right: 22.0),
+            /*top: 4.0,*/ bottom: 12.0, left: 22.0, right: 22.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -5498,13 +5498,13 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
           children: <Widget>[
             Container(
               //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  )
+              ),
+              /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -5593,13 +5593,13 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
           children: <Widget>[
             Container(
               //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[300], width: 1.0),
+                  )
+              ),
+              /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -5704,8 +5704,8 @@ class _ArrestMainScreenFragmentState extends State<ArrestMainScreenFragment>  wi
                   _addressno,
                   _gps,
                   placeAddress,
-                false,
-                ""
+                  false,
+                  ""
               );
               String address = _itemsLocale.ADDRESS_NO+(_itemsLocale.ALLEY.isEmpty?"":" ซอย "+_itemsLocale.ALLEY)
                   +(_itemsLocale.ROAD.isEmpty?"":" ถนน "+_itemsLocale.ROAD)

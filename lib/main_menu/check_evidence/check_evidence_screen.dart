@@ -19,7 +19,7 @@ import 'package:prototype_app_pang/main_menu/check_evidence/model/check_evidence
 import 'package:prototype_app_pang/main_menu/check_evidence/model/check_evidence_main.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/compare/compare_suspect_screen.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
+import 'package:prototype_app_pang/main_menu/arrest/tab_screen_arrest/tab_arrest_8/tab_screen_arrest_8_dowload.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_manage_evidence_screen.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 

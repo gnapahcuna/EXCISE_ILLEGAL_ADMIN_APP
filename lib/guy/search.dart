@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'chat.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -38,11 +39,6 @@ class Search1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
-    
     return new Theme(
       data: new ThemeData(
           primaryColor: Colors.white,
@@ -55,11 +51,11 @@ class Search1 extends StatelessWidget {
           preferredSize: Size.fromHeight(70.0), // here the desired height
           child: AppBar(
             title: new Padding(
-                padding: EdgeInsets.only(right: 22.0),
+              padding: EdgeInsets.only(right: 22.0),
               child: new TextField(
                 keyboardType: TextInputType.text,
                 style: styleTextSearch,
-                
+
                 decoration: new InputDecoration(
                   hintText: "ค้นหา",
                   hintStyle: styleTextSearch,
@@ -67,51 +63,47 @@ class Search1 extends StatelessWidget {
                     borderSide: BorderSide(color: Colors.grey[400]),
                   ),
                 ),
-                 onSubmitted: (String name1){
+                onSubmitted: (String name1) {
+                  if (name1 == name) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => new MyApp()),
+                    );
+                  } else if (name1 != name) {
+                    TextStyle TitleStyle = TextStyle(
+                        fontSize: 16.0, fontFamily: FontStyles().FontFamily);
+                    TextStyle ButtonAcceptStyle = TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: FontStyles().FontFamily);
 
-                    if (name1 == name) {
-     Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => new MyApp()),
-              );
-    }else if (name1 != name){
-TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-      color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return new CupertinoAlertDialog(
+                            content: new Padding(
+                              padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+                              child: Text("ไม่พบข้อมูล.",
+                                style: TitleStyle,
+                              ),
+                            ),
+                            actions: <Widget>[
+                              new CupertinoButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: new Text(
+                                      'ยืนยัน', style: ButtonAcceptStyle)),
+                            ]
+                        );
+                      },
+                    );
+                  } else {
 
-        showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-           return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text("ไม่พบข้อมูล.",
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(context);
-            
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-        },
-      );
-    
-    
-    
-    }else{
-
-    }
-
-
-                
-                  
-                 },
+                  }
+                },
               ),
             ),
             centerTitle: true,
@@ -119,32 +111,33 @@ TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFam
             backgroundColor: Colors.white,
             leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios,), onPressed: () {
-              Navigator.pop(context,"Back");
+              Navigator.pop(context, "Back");
             }),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-               
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                    ),
+                  ),
+                ],
               ),
-              
-            ],
-          ),
+            ),
+          ],
         ),
-        
       ),
     );
   }

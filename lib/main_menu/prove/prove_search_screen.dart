@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/lawsuit_accept_case_screen.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_%20suspect.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_case_information.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_evidence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_offense.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_proof.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_search.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_2.dart';
-import 'package:expandable/expandable.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_search.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/delivered_for_storage.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_case_information.dart';
@@ -17,6 +9,7 @@ import 'package:prototype_app_pang/main_menu/prove/model/prove_check_evidence.da
 import 'package:prototype_app_pang/main_menu/prove/model/prove_evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_main.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_screen.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ProveMainScreenFragmentSearch extends StatefulWidget {
   @override
@@ -476,7 +469,6 @@ class _FragmentState extends State<ProveMainScreenFragmentSearch> {
           child: Container(
             padding: EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -635,22 +627,24 @@ class _FragmentState extends State<ProveMainScreenFragmentSearch> {
             }),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Row(
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    //height: 34.0,
+                    decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                    ),
+                    /*child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -661,14 +655,16 @@ class _FragmentState extends State<ProveMainScreenFragmentSearch> {
                     )
                   ],
                 ),*/
+                  ),
+                  Expanded(
+                    child: _searchResult.length != 0 || controller.text.isNotEmpty
+                        ? _buildSearchResults() : new Container(),
+                  ),
+                ],
               ),
-              Expanded(
-                child: _searchResult.length != 0 || controller.text.isNotEmpty
-                    ? _buildSearchResults() : new Container(),
-              ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        )
       ),
     );
   }

@@ -23,6 +23,7 @@ class ItemsLawsuitListIndicmentProduct {
   double SIZES;
   double QUANTITY;
   double VOLUMN;
+  dynamic DEGREE;
   String SIZES_UNIT;
   String QUANTITY_UNIT;
   String VOLUMN_UNIT;
@@ -47,6 +48,7 @@ class ItemsLawsuitListIndicmentProduct {
     this.QUATITY_UNIT_ID,
     this.VOLUMN_UNIT_ID,
     this.SIZES,
+    this.DEGREE,
     this.QUANTITY,
     this.VOLUMN,
     this.SIZES_UNIT,
@@ -80,6 +82,7 @@ class ItemsLawsuitListIndicmentProduct {
       SIZES_UNIT: js['SIZES_UNIT'],
       QUANTITY_UNIT: js['QUANTITY_UNIT'],
       VOLUMN_UNIT: js['VOLUMN_UNIT'],
+      DEGREE: js['DEGREE'],
       IsCkecked: false,
     );
   }

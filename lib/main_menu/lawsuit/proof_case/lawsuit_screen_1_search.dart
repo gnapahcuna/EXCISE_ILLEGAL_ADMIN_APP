@@ -4,18 +4,10 @@ import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/lawsuit_accept_case_screen.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_sentence.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_arrest_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/lawsuit_not_accept_case_screen_1.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_%20suspect.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_case_information.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_evidence.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_offense.dart';
-import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_proof.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_search.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_2.dart';
-import 'package:expandable/expandable.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/item_arrest_search.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
 
 class LawsuitMainScreenFragmentSearch extends StatefulWidget {

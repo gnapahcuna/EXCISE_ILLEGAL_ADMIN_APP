@@ -9,6 +9,7 @@ import 'package:prototype_app_pang/main_menu/prove/model/evidence.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_case_information.dart';
 import 'package:prototype_app_pang/main_menu/prove/model/prove_main.dart';
 import 'package:prototype_app_pang/main_menu/prove/prove_screen.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class ProveFragment extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _FragmentState extends State<ProveFragment>  {
   //style content
   TextStyle textStyleLanding = TextStyle(fontSize: 20,fontFamily: FontStyles().FontFamily);
   TextStyle textStyleLabel = TextStyle(fontSize: 16,color: Color(0xff087de1),fontFamily: FontStyles().FontFamily);
-  TextStyle textStyleData = TextStyle(fontSize: 18,color: Colors.black,fontFamily: FontStyles().FontFamily);
+  TextStyle textStyleData = TextStyle(fontSize: 16,color: Colors.black,fontFamily: FontStyles().FontFamily);
   TextStyle textStylePageName = TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0);
   TextStyle textStyleDataSub = TextStyle(fontSize: 16,color: Colors.grey[400],fontFamily: FontStyles().FontFamily);
   EdgeInsets paddingData =  EdgeInsets.only(top: 4.0, bottom: 4.0);
@@ -310,11 +311,10 @@ class _FragmentState extends State<ProveFragment>  {
           ],
         )
             : Padding(
-          padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
+          padding: EdgeInsets.only(top: 2.0, bottom: 2.0),
           child: Container(
             padding: EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -406,22 +406,23 @@ class _FragmentState extends State<ProveFragment>  {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  //height: 34.0,
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -435,13 +436,15 @@ class _FragmentState extends State<ProveFragment>  {
                   ),
                   ],
                 )*/
+                ),
+                Expanded(
+                  child: _buildContent(context),
+                ),
+              ],
             ),
-            Expanded(
-              child: _buildContent(context),
-            ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/detail/lawsuit_not_accept_screen_offense_detail.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/not_accept_case/model/lawsuit_offense.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 
 class LawsuitNotAcceptOffenseListScreenFragment extends StatefulWidget {
   List<ItemsLawsuitOffense> ItemsOffense;
@@ -43,7 +44,6 @@ class _FragmentState extends State<LawsuitNotAcceptOffenseListScreenFragment>  w
             padding: EdgeInsets.only(
               left: 12.0, right: 12.0, top: 12.0, bottom: 12.0),
             decoration: BoxDecoration(
-                color: Colors.white,
                 shape: BoxShape.rectangle,
                 border: Border(
                   top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -94,44 +94,49 @@ class _FragmentState extends State<LawsuitNotAcceptOffenseListScreenFragment>  w
                 }),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                      //bottom: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: new Text(
-                        'ILG60_B_02_00_09_00', style: textStylePageName,),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(),
+        body: Stack(
+          children: <Widget>[
+            BackgroundContent(),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    //height: 34.0,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          //top: BorderSide(color: Colors.grey[300], width: 1.0),
+                          bottom: BorderSide(color: Colors.grey[300], width: 1.0),
+                        )
+                    ),
+                    /*child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: new Text(
+                            'ILG60_B_02_00_09_00', style: textStylePageName,),
+                        )
+                      ],
+                    ),*/
                   ),
-                ),
+                  Expanded(
+                    child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _buildContent(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        )
       ),
     );
   }

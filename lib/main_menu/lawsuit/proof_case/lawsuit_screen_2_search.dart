@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype_app_pang/font_family/font_style.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_get_office.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/check_evidence_select_evidence_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/delivery_book_select_evidence_screen.dart';
 import 'package:prototype_app_pang/main_menu/check_evidence/model/evidence.dart';
@@ -11,15 +12,19 @@ import 'package:prototype_app_pang/main_menu/destroy/select_book_select_evidence
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_list.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/lawsuit_screen_2_search_result.dart';
+import 'package:prototype_app_pang/model/Issue_Alert.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 import 'package:prototype_app_pang/picker/date_picker_lawsuit_search.dart';
 
 class LawsuitMainScreenFragmentSearch2 extends StatefulWidget {
   ItemsPersonInformation ItemsPerson;
+  ItemsArrestResponseGetOffice itemsOffice;
   LawsuitMainScreenFragmentSearch2({
     Key key,
     @required this.ItemsPerson,
+    @required this.itemsOffice,
   }) : super(key: key);
   @override
   _FragmentState createState() => new _FragmentState();
@@ -28,9 +33,9 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
 
   final FocusNode myFocusNodeDocNumber = FocusNode();
   final FocusNode myFocusNodeLawsuitNumber = FocusNode();
-  final FocusNode myFocusNodeLawsuitPerson= FocusNode();
-  final FocusNode myFocusNodeLawsuitDateStart= FocusNode();
-  final FocusNode myFocusNodeLawsuitDateEnd= FocusNode();
+  final FocusNode myFocusNodeLawsuitPerson = FocusNode();
+  final FocusNode myFocusNodeLawsuitDateStart = FocusNode();
+  final FocusNode myFocusNodeLawsuitDateEnd = FocusNode();
 
   TextEditingController editDocNumber = new TextEditingController();
   TextEditingController editLawsuitNumber = new TextEditingController();
@@ -44,10 +49,10 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
 
   DateTime _dtMaxDate;
 
-  bool IsLawsuitType1=true;
-  bool IsLawsuitType2=false;
-  bool IsLawsuitComplete=true;
-  bool IsLawsuitNonComplete=false;
+  bool IsLawsuitType1 = true;
+  bool IsLawsuitType2 = false;
+  bool IsLawsuitComplete = true;
+  bool IsLawsuitNonComplete = false;
 
   List<ItemsLawsuitList> _searchResult = [];
 
@@ -62,61 +67,24 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
     date = splits[0] + " " + splits[1] + " " +
         (int.parse(splits[3]) + 543).toString();
     _currentDateLawsuitStart = date;
-    _currentDateLawsuitEnd=date;
+    _currentDateLawsuitEnd = date;
     _dtDateLawsuitStart = DateTime.now();
     _dtDateLawsuitEnd = DateTime.now();
 
     _dtMaxDate = DateTime.now();
   }
-
-  CupertinoAlertDialog _cupertinoSearchEmpty(mContext) {
-    TextStyle TitleStyle = TextStyle(fontSize: 16.0,fontFamily: FontStyles().FontFamily);
-    TextStyle ButtonAcceptStyle = TextStyle(
-        color: Colors.blue, fontSize: 18.0, fontWeight: FontWeight.w500,fontFamily: FontStyles().FontFamily);
-    return new CupertinoAlertDialog(
-        content: new Padding(
-          padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-          child: Text("ไม่พบข้อมูล.",
-            style: TitleStyle,
-          ),
-        ),
-        actions: <Widget>[
-          new CupertinoButton(
-              onPressed: () {
-                Navigator.pop(mContext);
-                editDocNumber.clear();
-                editLawsuitNumber.clear();
-                editLawsuitDateStart.clear();
-                editLawsuitDateEnd.clear();
-                editLawsuitPerson.clear();
-                IsLawsuitType1=true;
-                IsLawsuitType2=false;
-                IsLawsuitComplete=true;
-                IsLawsuitNonComplete=false;
-              },
-              child: new Text('ยืนยัน', style: ButtonAcceptStyle)),
-        ]
-    );
-  }
-
-  void _showSearchEmptyAlertDialog(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _cupertinoSearchEmpty(context);
-      },
-    );
-  }
   //on show dialog
   Future<bool> onLoadAction(Map map) async {
-    await new LawsuitFuture().apiRequestLawsuiltListgetByConAdv(map).then((onValue) {
+    await new LawsuitFuture().apiRequestLawsuiltListgetByConAdv(map).then((
+        onValue) {
       _searchResult = onValue;
       print(onValue.length);
     });
     setState(() {});
     return true;
   }
-  onSearchTextSubmitted(Map map, mContext,IsAction) async {
+
+  onSearchTextSubmitted(Map map, mContext, IsAction) async {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -128,16 +96,18 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
     await onLoadAction(map);
     Navigator.pop(context);
     if (_searchResult.length == 0) {
-      if(!IsAction){
-        _showSearchEmptyAlertDialog(mContext);
+      if (!IsAction) {
+        new EmptyDialog(mContext,"ไม่พบข้อมูล.");
       }
-    }else{
+    } else {
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LawsuitMainScreenFragmentSearchResult(
-          ItemsPerson: widget.ItemsPerson,
-          ItemSearch: _searchResult,
-        )),
+        MaterialPageRoute(builder: (context) =>
+            LawsuitMainScreenFragmentSearchResult(
+              ItemsPerson: widget.ItemsPerson,
+              ItemSearch: _searchResult,
+              itemsOffice: widget.itemsOffice,
+            )),
       );
     }
   }
@@ -155,14 +125,14 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
 
   Widget _buildContent(BuildContext context) {
     Color labelColor = Color(0xff087de1);
-    TextStyle textLabelStyle = TextStyle(fontSize: 16.0, color: labelColor,fontFamily: FontStyles().FontFamily);
+    TextStyle textLabelStyle = TextStyle(
+        fontSize: 16.0, color: labelColor, fontFamily: FontStyles().FontFamily);
     var size = MediaQuery
         .of(context)
         .size;
     final double Width = (size.width * 85) / 100;
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -204,16 +174,22 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
                                   "GUILTBASE_NAME": "",
                                   "LAWSUIT_NO": editLawsuitNumber.text,
                                   "LAWSUIT_NO_YEAR": "",
-                                  "IS_OUTSIDE": IsLawsuitType1?1:0,
-                                  "LAWSUILT_DATE_FROM": editLawsuitDateStart.text.isEmpty?"":_dtDateLawsuitStart.toString(),
-                                  "LAWSUILT_DATE_TO": editLawsuitDateEnd.text.isEmpty?"":_dtDateLawsuitEnd.toString(),
+                                  "IS_OUTSIDE": IsLawsuitType1 ? 1 : 0,
+                                  "LAWSUILT_DATE_FROM": editLawsuitDateStart
+                                      .text.isEmpty ? "" : _dtDateLawsuitStart
+                                      .toString(),
+                                  "LAWSUILT_DATE_TO": editLawsuitDateEnd.text
+                                      .isEmpty ? "" : _dtDateLawsuitEnd
+                                      .toString(),
                                   "LAWSUILT_OFFICE_NAME": "",
                                   "LAWSUILT_NAME": editLawsuitPerson.text,
-                                  "IS_LAWSUIT_COMPLETE": IsLawsuitComplete?1:0,
+                                  "IS_LAWSUIT_COMPLETE": IsLawsuitComplete
+                                      ? 1
+                                      : 0,
                                   "ACCOUNT_OFFICE_CODE": "000000"
                                 };
                                 print(map.toString());
-                                onSearchTextSubmitted(map, context,false);
+                                onSearchTextSubmitted(map, context, false);
                               },
                               splashColor: Colors.grey,
                               child: Center(
@@ -624,9 +600,12 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    TextStyle styleTextAppbar = TextStyle(fontSize: 18.0, color: Colors.white,fontFamily: FontStyles().FontFamily);
+    TextStyle styleTextAppbar = TextStyle(fontSize: 18.0,
+        color: Colors.white,
+        fontFamily: FontStyles().FontFamily);
     return new WillPopScope(
       onWillPop: () {
         //
@@ -647,45 +626,34 @@ class _FragmentState extends State<LawsuitMainScreenFragmentSearch2> {
               }),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
-                  children: <Widget>[Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: new Text('ILG60_B_02_00_02_00',
-                          style: TextStyle(color: Colors.grey[400],fontFamily: FontStyles().FontFamily,fontSize: 12.0),),
-                      ),
-                    ],
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
                   ),
-                  ],
-                )*/
+                ),
+                Expanded(
+                  child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _buildContent(context),
+                      )
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(context),
-                  )
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
     );

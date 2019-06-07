@@ -6,13 +6,7 @@ import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/mode
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/lawsuit_main.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_insall.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/model/response/item_lawsuit_response_payment.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_lawbreaker.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/item_arrest_main.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/response/item_arrest_response_get_person.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/response/item_arrest_response_get_staff.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/response/item_arrest_response_message.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/response/item_arrest_response_save.dart';
-import 'package:prototype_app_pang/main_menu/menu/arrest/model/response/item_arrest_response_ins_staff.dart';
+import 'package:prototype_app_pang/main_menu/arrest/model/response/item_arrest_response_message.dart';
 import 'package:prototype_app_pang/server/server.dart' as serv;
 import 'package:http/http.dart' as http;
 

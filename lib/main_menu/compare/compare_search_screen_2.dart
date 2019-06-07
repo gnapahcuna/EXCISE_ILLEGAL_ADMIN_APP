@@ -15,6 +15,7 @@ import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/accept_case/mode
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/future/lawsuit_future.dart';
 import 'package:prototype_app_pang/main_menu/lawsuit/proof_case/lawsuit_screen_2_search_result.dart';
 import 'package:prototype_app_pang/model/ItemsPersonInfomation.dart';
+import 'package:prototype_app_pang/model/test/Background.dart';
 import 'package:prototype_app_pang/picker/date_picker.dart';
 import 'package:prototype_app_pang/picker/date_picker_lawsuit_search.dart';
 
@@ -169,7 +170,6 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch2> {
     final double Width = (size.width * 85) / 100;
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.rectangle,
             border: Border(
               top: BorderSide(color: Colors.grey[300], width: 1.0),
@@ -674,7 +674,6 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch2> {
       onWillPop: () {
         //
       }, child: Scaffold(
-      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0), // here the desired height
         child: AppBar(
@@ -690,21 +689,23 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch2> {
               }),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              //height: 34.0,
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300], width: 1.0),
-                    )
-                ),
-                /*child: Column(
+      body: Stack(
+        children: <Widget>[
+          BackgroundContent(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  //height: 34.0,
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[300], width: 1.0),
+                      )
+                  ),
+                  /*child: Column(
                   children: <Widget>[Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -718,18 +719,20 @@ class _FragmentState extends State<CompareMainScreenFragmentSearch2> {
                   ),
                   ],
                 )*/
+                ),
+                Expanded(
+                  child: new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: SingleChildScrollView(
+                        child: _buildContent(context),
+                      )
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: new ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: SingleChildScrollView(
-                    child: _buildContent(context),
-                  )
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     ),
     );
   }
